@@ -225,39 +225,154 @@ git commit -m "docs: 병합 충돌 해결"
 git push origin main
 ```
 
-## 원격 Books 설정
+## 원격 Books 동기화
 
-BaiDocs는 빌드 중에 원격 Git 저장소에서 book을 자동으로 동기화할 수 있습니다. `baidocs.config.yaml`에서 설정:
+BaiDocs는 원격 Git 저장소에서 book을 동기화할 수 있어 여러 소스에서 문서를 가져올 수 있습니다. 다중 저장소 프로젝트나 BaiDocs 메인 프로젝트와 별도로 문서를 관리할 때 유용합니다.
 
-```yaml
-remoteBooks:
-  - id: backend-api-docs
-    repository: https://github.com/your-org/backend-api-docs
-    branch: main
-    path: .
-  - id: frontend-guide
-    repository: https://github.com/your-org/frontend-guide
-    branch: production
-    path: docs
-```
+### 설정
 
-또는 Vercel/프로덕션용 환경 변수 사용:
+`.env.local`에서 `REMOTE_BOOKS_JSON` 환경 변수로 원격 book 설정:
 
 ```bash
-# .env.local이나 Vercel 환경 변수에
-REMOTE_BOOKS_JSON='{"books":[{"id":"my-docs","repository":"https://github.com/org/docs","branch":"main"}]}'
+# .env.local
+REMOTE_BOOKS_JSON='{"books":[{"id":"my-docs","repository":"https://github.com/org/docs","branch":"main","path":"."}]}'
 ```
 
-빌드 중에 BaiDocs는 자동으로:
-1. 원격 저장소 클론
-2. 지정된 브랜치 체크아웃
-3. `content/` 디렉토리에 내용 복사
-4. 문서 빌드
+설정 구조:
 
-다음에 적합:
-- **프로덕션 배포** (Vercel, Netlify)
-- **CI/CD 파이프라인**
-- **다중 저장소 문서**
+```json
+{
+  "books": [
+    {
+      "id": "backend-api-docs",           // content/의 book 디렉토리 이름
+      "repository": "https://github.com/your-org/backend-api-docs",
+      "branch": "main",                    // 클론할 브랜치 (선택, 기본값: main)
+      "path": "."                          // 저장소의 하위 디렉토리 (선택, 기본값: .)
+    },
+    {
+      "id": "frontend-guide",
+      "repository": "https://github.com/your-org/frontend-guide",
+      "branch": "production",
+      "path": "docs"                       // docs/ 하위 디렉토리만 동기화
+    }
+  ]
+}
+```
+
+### 수동 동기화
+
+로컬 개발 시 `sync:remote` 명령으로 원격 book을 수동으로 동기화:
+
+```bash
+# 프로젝트 루트에서
+pnpm sync:remote
+
+# 또는 apps/viewer에서
+cd apps/viewer
+pnpm sync:remote
+```
+
+**수행 작업:**
+1. 전체 Git 히스토리를 포함한 원격 저장소 클론
+2. 모든 원격 브랜치에 대한 로컬 브랜치 생성
+3. 지정된 브랜치로 체크아웃
+4. 버전 관리를 위한 `.git` 디렉토리 유지
+
+**사용 시기:**
+- 새 개발 환경 설정 시
+- 원격 book에서 최신 변경사항 가져오기
+- 다른 book 버전 간 전환
+- `REMOTE_BOOKS_JSON` 설정 업데이트 후
+
+:::warning 중요
+`pnpm sync:remote`는 `content/` 디렉토리의 **기존 원격 book을 삭제**합니다 (로컬 전용 book 제외). 이 명령을 실행하기 전에 항상 로컬 변경사항을 커밋하세요.
+:::
+
+### 로컬 전용 Books
+
+동기화 중 삭제로부터 특정 book을 보호하려면 `baidocs.config.yaml`에서 로컬 전용으로 설정:
+
+```yaml
+# baidocs.config.yaml
+deployment:
+  localOnlyBooks:
+    - my-local-book
+    - work-in-progress-docs
+```
+
+로컬 전용 book은 `pnpm sync:remote` 실행 시 보존됩니다.
+
+### 프로덕션 배포
+
+프로덕션 빌드(Vercel, Netlify)에서는 빌드 프로세스 중 원격 book이 자동으로 동기화됩니다:
+
+```bash
+# Vercel 빌드 명령 (vercel.json이나 프로젝트 설정에서 구성)
+pnpm build:vercel
+```
+
+실행 내용:
+1. `sync:remote` - 원격 book 클론
+2. `build` - 모든 앱 빌드 (viewer, editor)
+
+배포 플랫폼 설정에서 `REMOTE_BOOKS_JSON` 환경 변수를 설정하세요.
+
+### Git 브랜치 관리
+
+원격 book은 모든 브랜치를 포함한 전체 Git 저장소를 유지하여 버전별 문서를 지원합니다:
+
+```bash
+cd content/my-book
+
+# 사용 가능한 모든 브랜치 보기
+git branch -a
+
+# 다른 버전으로 전환
+git checkout v2.0
+
+# 기본 브랜치로 돌아가기
+git checkout main
+```
+
+BaiDocs 에디터는 명령줄 없이 브랜치를 전환할 수 있는 UI를 제공합니다.
+
+### 사용 사례
+
+원격 book 동기화는 다음에 적합합니다:
+- **다중 저장소 문서** - 여러 프로젝트에서 문서 가져오기
+- **프로덕션 배포** - Vercel/Netlify에서 자동 동기화
+- **CI/CD 파이프라인** - 문서를 최신 상태로 유지
+- **팀 협업** - 각 팀이 자체 문서 저장소 관리
+- **버전 관리** - 문서 버전 간 전환
+
+### 문제 해결
+
+**문제: 원격 book이 동기화되지 않음**
+
+설정 확인:
+```bash
+# REMOTE_BOOKS_JSON 설정 확인
+echo $REMOTE_BOOKS_JSON
+
+# 또는 .env.local 확인
+cat .env.local | grep REMOTE_BOOKS_JSON
+```
+
+**문제: 프라이빗 저장소 클론 시 권한 거부**
+
+`.env.local`에 GitHub 토큰 설정:
+```bash
+GITHUB_TOKEN=ghp_xxxxxxxxxxxxxxxxxxxx
+```
+
+토큰 생성: https://github.com/settings/tokens
+
+**문제: 로컬 변경사항이 손실됨**
+
+원격 book 동기화는 기존 콘텐츠를 삭제합니다. 이를 방지하려면:
+1. `baidocs.config.yaml`의 `localOnlyBooks`에 book 추가
+2. 동기화 전에 Git에 변경사항 커밋
+3. `REMOTE_BOOKS_JSON` 외부에 로컬 전용 book 유지
 
 ## 버전 태그와 릴리스
 

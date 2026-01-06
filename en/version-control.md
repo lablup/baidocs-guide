@@ -225,39 +225,154 @@ git commit -m "docs: Resolve merge conflicts"
 git push origin main
 ```
 
-## Remote Books Configuration
+## Remote Books Synchronization
 
-BaiDocs can automatically sync books from remote Git repositories during build. Configure in `baidocs.config.yaml`:
+BaiDocs can sync books from remote Git repositories, allowing you to pull documentation from multiple sources. This is useful for multi-repository projects or when documentation is maintained separately from the main BaiDocs project.
 
-```yaml
-remoteBooks:
-  - id: backend-api-docs
-    repository: https://github.com/your-org/backend-api-docs
-    branch: main
-    path: .
-  - id: frontend-guide
-    repository: https://github.com/your-org/frontend-guide
-    branch: production
-    path: docs
-```
+### Configuration
 
-Or use environment variable for Vercel/production:
+Configure remote books using the `REMOTE_BOOKS_JSON` environment variable in `.env.local`:
 
 ```bash
-# In .env.local or Vercel environment variables
-REMOTE_BOOKS_JSON='{"books":[{"id":"my-docs","repository":"https://github.com/org/docs","branch":"main"}]}'
+# .env.local
+REMOTE_BOOKS_JSON='{"books":[{"id":"my-docs","repository":"https://github.com/org/docs","branch":"main","path":"."}]}'
 ```
 
-During build, BaiDocs will automatically:
-1. Clone the remote repositories
-2. Checkout the specified branch
-3. Copy content to the `content/` directory
-4. Build the documentation
+Configuration structure:
 
-This is perfect for:
-- **Production deployments** (Vercel, Netlify)
-- **CI/CD pipelines**
-- **Multi-repository documentation**
+```json
+{
+  "books": [
+    {
+      "id": "backend-api-docs",           // Book directory name in content/
+      "repository": "https://github.com/your-org/backend-api-docs",
+      "branch": "main",                    // Branch to clone (optional, default: main)
+      "path": "."                          // Subdirectory in repo (optional, default: .)
+    },
+    {
+      "id": "frontend-guide",
+      "repository": "https://github.com/your-org/frontend-guide",
+      "branch": "production",
+      "path": "docs"                       // Only sync docs/ subdirectory
+    }
+  ]
+}
+```
+
+### Manual Synchronization
+
+For local development, use the `sync:remote` command to manually sync remote books:
+
+```bash
+# From project root
+pnpm sync:remote
+
+# Or from apps/viewer
+cd apps/viewer
+pnpm sync:remote
+```
+
+**What it does:**
+1. Clones remote repositories with full Git history
+2. Creates local branches for all remote branches
+3. Checkouts the specified branch
+4. Preserves `.git` directory for version control
+
+**When to use:**
+- Setting up a new development environment
+- Pulling latest changes from remote books
+- Switching between different book versions
+- After updating `REMOTE_BOOKS_JSON` configuration
+
+:::warning Important
+`pnpm sync:remote` will **delete existing remote books** in your `content/` directory (except local-only books). Always commit your local changes before running this command.
+:::
+
+### Local-Only Books
+
+To protect certain books from being deleted during sync, configure them as local-only in `baidocs.config.yaml`:
+
+```yaml
+# baidocs.config.yaml
+deployment:
+  localOnlyBooks:
+    - my-local-book
+    - work-in-progress-docs
+```
+
+Local-only books will be preserved when running `pnpm sync:remote`.
+
+### Production Deployment
+
+For production builds (Vercel, Netlify), remote books are automatically synced during the build process:
+
+```bash
+# Vercel build command (configured in vercel.json or project settings)
+pnpm build:vercel
+```
+
+This runs:
+1. `sync:remote` - Clone remote books
+2. `build` - Build all apps (viewer, editor)
+
+Set the `REMOTE_BOOKS_JSON` environment variable in your deployment platform's settings.
+
+### Git Branch Management
+
+Remote books maintain full Git repositories with all branches, enabling version-specific documentation:
+
+```bash
+cd content/my-book
+
+# View all available branches
+git branch -a
+
+# Switch to a different version
+git checkout v2.0
+
+# Return to default branch
+git checkout main
+```
+
+The BaiDocs editor provides a UI for switching branches without using the command line.
+
+### Use Cases
+
+Remote books synchronization is perfect for:
+- **Multi-repository documentation** - Pull docs from multiple projects
+- **Production deployments** - Automatically sync on Vercel/Netlify
+- **CI/CD pipelines** - Keep documentation up-to-date
+- **Team collaboration** - Each team maintains their own docs repo
+- **Version management** - Switch between documentation versions
+
+### Troubleshooting
+
+**Problem: Remote books not syncing**
+
+Check your configuration:
+```bash
+# Verify REMOTE_BOOKS_JSON is set
+echo $REMOTE_BOOKS_JSON
+
+# Or check .env.local
+cat .env.local | grep REMOTE_BOOKS_JSON
+```
+
+**Problem: Permission denied when cloning private repositories**
+
+Set a GitHub token in `.env.local`:
+```bash
+GITHUB_TOKEN=ghp_xxxxxxxxxxxxxxxxxxxx
+```
+
+Create a token at: https://github.com/settings/tokens
+
+**Problem: Local changes were lost**
+
+Remote books sync will delete existing content. To prevent this:
+1. Add books to `localOnlyBooks` in `baidocs.config.yaml`
+2. Commit changes to Git before syncing
+3. Keep local-only books outside of `REMOTE_BOOKS_JSON`
 
 ## Version Tags and Releases
 
