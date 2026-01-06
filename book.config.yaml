@@ -1,0 +1,117 @@
+id: baidocs-guide
+title: BaiDocs Guide
+description: Complete guide to using BaiDocs - a modern documentation framework with MDX support
+emoji: 📚
+type: document
+languages:
+  - en
+  - ko
+defaultLanguage: en
+navigation:
+  en:
+    - title: Introduction
+      items:
+        - title: Welcome
+          path: index.md
+        - title: What is BaiDocs?
+          path: what-is-baidocs.md
+        - title: Key Features
+          path: key-features.md
+    - title: Getting Started
+      items:
+        - title: Installation
+          path: installation.md
+        - title: Creating Your First Book
+          path: creating-first-book.md
+        - title: Project Structure
+          path: project-structure.md
+        - title: Version Control with Git
+          path: version-control.md
+    - title: Writing Content
+      items:
+        - title: Basic Markdown Syntax
+          path: markdown-basics.md
+        - title: Extended Markdown Features
+          path: markdown-extended.md
+        - title: Admonitions
+          path: admonitions.md
+        - title: Code Blocks
+          path: code-blocks.md
+        - title: Tables and Lists
+          path: tables-lists.md
+        - title: Images and Media
+          path: images-media.md
+    - title: Advanced Features
+      items:
+        - title: Theme Customization
+          path: theme-customization.md
+        - title: PDF Generation
+          path: pdf-generation.md
+        - title: Search Configuration
+          path: search-configuration.md
+        - title: Multi-language Support
+          path: multi-language.md
+    - title: Deployment
+      items:
+        - title: Building for Production
+          path: building-production.md
+        - title: Deployment Options
+          path: deployment-options.md
+  ko:
+    - title: 소개
+      items:
+        - title: 환영합니다
+          path: index.md
+        - title: BaiDocs란 무엇인가?
+          path: what-is-baidocs.md
+        - title: 주요 기능
+          path: key-features.md
+    - title: 시작하기
+      items:
+        - title: 설치
+          path: installation.md
+        - title: 첫 번째 북 만들기
+          path: creating-first-book.md
+        - title: 프로젝트 구조
+          path: project-structure.md
+        - title: Git으로 버전 관리하기
+          path: version-control.md
+    - title: 콘텐츠 작성
+      items:
+        - title: 기본 마크다운 문법
+          path: markdown-basics.md
+        - title: 확장 마크다운 기능
+          path: markdown-extended.md
+        - title: 어드모니션
+          path: admonitions.md
+        - title: 코드 블록
+          path: code-blocks.md
+        - title: 테이블과 리스트
+          path: tables-lists.md
+        - title: 이미지와 미디어
+          path: images-media.md
+    - title: 고급 기능
+      items:
+        - title: 테마 커스터마이징
+          path: theme-customization.md
+        - title: PDF 생성
+          path: pdf-generation.md
+        - title: 검색 설정
+          path: search-configuration.md
+        - title: 다국어 지원
+          path: multi-language.md
+    - title: 배포
+      items:
+        - title: 프로덕션 빌드
+          path: building-production.md
+        - title: 배포 옵션
+          path: deployment-options.md
+pdf:
+  split: chapter
+  cover:
+    title: "BaiDocs Guide"
+    subtitle: "Complete Documentation Framework Guide"
+  imageOptimization:
+    enabled: true
+    maxWidth: 1200
+    quality: 85
