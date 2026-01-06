@@ -109,8 +109,8 @@ navigation:
 pdf:
   split: chapter
   cover:
-    title: "BaiDocs Guide"
-    subtitle: "Complete Documentation Framework Guide"
+    title: BaiDocs Guide
+    subtitle: Complete Documentation Framework Guide
   imageOptimization:
     enabled: true
     maxWidth: 1200
