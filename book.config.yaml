@@ -106,6 +106,12 @@ navigation:
           path: building-production.md
         - title: 배포 옵션
           path: deployment-options.md
+    - title: Additional
+      path: additional
+      items:
+        - title: Additional (Index)
+          path: additional/index.mdx
+          items: []
 pdf:
   split: chapter
   cover:
