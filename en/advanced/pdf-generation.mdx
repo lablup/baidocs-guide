@@ -1,0 +1,591 @@
+# PDF Generation
+
+BaiDocs includes powerful PDF generation capabilities that automatically convert your MDX documentation into high-quality, print-ready PDF documents with proper formatting, navigation, and styling.
+
+## Overview
+
+The PDF generation system creates:
+
+- **Individual Page PDFs**: Each documentation page as a standalone PDF
+- **Complete Book PDFs**: Entire documentation compiled into a single PDF
+- **Multi-language Support**: Separate PDFs for each language
+- **Custom Styling**: Consistent branding and professional formatting
+- **Interactive Elements**: Clickable table of contents and internal links
+
+## PDF Generation Process
+
+### Automatic Generation
+
+PDFs are automatically generated during the build process:
+
+```bash
+npm run build
+# Generates PDFs for all books and pages
+# Output: public/pdfs/{book-id}/{language}/
+```
+
+### Build Output Structure
+
+```
+public/pdfs/
+├── baidocs-guide/
+│   ├── en/
+│   │   ├── complete-guide.pdf          # Full book PDF
+│   │   ├── getting-started/
+│   │   │   ├── overview.pdf           # Individual page PDFs
+│   │   │   ├── installation.pdf
+│   │   │   └── first-book.pdf
+│   │   ├── writing/
+│   │   │   ├── markdown-basics.pdf
+│   │   │   └── mdx-features.pdf
+│   │   └── advanced/
+│   │       ├── themes.pdf
+│   │       └── pdf-generation.pdf
+│   └── ko/
+│       ├── complete-guide.pdf          # Korean version
+│       └── getting-started/
+│           └── overview.pdf
+└── api-docs/
+    └── en/
+        └── complete-guide.pdf
+```
+
+## Configuration
+
+### PDF Settings in book.config.yaml
+
+Configure PDF generation for your book:
+
+```yaml
+# book.config.yaml
+id: my-documentation
+title: My Documentation
+description: Complete user guide
+
+# PDF generation settings
+pdf:
+  enabled: true
+
+  # Book-level PDF configuration
+  book:
+    title: "My Documentation - Complete Guide"
+    author: "Your Organization"
+    subject: "User Documentation"
+    creator: "BaiDocs"
+
+    # Cover page settings
+    cover:
+      enabled: true
+      title: "My Documentation"
+      subtitle: "Complete User Guide"
+      version: "v2.0"
+      date: "2024-01-26"
+      logo: "../_assets/logo.png"
+
+    # Table of contents
+    toc:
+      enabled: true
+      depth: 3
+      showPageNumbers: true
+
+    # Styling options
+    styling:
+      fontSize: "12pt"
+      fontFamily: "Inter"
+      lineHeight: 1.6
+      margins:
+        top: "2cm"
+        bottom: "2cm"
+        left: "2cm"
+        right: "2cm"
+
+  # Page-level PDF configuration
+  pages:
+    header:
+      enabled: true
+      content: "{book.title} - {page.title}"
+      alignment: "center"
+      fontSize: "10pt"
+
+    footer:
+      enabled: true
+      content: "Page {page.number} of {total.pages}"
+      alignment: "center"
+      fontSize: "10pt"
+
+    # Watermark
+    watermark:
+      enabled: false
+      text: "CONFIDENTIAL"
+      opacity: 0.1
+      angle: 45
+```
+
+### Advanced PDF Options
+
+#### Custom CSS for PDF
+
+Create PDF-specific styling:
+
+```css
+/* styles/pdf.css */
+
+/* PDF-specific styles */
+@media print {
+  /* Page breaks */
+  .page-break-before {
+    page-break-before: always;
+  }
+
+  .page-break-after {
+    page-break-after: always;
+  }
+
+  .page-break-avoid {
+    page-break-inside: avoid;
+  }
+
+  /* Hide navigation elements */
+  .navigation,
+  .breadcrumbs,
+  .page-actions {
+    display: none !important;
+  }
+
+  /* Optimize code blocks for print */
+  pre {
+    background: #f8f9fa !important;
+    border: 1px solid #dee2e6 !important;
+    font-size: 10pt !important;
+    line-height: 1.4 !important;
+    white-space: pre-wrap !important;
+    word-wrap: break-word !important;
+  }
+
+  /* Table formatting */
+  table {
+    border-collapse: collapse !important;
+    width: 100% !important;
+    margin: 1em 0 !important;
+  }
+
+  th, td {
+    border: 1px solid #dee2e6 !important;
+    padding: 8px !important;
+    text-align: left !important;
+  }
+
+  /* Admonition styling for print */
+  .admonition {
+    border: 1px solid #dee2e6 !important;
+    background: #f8f9fa !important;
+    page-break-inside: avoid !important;
+    margin: 1em 0 !important;
+  }
+
+  /* Link styling */
+  a[href^="http"]:after {
+    content: " (" attr(href) ")";
+    font-size: 0.8em;
+    color: #666;
+  }
+
+  /* Image optimization */
+  img {
+    max-width: 100% !important;
+    height: auto !important;
+    page-break-inside: avoid !important;
+  }
+}
+
+/* PDF cover page styling */
+.pdf-cover {
+  text-align: center;
+  padding: 4cm 2cm;
+  page-break-after: always;
+}
+
+.pdf-cover h1 {
+  font-size: 2.5em;
+  margin-bottom: 0.5em;
+  color: #2563eb;
+}
+
+.pdf-cover .subtitle {
+  font-size: 1.2em;
+  color: #6b7280;
+  margin-bottom: 2em;
+}
+
+.pdf-cover .metadata {
+  margin-top: 2em;
+  font-size: 0.9em;
+  color: #9ca3af;
+}
+```
+
+#### Include PDF Styles
+
+Reference the PDF stylesheet in your documentation:
+
+```yaml
+# book.config.yaml
+pdf:
+  styling:
+    customCSS: "styles/pdf.css"
+```
+
+## Manual PDF Generation
+
+### Generate PDFs for Specific Book
+
+Generate PDFs for a single book:
+
+```bash
+# Generate all PDFs for a specific book
+npm run build:pdfs -- --book=my-documentation
+
+# Generate PDFs for specific language
+npm run build:pdfs -- --book=my-documentation --language=en
+```
+
+### Generate Individual Page PDFs
+
+Create PDFs for specific pages:
+
+```bash
+# Generate PDF for specific page
+npm run build:pdf -- --book=my-documentation --language=en --page=getting-started/overview
+```
+
+## PDF Features
+
+### Cover Page Generation
+
+Automatically generated cover pages include:
+
+- **Book Title and Subtitle**: From configuration
+- **Version Information**: Book version and build date
+- **Logo**: Organization or project logo
+- **Metadata**: Author, description, and build information
+
+Example cover page configuration:
+
+```yaml
+pdf:
+  book:
+    cover:
+      enabled: true
+      title: "BaiDocs User Guide"
+      subtitle: "Complete Documentation Platform"
+      version: "v3.0"
+      date: "January 2024"
+      logo: "../_assets/baidocs-logo.png"
+      background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)"
+      textColor: "white"
+```
+
+### Table of Contents
+
+Interactive table of contents with:
+
+- **Hierarchical Structure**: Reflects navigation structure
+- **Page Numbers**: Accurate page references
+- **Clickable Links**: Navigate directly to sections
+- **Customizable Depth**: Control heading levels included
+
+### Headers and Footers
+
+Customizable headers and footers support:
+
+- **Dynamic Content**: Book title, page title, page numbers
+- **Custom Text**: Organization name, document classification
+- **Multiple Alignments**: Left, center, right positioning
+- **Variable Substitution**: Template variables for dynamic content
+
+#### Header/Footer Variables
+
+Available template variables:
+
+```yaml
+# Template variables for headers/footers
+variables:
+  "{book.title}": "Book title from configuration"
+  "{book.description}": "Book description"
+  "{page.title}": "Current page title"
+  "{page.number}": "Current page number"
+  "{total.pages}": "Total number of pages"
+  "{current.date}": "Current date"
+  "{build.date}": "Build timestamp"
+  "{book.version}": "Book version"
+```
+
+### Page Layout Control
+
+Control page layouts with MDX components:
+
+```mdx
+# Introduction
+
+This content appears normally.
+
+<div className="page-break-before">
+## New Section (starts on new page)
+</div>
+
+This section starts on a fresh page.
+
+<div className="page-break-avoid">
+### Important Note
+
+This entire section will stay together and not be split across pages.
+</div>
+
+<div className="page-break-after">
+## Section End
+</div>
+
+Next content starts on a new page.
+```
+
+### Code Block Optimization
+
+Code blocks are automatically optimized for PDF:
+
+- **Syntax Highlighting**: Preserved in print
+- **Line Wrapping**: Long lines wrap appropriately
+- **Font Sizing**: Readable but space-efficient
+- **Background**: Print-friendly colors
+
+```javascript
+// This code block will be optimized for PDF output
+function generatePDF(book, options) {
+  const pdfOptions = {
+    format: 'A4',
+    margin: options.margins || {
+      top: '2cm',
+      bottom: '2cm',
+      left: '2cm',
+      right: '2cm'
+    },
+    printBackground: true,
+    preferCSSPageSize: true
+  };
+
+  return createPDF(book.content, pdfOptions);
+}
+```
+
+### Image Handling
+
+Images are automatically processed for PDF:
+
+- **Resolution Optimization**: High-quality but reasonably sized
+- **Format Conversion**: Optimal formats for print
+- **Sizing**: Automatic scaling to fit page width
+- **Quality**: Maintains clarity in print
+
+## Build Integration
+
+### PDF Generation in CI/CD
+
+Integrate PDF generation in your deployment pipeline:
+
+```yaml
+# .github/workflows/deploy.yml
+name: Deploy Documentation
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build documentation
+        run: npm run build
+
+      - name: Generate PDFs
+        run: npm run build:pdfs
+
+      - name: Deploy to Vercel
+        run: npm run deploy
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+```
+
+### PDF Artifacts
+
+Access generated PDFs:
+
+- **Direct URLs**: `https://your-site.com/pdfs/book-id/language/page.pdf`
+- **Download Links**: Automatic download buttons in the viewer
+- **Archive Creation**: Compressed archives of all PDFs
+
+## Troubleshooting
+
+### Common Issues
+
+#### "PDF Generation Failed"
+
+```bash
+# Check for missing dependencies
+npm install puppeteer-core
+
+# Verify book configuration
+npm run validate-config
+
+# Debug PDF generation
+DEBUG=pdf npm run build:pdfs
+```
+
+#### "Fonts Not Loading"
+
+```yaml
+# book.config.yaml
+pdf:
+  styling:
+    fontFamily: "Inter"
+    # Ensure font is available or use web-safe fonts
+    fontFallbacks:
+      - "Arial"
+      - "sans-serif"
+```
+
+#### "Images Missing in PDF"
+
+- Verify image paths are relative to content directory
+- Ensure images exist and are accessible
+- Check image format support (PNG, JPG, SVG recommended)
+
+#### "Large File Sizes"
+
+```yaml
+# Optimize PDF size
+pdf:
+  optimization:
+    compressImages: true
+    imageQuality: 85
+    removeUnusedAssets: true
+    minimizeWhitespace: true
+```
+
+### Performance Optimization
+
+#### Speed Up PDF Generation
+
+```bash
+# Generate PDFs in parallel
+npm run build:pdfs -- --parallel=4
+
+# Skip unchanged pages
+npm run build:pdfs -- --incremental
+
+# Generate specific formats only
+npm run build:pdfs -- --format=pdf
+```
+
+#### Reduce Memory Usage
+
+```yaml
+# book.config.yaml
+pdf:
+  performance:
+    maxMemory: "2GB"
+    batchSize: 10
+    enableGC: true
+    timeout: 30000
+```
+
+## Advanced Use Cases
+
+### Custom PDF Templates
+
+Create custom PDF templates for different document types:
+
+```typescript
+// pdf-templates/api-reference.ts
+export const apiReferenceTemplate = {
+  cover: {
+    title: "{book.title}",
+    subtitle: "API Reference v{book.version}",
+    layout: "technical"
+  },
+  header: {
+    content: "{book.title} API | {page.title}",
+    style: "technical"
+  },
+  footer: {
+    content: "Page {page.number} | Last updated: {build.date}",
+    includeConfidentiality: true
+  },
+  styling: {
+    codeBlockStyle: "technical",
+    tableStyle: "compact",
+    admonitionStyle: "minimal"
+  }
+};
+```
+
+### Conditional PDF Content
+
+Include or exclude content based on PDF generation:
+
+```mdx
+import { isPDFExport } from '@baidocs/utils'
+
+# Documentation Page
+
+Regular content that appears everywhere.
+
+{!isPDFExport && (
+  <div className="interactive-demo">
+    This interactive demo only appears in web version.
+  </div>
+)}
+
+{isPDFExport && (
+  <div className="pdf-note">
+    📋 **Note**: This documentation includes interactive elements that are not available in PDF format. Visit the online version for full functionality.
+  </div>
+)}
+```
+
+### Batch PDF Operations
+
+Generate PDFs for multiple books:
+
+```bash
+# Generate PDFs for all books
+npm run build:pdfs -- --all
+
+# Generate for specific books
+npm run build:pdfs -- --books=guide,api-reference,tutorials
+
+# Export to different directory
+npm run build:pdfs -- --output=/path/to/pdfs/
+```
+
+## Next Steps
+
+Enhance your PDF documentation:
+
+1. **[Search Configuration](search.mdx)** - Ensure PDFs are discoverable
+2. **[Multi-language Support](multilingual.mdx)** - Generate PDFs for all languages
+3. **[Versioning](versioning.mdx)** - Manage PDF versions across releases
+
+---
+
+*PDF generation transforms your digital documentation into professional, shareable documents perfect for offline reading and formal distribution.*

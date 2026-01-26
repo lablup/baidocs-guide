@@ -1,0 +1,533 @@
+# Markdown Basics
+
+BaiDocs uses MDX (Markdown + JSX) as its primary content format, which means you get all the power of standard Markdown plus the ability to embed React components and custom styling.
+
+## Standard Markdown Syntax
+
+All standard Markdown syntax is fully supported in BaiDocs:
+
+### Headers
+
+Use `#` for headers. BaiDocs automatically generates navigation and table of contents from headers:
+
+```markdown
+# H1 Header (Page Title)
+## H2 Header (Main Section)
+### H3 Header (Subsection)
+#### H4 Header (Sub-subsection)
+##### H5 Header (Minor section)
+###### H6 Header (Smallest header)
+```
+
+**Result:**
+# H1 Header (Page Title)
+## H2 Header (Main Section)
+### H3 Header (Subsection)
+#### H4 Header (Sub-subsection)
+##### H5 Header (Minor section)
+###### H6 Header (Smallest header)
+
+### Text Formatting
+
+Format text with simple syntax:
+
+```markdown
+**Bold text** or __Bold text__
+*Italic text* or _Italic text_
+***Bold and italic*** or ___Bold and italic___
+~~Strikethrough text~~
+`Inline code`
+```
+
+**Result:**
+**Bold text** or __Bold text__
+*Italic text* or _Italic text_
+***Bold and italic*** or ___Bold and italic___
+~~Strikethrough text~~
+`Inline code`
+
+### Lists
+
+Create ordered and unordered lists:
+
+```markdown
+## Unordered List
+- Item 1
+- Item 2
+  - Nested item 2.1
+  - Nested item 2.2
+- Item 3
+
+## Ordered List
+1. First item
+2. Second item
+   1. Nested item 2.1
+   2. Nested item 2.2
+3. Third item
+
+## Mixed List
+1. Ordered item
+   - Unordered nested item
+   - Another unordered item
+2. Another ordered item
+```
+
+**Result:**
+
+## Unordered List
+- Item 1
+- Item 2
+  - Nested item 2.1
+  - Nested item 2.2
+- Item 3
+
+## Ordered List
+1. First item
+2. Second item
+   1. Nested item 2.1
+   2. Nested item 2.2
+3. Third item
+
+### Links
+
+Create various types of links:
+
+```markdown
+[Link text](https://example.com)
+[Link with title](https://example.com "This is a title")
+[Internal link](../getting-started/overview.mdx)
+[Anchor link](#headers)
+
+<!-- Reference-style links -->
+[Reference link][1]
+[1]: https://example.com "Reference title"
+
+<!-- Auto-links -->
+https://example.com
+<user@example.com>
+```
+
+**Result:**
+[Link text](https://example.com)
+[Link with title](https://example.com "This is a title")
+[Internal link](../getting-started/overview.mdx)
+[Anchor link](#headers)
+
+### Images
+
+Embed images with various options:
+
+```markdown
+![Alt text](../_assets/example.png)
+![Alt text with title](../_assets/example.png "Image title")
+
+<!-- Reference-style images -->
+![Alt text][image1]
+[image1]: ../_assets/example.png "Reference image"
+
+<!-- With dimensions (HTML style) -->
+<img src="../_assets/example.png" alt="Alt text" width="300" height="200" />
+```
+
+### Code Blocks
+
+BaiDocs provides enhanced syntax highlighting for code blocks:
+
+````markdown
+```javascript
+function greetUser(name) {
+  console.log(`Hello, ${name}!`);
+  return `Welcome to BaiDocs, ${name}`;
+}
+
+const user = "Developer";
+greetUser(user);
+```
+
+```python
+def greet_user(name):
+    print(f"Hello, {name}!")
+    return f"Welcome to BaiDocs, {name}"
+
+user = "Developer"
+greet_user(user)
+```
+
+```yaml
+# Configuration example
+id: my-book
+title: My Documentation
+languages:
+  - en
+  - ko
+navigation:
+  en:
+    - title: "Home"
+      path: "index.mdx"
+```
+````
+
+**Result:**
+
+```javascript
+function greetUser(name) {
+  console.log(`Hello, ${name}!`);
+  return `Welcome to BaiDocs, ${name}`;
+}
+
+const user = "Developer";
+greetUser(user);
+```
+
+### Tables
+
+Create tables with alignment options:
+
+```markdown
+| Feature | Basic | Pro | Enterprise |
+|---------|-------|-----|------------|
+| Users | 1 | 10 | Unlimited |
+| Storage | 1GB | 100GB | Unlimited |
+| Support | Email | Chat | Phone |
+
+<!-- With alignment -->
+| Left Aligned | Center Aligned | Right Aligned |
+|:-------------|:--------------:|--------------:|
+| Text | Text | Text |
+| More text | More text | More text |
+```
+
+**Result:**
+
+| Feature | Basic | Pro | Enterprise |
+|---------|-------|-----|------------|
+| Users | 1 | 10 | Unlimited |
+| Storage | 1GB | 100GB | Unlimited |
+| Support | Email | Chat | Phone |
+
+### Blockquotes
+
+Create blockquotes and nested blockquotes:
+
+```markdown
+> This is a blockquote.
+> It can span multiple lines.
+
+> This is a blockquote with a nested quote:
+>
+> > This is a nested blockquote.
+> > It's indented further.
+>
+> Back to the original quote level.
+
+> **Note**: Blockquotes can contain other Markdown elements:
+>
+> - List items
+> - `Code`
+> - **Bold text**
+```
+
+**Result:**
+
+> This is a blockquote.
+> It can span multiple lines.
+
+> This is a blockquote with a nested quote:
+>
+> > This is a nested blockquote.
+> > It's indented further.
+>
+> Back to the original quote level.
+
+### Horizontal Rules
+
+Create horizontal dividers:
+
+```markdown
+---
+***
+___
+```
+
+**Result:**
+
+---
+
+### Line Breaks
+
+Control line breaks in your content:
+
+```markdown
+<!-- Hard line break: two spaces at end of line -->
+Line one
+Line two
+
+<!-- Soft line break: just a newline -->
+Line one
+Line two (same paragraph)
+
+<!-- Paragraph break: blank line -->
+Paragraph one
+
+Paragraph two
+```
+
+## BaiDocs-Enhanced Markdown
+
+BaiDocs extends standard Markdown with additional features:
+
+### Frontmatter
+
+Add metadata to your pages using YAML frontmatter:
+
+```yaml
+---
+title: Custom Page Title
+description: Page description for SEO
+author: Your Name
+date: 2024-01-26
+tags:
+  - documentation
+  - guide
+featured: true
+---
+
+# Page Content
+
+Your page content starts here.
+```
+
+### Task Lists
+
+Create interactive checkboxes:
+
+```markdown
+## Todo List
+
+- [x] Write documentation
+- [x] Add examples
+- [ ] Review content
+- [ ] Publish to production
+
+## Shopping List
+
+- [x] ~~Buy groceries~~ (completed)
+- [ ] Pick up dry cleaning
+- [ ] Schedule dentist appointment
+```
+
+**Result:**
+
+## Todo List
+
+- [x] Write documentation
+- [x] Add examples
+- [ ] Review content
+- [ ] Publish to production
+
+### Footnotes
+
+Add footnotes for additional information:
+
+```markdown
+This is a statement with a footnote[^1].
+
+Here's another statement with a longer footnote[^longnote].
+
+[^1]: This is a simple footnote.
+
+[^longnote]: This is a longer footnote with multiple paragraphs.
+
+    You can include multiple paragraphs in footnotes.
+
+    - And even lists!
+    - Like this one.
+```
+
+### Definition Lists
+
+Create definition lists for glossaries:
+
+```markdown
+Term 1
+: Definition for term 1
+
+Term 2
+: Definition for term 2
+: Another definition for term 2
+
+Term with *emphasis*
+: Definition can contain **other** `markdown` elements.
+```
+
+## Writing Best Practices
+
+### Document Structure
+
+**Use Logical Hierarchy**:
+```markdown
+# Page Title (H1) - Only one per page
+## Major Sections (H2)
+### Subsections (H3)
+#### Sub-subsections (H4)
+```
+
+**Avoid Skipping Levels**:
+```markdown
+# Good Structure
+## Section 1
+### Subsection 1.1
+### Subsection 1.2
+## Section 2
+
+# Poor Structure (skips H2)
+# Title
+### Subsection (jumps from H1 to H3)
+```
+
+### Content Guidelines
+
+**Be Descriptive**:
+```markdown
+<!-- Good -->
+## Installing the Development Environment
+### Prerequisites for macOS Users
+
+<!-- Avoid -->
+## Setup
+### Mac Stuff
+```
+
+**Use Active Voice**:
+```markdown
+<!-- Good -->
+Click the "Save" button to save your changes.
+
+<!-- Avoid -->
+The changes can be saved by clicking the "Save" button.
+```
+
+### Code Examples
+
+**Provide Context**:
+```markdown
+<!-- Good -->
+To connect to the API, use the following configuration:
+
+```javascript
+const config = {
+  apiUrl: 'https://api.example.com',
+  timeout: 5000
+};
+```
+
+<!-- Avoid -->
+```javascript
+const config = {
+  apiUrl: 'https://api.example.com',
+  timeout: 5000
+};
+```
+```
+
+**Use Meaningful Variable Names**:
+```markdown
+<!-- Good -->
+```javascript
+const userApiKey = 'your-api-key-here';
+const maxRetryAttempts = 3;
+```
+
+<!-- Avoid -->
+```javascript
+const key = 'abc123';
+const x = 3;
+```
+```
+
+### Cross-References
+
+**Link Related Content**:
+```markdown
+For more advanced features, see [MDX Features](mdx-features.mdx).
+
+Before continuing, make sure you've completed the [Installation](../getting-started/installation.mdx) guide.
+```
+
+**Use Descriptive Link Text**:
+```markdown
+<!-- Good -->
+Read the [deployment guide](../deployment/vercel.mdx) for production setup.
+
+<!-- Avoid -->
+For production setup, click [here](../deployment/vercel.mdx).
+```
+
+## Common Markdown Pitfalls
+
+### Spacing Issues
+
+**Problem**: Inconsistent spacing around headers
+```markdown
+<!-- Incorrect -->
+## Header
+Content immediately after header
+
+## Another Header
+```
+
+**Solution**: Add blank lines around headers
+```markdown
+<!-- Correct -->
+## Header
+
+Content with proper spacing.
+
+## Another Header
+
+More content with proper spacing.
+```
+
+### List Formatting
+
+**Problem**: Incorrect list indentation
+```markdown
+<!-- Incorrect -->
+- Item 1
+  - Nested item (wrong indentation)
+- Item 2
+```
+
+**Solution**: Use consistent 2-space indentation
+```markdown
+<!-- Correct -->
+- Item 1
+  - Nested item (correct indentation)
+- Item 2
+```
+
+### Link References
+
+**Problem**: Broken relative links
+```markdown
+<!-- Incorrect -->
+[Link](../wrong/path.mdx)
+```
+
+**Solution**: Verify file paths
+```markdown
+<!-- Correct -->
+[Link](../correct/path.mdx)
+```
+
+## Next Steps
+
+Now that you understand Markdown basics:
+
+1. **[Learn MDX Features](mdx-features.mdx)** - Explore advanced MDX capabilities
+2. **[Master Admonitions](admonitions.mdx)** - Add visual callouts and notes
+3. **[Advanced Features](../advanced/themes.mdx)** - Customize your documentation
+
+---
+
+*Master these Markdown fundamentals to create clear, well-structured documentation.*

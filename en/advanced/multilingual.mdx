@@ -1,0 +1,921 @@
+# Multi-language Support
+
+BaiDocs provides comprehensive multi-language support, allowing you to create documentation in multiple languages with automatic language detection, translation workflows, and localized user experiences.
+
+## Overview
+
+### Multi-language Features
+
+- **Multiple Language Support**: Create content in any number of languages
+- **Language-Specific Navigation**: Independent navigation structures per language
+- **Automatic Language Detection**: Detect user's preferred language
+- **Language Switching**: Seamless switching between language versions
+- **RTL Support**: Right-to-left language support (Arabic, Hebrew, etc.)
+- **Localized UI**: Translate interface elements and messages
+- **Search Integration**: Language-aware search functionality
+
+### Supported Languages
+
+BaiDocs supports all languages with proper locale codes:
+
+- **Western Languages**: English (en), Spanish (es), French (fr), German (de), Italian (it)
+- **Asian Languages**: Korean (ko), Japanese (ja), Chinese Simplified (zh-cn), Chinese Traditional (zh-tw)
+- **RTL Languages**: Arabic (ar), Hebrew (he), Persian (fa)
+- **Other Languages**: Russian (ru), Portuguese (pt), Dutch (nl), and many more
+
+## Language Configuration
+
+### Basic Multi-language Setup
+
+Configure languages in your book configuration:
+
+```yaml
+# book.config.yaml
+id: my-documentation
+title: My Documentation
+description: Multi-language documentation
+
+# Language configuration
+languages:
+  - en
+  - ko
+  - es
+  - fr
+
+# Default language (falls back to first if not specified)
+defaultLanguage: en
+
+# Language-specific metadata
+languageConfig:
+  en:
+    title: "My Documentation"
+    description: "Complete user guide in English"
+    direction: ltr
+
+  ko:
+    title: "내 문서"
+    description: "한국어 사용자 가이드"
+    direction: ltr
+
+  es:
+    title: "Mi Documentación"
+    description: "Guía completa del usuario en español"
+    direction: ltr
+
+  fr:
+    title: "Ma Documentation"
+    description: "Guide utilisateur complet en français"
+    direction: ltr
+```
+
+### Advanced Language Configuration
+
+```yaml
+# book.config.yaml
+languageConfig:
+  en:
+    title: "Documentation"
+    description: "Complete user guide"
+    direction: ltr
+    locale: "en-US"
+    dateFormat: "MM/DD/YYYY"
+    timeFormat: "12h"
+    numberFormat: "1,234.56"
+    currency: "USD"
+
+  ko:
+    title: "문서"
+    description: "완전한 사용자 가이드"
+    direction: ltr
+    locale: "ko-KR"
+    dateFormat: "YYYY-MM-DD"
+    timeFormat: "24h"
+    numberFormat: "1,234.56"
+    currency: "KRW"
+
+  ar:
+    title: "الوثائق"
+    description: "دليل المستخدم الكامل"
+    direction: rtl
+    locale: "ar-SA"
+    dateFormat: "DD/MM/YYYY"
+    timeFormat: "24h"
+    numberFormat: "1٬234٫56"
+    currency: "SAR"
+```
+
+## Directory Structure
+
+### Language-Based Structure
+
+Organize content by language directories:
+
+```
+content/my-documentation/
+├── book.config.yaml
+├── en/                          # English content
+│   ├── index.mdx
+│   ├── getting-started/
+│   │   ├── overview.mdx
+│   │   └── installation.mdx
+│   ├── guides/
+│   │   ├── basic-usage.mdx
+│   │   └── advanced-features.mdx
+│   └── _assets/
+│       ├── screenshot-en-1.png
+│       └── logo-en.svg
+├── ko/                          # Korean content
+│   ├── index.mdx
+│   ├── getting-started/
+│   │   ├── overview.mdx
+│   │   └── installation.mdx
+│   ├── guides/
+│   │   ├── basic-usage.mdx
+│   │   └── advanced-features.mdx
+│   └── _assets/
+│       ├── screenshot-ko-1.png
+│       └── logo-ko.svg
+├── es/                          # Spanish content
+│   ├── index.mdx
+│   └── ...
+└── shared/                      # Shared assets
+    ├── _assets/
+    │   ├── diagram.svg
+    │   └── architecture.png
+    └── downloads/
+        └── sample-file.zip
+```
+
+## Navigation Configuration
+
+### Language-Specific Navigation
+
+Configure independent navigation for each language:
+
+```yaml
+# book.config.yaml
+navigation:
+  en:
+    - title: "Home"
+      path: "index.mdx"
+    - title: "Getting Started"
+      items:
+        - title: "Overview"
+          path: "getting-started/overview.mdx"
+        - title: "Installation"
+          path: "getting-started/installation.mdx"
+    - title: "Guides"
+      items:
+        - title: "Basic Usage"
+          path: "guides/basic-usage.mdx"
+        - title: "Advanced Features"
+          path: "guides/advanced-features.mdx"
+
+  ko:
+    - title: "홈"
+      path: "index.mdx"
+    - title: "시작하기"
+      items:
+        - title: "개요"
+          path: "getting-started/overview.mdx"
+        - title: "설치"
+          path: "getting-started/installation.mdx"
+    - title: "가이드"
+      items:
+        - title: "기본 사용법"
+          path: "guides/basic-usage.mdx"
+        - title: "고급 기능"
+          path: "guides/advanced-features.mdx"
+
+  es:
+    - title: "Inicio"
+      path: "index.mdx"
+    - title: "Comenzando"
+      items:
+        - title: "Resumen"
+          path: "getting-started/overview.mdx"
+        - title: "Instalación"
+          path: "getting-started/installation.mdx"
+    - title: "Guías"
+      items:
+        - title: "Uso Básico"
+          path: "guides/basic-usage.mdx"
+        - title: "Características Avanzadas"
+          path: "guides/advanced-features.mdx"
+```
+
+### Shared Navigation Structure
+
+For consistent structure across languages, use template navigation:
+
+```yaml
+# book.config.yaml
+navigationTemplate:
+  - title: "{nav.home}"
+    path: "index.mdx"
+  - title: "{nav.getting_started}"
+    items:
+      - title: "{nav.overview}"
+        path: "getting-started/overview.mdx"
+      - title: "{nav.installation}"
+        path: "getting-started/installation.mdx"
+
+# Language strings
+languageStrings:
+  en:
+    nav:
+      home: "Home"
+      getting_started: "Getting Started"
+      overview: "Overview"
+      installation: "Installation"
+
+  ko:
+    nav:
+      home: "홈"
+      getting_started: "시작하기"
+      overview: "개요"
+      installation: "설치"
+
+  es:
+    nav:
+      home: "Inicio"
+      getting_started: "Comenzando"
+      overview: "Resumen"
+      installation: "Instalación"
+```
+
+## Content Translation
+
+### Translation Workflow
+
+#### 1. Create Base Content
+
+Start with your primary language (usually English):
+
+```mdx
+<!-- en/getting-started/overview.mdx -->
+---
+title: Getting Started Overview
+description: Learn the basics of using our platform
+tags: ["beginner", "overview", "introduction"]
+---
+
+# Getting Started Overview
+
+Welcome to our platform! This guide will help you understand the core concepts and get you started quickly.
+
+## What You'll Learn
+
+- Core platform concepts
+- How to set up your account
+- Basic navigation and features
+- Next steps for advanced usage
+
+:::tip Quick Start
+If you're in a hurry, check out our [Quick Start Guide](quick-start.mdx) for the essentials.
+:::
+
+## Prerequisites
+
+Before you begin, make sure you have:
+
+- A valid account
+- Basic understanding of web technologies
+- Access to our platform
+
+## Next Steps
+
+Once you've read this overview:
+
+1. [Install the platform](installation.mdx)
+2. [Complete the tutorial](tutorial.mdx)
+3. [Explore advanced features](../advanced/index.mdx)
+```
+
+#### 2. Create Translated Versions
+
+Translate content while maintaining structure:
+
+```mdx
+<!-- ko/getting-started/overview.mdx -->
+---
+title: 시작하기 개요
+description: 우리 플랫폼 사용의 기본을 배우세요
+tags: ["초보자", "개요", "소개"]
+---
+
+# 시작하기 개요
+
+우리 플랫폼에 오신 것을 환영합니다! 이 가이드는 핵심 개념을 이해하고 빠르게 시작할 수 있도록 도와드립니다.
+
+## 학습할 내용
+
+- 핵심 플랫폼 개념
+- 계정 설정 방법
+- 기본 네비게이션 및 기능
+- 고급 사용을 위한 다음 단계
+
+:::tip 빠른 시작
+급하시다면 [빠른 시작 가이드](quick-start.mdx)에서 필수 사항을 확인하세요.
+:::
+
+## 전제 조건
+
+시작하기 전에 다음이 필요합니다:
+
+- 유효한 계정
+- 웹 기술에 대한 기본 이해
+- 우리 플랫폼에 대한 액세스
+
+## 다음 단계
+
+이 개요를 읽은 후:
+
+1. [플랫폼 설치](installation.mdx)
+2. [튜토리얼 완료](tutorial.mdx)
+3. [고급 기능 탐색](../advanced/index.mdx)
+```
+
+### Translation Best Practices
+
+#### Content Structure Consistency
+
+Maintain consistent structure across languages:
+
+```mdx
+<!-- Template structure to maintain across all languages -->
+
+<!-- Frontmatter (translate values, keep keys) -->
+---
+title: "Translated Title"
+description: "Translated description"
+tags: ["translated", "tags"]
+---
+
+<!-- Page title -->
+# Translated Page Title
+
+<!-- Introduction paragraph -->
+Translated introduction content...
+
+<!-- Section headers (maintain hierarchy) -->
+## Translated Section 1
+### Translated Subsection 1.1
+
+<!-- Content blocks -->
+Translated content...
+
+<!-- Admonitions (translate content, keep types) -->
+:::tip Translated Tip Title
+Translated tip content...
+:::
+
+<!-- Code examples (translate comments, keep code) -->
+```javascript
+// Translated comment
+const example = "code remains same";
+```
+
+<!-- Navigation links (translate text, update paths if needed) -->
+[Translated Link Text](relative-path-same.mdx)
+```
+
+#### Image Localization
+
+Handle language-specific images:
+
+```mdx
+<!-- Language-specific images -->
+![Translated Alt Text](../_assets/screenshot-ko.png "Translated caption")
+
+<!-- Shared images -->
+![Translated Alt Text](../../shared/_assets/diagram.svg "Translated caption")
+
+<!-- Conditional images -->
+import { useLanguage } from '@baidocs/hooks'
+
+export const LocalizedImage = () => {
+  const language = useLanguage();
+
+  const images = {
+    en: "/_assets/tutorial-en.png",
+    ko: "/_assets/tutorial-ko.png",
+    es: "/_assets/tutorial-es.png"
+  };
+
+  return (
+    <img
+      src={images[language] || images.en}
+      alt={language === 'ko' ? '튜토리얼 스크린샷' : 'Tutorial screenshot'}
+    />
+  );
+};
+
+<LocalizedImage />
+```
+
+## Language-Specific Features
+
+### Date and Time Formatting
+
+Handle locale-specific formatting:
+
+```mdx
+import { formatDate, formatTime, formatNumber } from '@baidocs/i18n'
+
+<!-- Automatic formatting based on language -->
+**Last updated:** {formatDate(new Date(), { language: 'auto' })}
+
+**Build time:** {formatTime('14:30', { language: 'ko', format: '24h' })}
+
+**Download size:** {formatNumber(1234567, { language: 'en', style: 'bytes' })}
+
+<!-- Language-specific content -->
+export const LocalizedMetrics = ({ downloads, users }) => {
+  const { language } = useLanguage();
+
+  const metrics = {
+    en: {
+      downloads: `${formatNumber(downloads, { language: 'en' })} downloads`,
+      users: `${formatNumber(users, { language: 'en' })} active users`
+    },
+    ko: {
+      downloads: `다운로드 ${formatNumber(downloads, { language: 'ko' })}회`,
+      users: `활성 사용자 ${formatNumber(users, { language: 'ko' })}명`
+    }
+  };
+
+  return (
+    <div>
+      <p>{metrics[language]?.downloads}</p>
+      <p>{metrics[language]?.users}</p>
+    </div>
+  );
+};
+```
+
+### RTL Language Support
+
+Configure right-to-left languages:
+
+```yaml
+# book.config.yaml
+languageConfig:
+  ar:
+    title: "الوثائق"
+    description: "دليل المستخدم"
+    direction: rtl
+    locale: "ar-SA"
+
+  he:
+    title: "תיעוד"
+    description: "מדריך למשתמש"
+    direction: rtl
+    locale: "he-IL"
+```
+
+RTL-specific styling:
+
+```css
+/* styles/rtl.css */
+
+/* RTL language support */
+[dir="rtl"] {
+  direction: rtl;
+  text-align: right;
+}
+
+[dir="rtl"] .navigation {
+  border-right: none;
+  border-left: 1px solid #e5e7eb;
+}
+
+[dir="rtl"] .breadcrumbs {
+  direction: rtl;
+}
+
+[dir="rtl"] .breadcrumbs::before {
+  content: "←";
+  margin-left: 0.5rem;
+  margin-right: 0;
+}
+
+[dir="rtl"] code {
+  direction: ltr;
+  text-align: left;
+}
+
+[dir="rtl"] .admonition {
+  border-right: 4px solid var(--admonition-color);
+  border-left: none;
+  padding-right: 1rem;
+  padding-left: 0.75rem;
+}
+
+/* Responsive RTL adjustments */
+@media (max-width: 768px) {
+  [dir="rtl"] .mobile-nav {
+    right: auto;
+    left: 0;
+  }
+}
+```
+
+## Translation Management
+
+### Translation Workflow Tools
+
+#### Translation Status Tracking
+
+Track translation progress:
+
+```yaml
+# translation-status.yaml
+languages:
+  en:
+    status: "complete"
+    lastUpdated: "2024-01-26"
+    pages: 45
+    wordCount: 12500
+
+  ko:
+    status: "in-progress"
+    lastUpdated: "2024-01-20"
+    pages: 32
+    wordCount: 8900
+    missing:
+      - "advanced/themes.mdx"
+      - "deployment/vercel.mdx"
+
+  es:
+    status: "planned"
+    pages: 0
+    wordCount: 0
+    assignee: "maria@company.com"
+```
+
+#### Translation Validation
+
+Automated translation validation:
+
+```typescript
+// scripts/validate-translations.ts
+interface TranslationValidation {
+  missingTranslations: string[];
+  outdatedTranslations: string[];
+  structureMismatches: string[];
+  brokenLinks: string[];
+}
+
+async function validateTranslations(
+  baseLanguage: string = 'en',
+  targetLanguages: string[]
+): Promise<Record<string, TranslationValidation>> {
+  const results: Record<string, TranslationValidation> = {};
+
+  for (const lang of targetLanguages) {
+    results[lang] = {
+      missingTranslations: [],
+      outdatedTranslations: [],
+      structureMismatches: [],
+      brokenLinks: []
+    };
+
+    // Check for missing files
+    const baseFiles = await getLanguageFiles(baseLanguage);
+    const langFiles = await getLanguageFiles(lang);
+
+    for (const file of baseFiles) {
+      const langFile = file.replace(`/${baseLanguage}/`, `/${lang}/`);
+      if (!langFiles.includes(langFile)) {
+        results[lang].missingTranslations.push(langFile);
+      }
+    }
+
+    // Check for outdated translations
+    for (const file of langFiles) {
+      const baseFile = file.replace(`/${lang}/`, `/${baseLanguage}/`);
+      if (await isFileNewer(baseFile, file)) {
+        results[lang].outdatedTranslations.push(file);
+      }
+    }
+
+    // Validate navigation structure
+    const baseNav = await getNavigationStructure(baseLanguage);
+    const langNav = await getNavigationStructure(lang);
+
+    if (!navigationStructuresMatch(baseNav, langNav)) {
+      results[lang].structureMismatches.push('navigation structure');
+    }
+
+    // Check for broken internal links
+    const brokenLinks = await validateInternalLinks(lang);
+    results[lang].brokenLinks = brokenLinks;
+  }
+
+  return results;
+}
+```
+
+### Automated Translation Workflows
+
+#### CI/CD Integration
+
+Automated translation workflow:
+
+```yaml
+# .github/workflows/translation.yml
+name: Translation Management
+
+on:
+  push:
+    branches: [main]
+    paths: ['content/**/en/**']
+
+  pull_request:
+    paths: ['content/**/*/']
+
+jobs:
+  validate-translations:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Validate translations
+        run: npm run validate:translations
+
+      - name: Check translation status
+        run: npm run translation:status
+
+      - name: Generate translation report
+        run: npm run translation:report
+
+      - name: Comment PR with translation status
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const fs = require('fs');
+            const report = fs.readFileSync('translation-report.md', 'utf8');
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: report
+            });
+
+  notify-translators:
+    if: github.ref == 'refs/heads/main'
+    needs: validate-translations
+    runs-on: ubuntu-latest
+    steps:
+      - name: Notify translators of changes
+        run: |
+          # Send notifications to translators
+          # Update translation management system
+          # Create translation tasks
+```
+
+## Language Detection and Switching
+
+### Automatic Language Detection
+
+Detect user's preferred language:
+
+```typescript
+// Language detection logic
+function detectUserLanguage(
+  availableLanguages: string[],
+  defaultLanguage: string = 'en'
+): string {
+  // 1. URL language parameter
+  const urlParams = new URLSearchParams(window.location.search);
+  const urlLang = urlParams.get('lang');
+  if (urlLang && availableLanguages.includes(urlLang)) {
+    return urlLang;
+  }
+
+  // 2. Stored user preference
+  const storedLang = localStorage.getItem('preferred-language');
+  if (storedLang && availableLanguages.includes(storedLang)) {
+    return storedLang;
+  }
+
+  // 3. Browser language
+  const browserLangs = navigator.languages || [navigator.language];
+  for (const browserLang of browserLangs) {
+    // Exact match
+    if (availableLanguages.includes(browserLang)) {
+      return browserLang;
+    }
+
+    // Language code match (en-US -> en)
+    const langCode = browserLang.split('-')[0];
+    if (availableLanguages.includes(langCode)) {
+      return langCode;
+    }
+  }
+
+  // 4. Default language
+  return defaultLanguage;
+}
+```
+
+### Language Switcher Component
+
+Create language switching interface:
+
+```typescript
+// components/LanguageSwitcher.tsx
+import React from 'react';
+import { useRouter } from 'next/router';
+import { useLanguage } from '@baidocs/hooks';
+
+interface Language {
+  code: string;
+  name: string;
+  nativeName: string;
+  flag: string;
+}
+
+const languages: Language[] = [
+  { code: 'en', name: 'English', nativeName: 'English', flag: '🇺🇸' },
+  { code: 'ko', name: 'Korean', nativeName: '한국어', flag: '🇰🇷' },
+  { code: 'es', name: 'Spanish', nativeName: 'Español', flag: '🇪🇸' },
+  { code: 'fr', name: 'French', nativeName: 'Français', flag: '🇫🇷' },
+  { code: 'ar', name: 'Arabic', nativeName: 'العربية', flag: '🇸🇦' }
+];
+
+export function LanguageSwitcher() {
+  const router = useRouter();
+  const { currentLanguage, availableLanguages, switchLanguage } = useLanguage();
+
+  const handleLanguageChange = async (newLanguage: string) => {
+    try {
+      await switchLanguage(newLanguage);
+
+      // Update URL to reflect language change
+      const currentPath = router.asPath;
+      const newPath = currentPath.replace(
+        `/docs/${currentLanguage}/`,
+        `/docs/${newLanguage}/`
+      );
+
+      router.push(newPath);
+
+      // Store preference
+      localStorage.setItem('preferred-language', newLanguage);
+    } catch (error) {
+      console.error('Failed to switch language:', error);
+    }
+  };
+
+  const availableLanguageList = languages.filter(lang =>
+    availableLanguages.includes(lang.code)
+  );
+
+  return (
+    <div className="language-switcher">
+      <button
+        className="language-trigger"
+        aria-label="Select language"
+        aria-haspopup="listbox"
+      >
+        <span className="current-language-flag">
+          {languages.find(lang => lang.code === currentLanguage)?.flag}
+        </span>
+        <span className="current-language-name">
+          {languages.find(lang => lang.code === currentLanguage)?.nativeName}
+        </span>
+        <span className="dropdown-arrow">▼</span>
+      </button>
+
+      <div className="language-dropdown" role="listbox">
+        {availableLanguageList.map((language) => (
+          <button
+            key={language.code}
+            onClick={() => handleLanguageChange(language.code)}
+            className={`language-option ${
+              language.code === currentLanguage ? 'active' : ''
+            }`}
+            role="option"
+            aria-selected={language.code === currentLanguage}
+          >
+            <span className="language-flag">{language.flag}</span>
+            <span className="language-names">
+              <span className="language-native">{language.nativeName}</span>
+              <span className="language-english">{language.name}</span>
+            </span>
+            {language.code === currentLanguage && (
+              <span className="current-indicator">✓</span>
+            )}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+```
+
+## SEO and Multi-language
+
+### Language-Specific SEO
+
+Configure SEO for each language:
+
+```mdx
+---
+# English SEO
+title: "Complete User Guide - MyApp Documentation"
+description: "Learn how to use MyApp with our comprehensive user guide. Step-by-step tutorials, API reference, and best practices."
+keywords: ["myapp", "user guide", "documentation", "tutorial"]
+canonical: "https://docs.myapp.com/en/guide/"
+hreflang:
+  - lang: "en"
+    url: "https://docs.myapp.com/en/guide/"
+  - lang: "ko"
+    url: "https://docs.myapp.com/ko/guide/"
+  - lang: "es"
+    url: "https://docs.myapp.com/es/guide/"
+---
+
+# Complete User Guide
+
+This guide covers everything you need to know...
+```
+
+```mdx
+---
+# Korean SEO
+title: "완전한 사용자 가이드 - MyApp 문서"
+description: "포괄적인 사용자 가이드로 MyApp 사용법을 배우세요. 단계별 튜토리얼, API 참조, 모범 사례를 제공합니다."
+keywords: ["myapp", "사용자 가이드", "문서", "튜토리얼"]
+canonical: "https://docs.myapp.com/ko/guide/"
+hreflang:
+  - lang: "en"
+    url: "https://docs.myapp.com/en/guide/"
+  - lang: "ko"
+    url: "https://docs.myapp.com/ko/guide/"
+  - lang: "es"
+    url: "https://docs.myapp.com/es/guide/"
+---
+
+# 완전한 사용자 가이드
+
+이 가이드는 알아야 할 모든 것을 다룹니다...
+```
+
+### Sitemap Generation
+
+Generate language-specific sitemaps:
+
+```xml
+<!-- sitemap.xml -->
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+
+  <!-- English pages -->
+  <url>
+    <loc>https://docs.myapp.com/en/guide/</loc>
+    <lastmod>2024-01-26</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://docs.myapp.com/ko/guide/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://docs.myapp.com/es/guide/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://docs.myapp.com/en/guide/" />
+  </url>
+
+  <!-- Korean pages -->
+  <url>
+    <loc>https://docs.myapp.com/ko/guide/</loc>
+    <lastmod>2024-01-26</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://docs.myapp.com/en/guide/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://docs.myapp.com/es/guide/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://docs.myapp.com/en/guide/" />
+  </url>
+
+</urlset>
+```
+
+## Next Steps
+
+Enhance your multi-language documentation:
+
+1. **[Versioning](versioning.mdx)** - Manage different language versions
+2. **[Search Configuration](search.mdx)** - Configure language-specific search
+3. **[PDF Generation](pdf-generation.mdx)** - Generate PDFs in multiple languages
+
+---
+
+*Multi-language support makes your documentation accessible to a global audience, increasing reach and usability across different cultures and regions.*

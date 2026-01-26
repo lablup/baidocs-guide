@@ -1,0 +1,817 @@
+# Search Configuration
+
+BaiDocs includes a powerful, built-in search system that provides instant, intelligent search across all your documentation content with advanced filtering, highlighting, and multi-language support.
+
+## Search System Overview
+
+### Features
+
+- **Instant Search**: Real-time results as you type
+- **Full-Text Search**: Searches through all content, headings, and metadata
+- **Multi-language Support**: Search within specific languages or across all languages
+- **Advanced Filtering**: Filter by book, section, content type, and tags
+- **Intelligent Ranking**: Results ranked by relevance and context
+- **Keyboard Navigation**: Full keyboard support for accessibility
+- **Highlighting**: Search terms highlighted in results and content
+
+### Search Architecture
+
+```
+Search Index Generation:
+Content Files → Indexing → Search Database → Search API → User Interface
+
+Components:
+├── Content Indexer      # Processes MDX files
+├── Search Database      # Stores indexed content
+├── Search API          # Query processing
+├── Search UI           # User interface
+└── Result Highlighting # Term highlighting
+```
+
+## Automatic Search Setup
+
+### Default Configuration
+
+Search is enabled by default and automatically indexes:
+
+- All MDX content files
+- Page titles and headings
+- Frontmatter metadata
+- Navigation structure
+- Code blocks (optionally)
+- Images alt text
+
+### Build-time Indexing
+
+Search index is generated during build:
+
+```bash
+npm run build
+# Automatically generates search index
+# Output: _data/search/index.json
+```
+
+## Search Configuration
+
+### Basic Configuration
+
+Configure search in your book settings:
+
+```yaml
+# book.config.yaml
+id: my-documentation
+title: My Documentation
+
+# Search configuration
+search:
+  enabled: true
+
+  # Indexing options
+  indexing:
+    includeContent: true
+    includeHeadings: true
+    includeCodeBlocks: true
+    includeFrontmatter: true
+
+    # Content processing
+    minWordLength: 3
+    maxResultsPerPage: 10
+    excerptLength: 150
+
+  # UI configuration
+  ui:
+    placeholder: "Search documentation..."
+    noResultsMessage: "No results found"
+    shortcut: "/"
+    showRecentSearches: true
+    showSearchStats: true
+```
+
+### Advanced Search Options
+
+```yaml
+# book.config.yaml
+search:
+  # Advanced indexing
+  indexing:
+    # Include/exclude specific file types
+    includeFiles:
+      - "*.mdx"
+      - "*.md"
+    excludeFiles:
+      - "**/README.md"
+      - "**/_*.mdx"
+
+    # Content section weights (higher = more important)
+    sectionWeights:
+      title: 10
+      heading1: 8
+      heading2: 6
+      heading3: 4
+      content: 1
+      codeblock: 2
+
+    # Language-specific stemming
+    stemming:
+      enabled: true
+      languages:
+        - en
+        - ko
+
+    # Stop words (words to ignore)
+    stopWords:
+      en: ["the", "is", "at", "which", "on"]
+      ko: ["이", "그", "저", "것", "등"]
+
+  # Search behavior
+  behavior:
+    # Fuzzy matching tolerance
+    fuzzyThreshold: 0.6
+
+    # Minimum query length
+    minQueryLength: 2
+
+    # Result highlighting
+    highlighting:
+      enabled: true
+      className: "search-highlight"
+      maxHighlights: 3
+
+    # Auto-suggest
+    suggestions:
+      enabled: true
+      maxSuggestions: 5
+      includePopular: true
+```
+
+## Search UI Customization
+
+### Custom Search Component
+
+Create custom search interface:
+
+```typescript
+// components/CustomSearch.tsx
+import React, { useState, useEffect } from 'react';
+import { useSearch } from '@baidocs/search';
+
+interface SearchResult {
+  id: string;
+  title: string;
+  excerpt: string;
+  url: string;
+  type: string;
+  score: number;
+  highlights: string[];
+}
+
+export function CustomSearch() {
+  const [query, setQuery] = useState('');
+  const [results, setResults] = useState<SearchResult[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const { search } = useSearch();
+
+  useEffect(() => {
+    if (query.length < 2) {
+      setResults([]);
+      return;
+    }
+
+    setIsLoading(true);
+
+    search(query, {
+      limit: 20,
+      includeHighlights: true,
+      filters: {
+        type: ['page', 'section'],
+        language: 'en'
+      }
+    })
+    .then(setResults)
+    .finally(() => setIsLoading(false));
+  }, [query, search]);
+
+  return (
+    <div className="search-container">
+      <div className="search-input-wrapper">
+        <input
+          type="text"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder="Search documentation..."
+          className="search-input"
+          aria-label="Search documentation"
+        />
+        {isLoading && <div className="search-loading">Searching...</div>}
+      </div>
+
+      {results.length > 0 && (
+        <div className="search-results">
+          <div className="search-stats">
+            Found {results.length} results
+          </div>
+
+          {results.map((result) => (
+            <div key={result.id} className="search-result">
+              <a href={result.url} className="search-result-link">
+                <h3 className="search-result-title">
+                  <span dangerouslySetInnerHTML={{ __html: result.title }} />
+                </h3>
+                <p className="search-result-excerpt">
+                  <span dangerouslySetInnerHTML={{ __html: result.excerpt }} />
+                </p>
+                <div className="search-result-meta">
+                  <span className="search-result-type">{result.type}</span>
+                  <span className="search-result-score">Score: {result.score.toFixed(2)}</span>
+                </div>
+              </a>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {query.length >= 2 && results.length === 0 && !isLoading && (
+        <div className="search-no-results">
+          <p>No results found for "{query}"</p>
+          <div className="search-suggestions">
+            <p>Try:</p>
+            <ul>
+              <li>Checking your spelling</li>
+              <li>Using different keywords</li>
+              <li>Using more general terms</li>
+            </ul>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+```
+
+### Search Styling
+
+Custom search interface styling:
+
+```css
+/* styles/search.css */
+
+.search-container {
+  position: relative;
+  width: 100%;
+  max-width: 600px;
+}
+
+.search-input-wrapper {
+  position: relative;
+}
+
+.search-input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 2px solid #e5e7eb;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  transition: border-color 0.2s ease;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.search-loading {
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+.search-results {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  z-index: 50;
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+.search-stats {
+  padding: 0.75rem 1rem;
+  font-size: 0.875rem;
+  color: #6b7280;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.search-result {
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.search-result:last-child {
+  border-bottom: none;
+}
+
+.search-result-link {
+  display: block;
+  padding: 1rem;
+  text-decoration: none;
+  color: inherit;
+  transition: background-color 0.2s ease;
+}
+
+.search-result-link:hover {
+  background-color: #f9fafb;
+}
+
+.search-result-title {
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0 0 0.5rem 0;
+  color: #1f2937;
+}
+
+.search-result-excerpt {
+  font-size: 0.875rem;
+  color: #6b7280;
+  line-height: 1.5;
+  margin: 0 0 0.5rem 0;
+}
+
+.search-result-meta {
+  display: flex;
+  gap: 1rem;
+  font-size: 0.75rem;
+  color: #9ca3af;
+}
+
+.search-result-type {
+  background: #f3f4f6;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+/* Search highlighting */
+.search-highlight {
+  background-color: #fef3c7;
+  color: #92400e;
+  font-weight: 600;
+  padding: 0.125rem 0.25rem;
+  border-radius: 0.25rem;
+}
+
+/* No results state */
+.search-no-results {
+  padding: 2rem 1rem;
+  text-align: center;
+}
+
+.search-suggestions {
+  margin-top: 1rem;
+  text-align: left;
+}
+
+.search-suggestions ul {
+  margin: 0.5rem 0;
+  padding-left: 1.5rem;
+}
+
+.search-suggestions li {
+  margin: 0.25rem 0;
+  color: #6b7280;
+  font-size: 0.875rem;
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .search-input {
+    background: #1f2937;
+    border-color: #374151;
+    color: #f9fafb;
+  }
+
+  .search-input:focus {
+    border-color: #60a5fa;
+    box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.1);
+  }
+
+  .search-results {
+    background: #1f2937;
+    border-color: #374151;
+  }
+
+  .search-result-link:hover {
+    background-color: #374151;
+  }
+
+  .search-result-title {
+    color: #f9fafb;
+  }
+
+  .search-result-excerpt {
+    color: #d1d5db;
+  }
+
+  .search-highlight {
+    background-color: #fbbf24;
+    color: #92400e;
+  }
+}
+```
+
+## Search API
+
+### Search Query API
+
+Access search programmatically:
+
+```typescript
+// Search API usage
+import { searchAPI } from '@baidocs/search';
+
+// Basic search
+const results = await searchAPI.search('installation guide', {
+  limit: 10,
+  offset: 0,
+  language: 'en'
+});
+
+// Advanced search with filters
+const advancedResults = await searchAPI.search('configuration', {
+  limit: 20,
+  filters: {
+    book: ['user-guide', 'api-reference'],
+    type: ['page', 'heading'],
+    tags: ['beginner'],
+    section: ['getting-started']
+  },
+  highlighting: {
+    enabled: true,
+    preTag: '<mark>',
+    postTag: '</mark>'
+  },
+  sort: 'relevance', // or 'date', 'title'
+  fuzzy: {
+    enabled: true,
+    threshold: 0.7
+  }
+});
+
+// Search suggestions
+const suggestions = await searchAPI.suggest('config', {
+  limit: 5,
+  includePopular: true
+});
+
+// Search analytics
+const analytics = await searchAPI.getAnalytics({
+  timeframe: '30d',
+  metrics: ['queries', 'clicks', 'zero_results']
+});
+```
+
+### Search Result Interface
+
+```typescript
+interface SearchResult {
+  // Content identification
+  id: string;
+  url: string;
+  title: string;
+  excerpt: string;
+
+  // Content classification
+  type: 'page' | 'heading' | 'section' | 'code';
+  book: string;
+  language: string;
+  section?: string;
+
+  // Search metadata
+  score: number;
+  highlights: SearchHighlight[];
+  matchedTerms: string[];
+
+  // Content metadata
+  lastModified: string;
+  wordCount: number;
+  tags: string[];
+  author?: string;
+}
+
+interface SearchHighlight {
+  field: string; // 'title', 'content', 'heading'
+  highlights: string[];
+  positions: Array<{ start: number; end: number }>;
+}
+```
+
+## Multi-language Search
+
+### Language-Specific Configuration
+
+Configure search for multiple languages:
+
+```yaml
+# book.config.yaml
+languages:
+  - en
+  - ko
+  - es
+
+search:
+  # Language-specific settings
+  languages:
+    en:
+      stemming: true
+      stopWords: ["the", "is", "at", "which", "on"]
+      synonyms:
+        setup: ["installation", "configuration"]
+        guide: ["tutorial", "walkthrough"]
+
+    ko:
+      stemming: false  # Korean doesn't use traditional stemming
+      stopWords: ["이", "그", "저", "것", "등"]
+      wordSegmentation: true  # Enable for Korean/Chinese/Japanese
+
+    es:
+      stemming: true
+      stopWords: ["el", "la", "es", "en", "de"]
+
+  # Cross-language search
+  crossLanguage:
+    enabled: true
+    defaultLanguage: en
+    translateQueries: true
+```
+
+### Language Detection
+
+Automatic language detection for search queries:
+
+```typescript
+// Automatic language detection
+const searchWithAutoDetect = async (query: string) => {
+  const detectedLanguage = await searchAPI.detectLanguage(query);
+
+  const results = await searchAPI.search(query, {
+    language: detectedLanguage,
+    fallbackLanguages: ['en'], // Fallback if no results
+    includeTranslations: true
+  });
+
+  return results;
+};
+```
+
+## Search Analytics
+
+### Usage Tracking
+
+Track search usage and performance:
+
+```yaml
+# book.config.yaml
+search:
+  analytics:
+    enabled: true
+
+    # Track search events
+    tracking:
+      queries: true
+      results: true
+      clicks: true
+      zeroResults: true
+
+    # Privacy settings
+    privacy:
+      anonymizeQueries: true
+      retentionDays: 90
+      excludePersonalInfo: true
+
+    # Performance monitoring
+    performance:
+      trackLatency: true
+      trackIndexSize: true
+      slowQueryThreshold: 500  # ms
+```
+
+### Search Metrics Dashboard
+
+Access search analytics:
+
+```typescript
+// Search analytics
+const analytics = await searchAPI.getAnalytics({
+  timeframe: '30d',
+  metrics: [
+    'total_queries',
+    'unique_queries',
+    'click_through_rate',
+    'zero_result_rate',
+    'average_latency',
+    'popular_queries',
+    'popular_results'
+  ]
+});
+
+// Popular search terms
+const popularQueries = await searchAPI.getPopularQueries({
+  timeframe: '7d',
+  limit: 10,
+  language: 'en'
+});
+
+// Search performance
+const performance = await searchAPI.getPerformanceMetrics({
+  timeframe: '24h',
+  includeSlowQueries: true
+});
+```
+
+## Search Optimization
+
+### Index Optimization
+
+Optimize search index for better performance:
+
+```yaml
+# book.config.yaml
+search:
+  optimization:
+    # Index compression
+    compression:
+      enabled: true
+      algorithm: 'gzip'
+      level: 6
+
+    # Index segmentation
+    segmentation:
+      enabled: true
+      maxDocumentsPerSegment: 1000
+      mergeThreshold: 10
+
+    # Memory optimization
+    memory:
+      indexCacheSize: '100MB'
+      queryCacheSize: '50MB'
+      enableLazyLoading: true
+
+    # Update strategy
+    updates:
+      incremental: true
+      batchSize: 100
+      debounceMs: 1000
+```
+
+### Query Optimization
+
+Optimize search queries:
+
+```typescript
+// Query optimization techniques
+const optimizedSearch = {
+  // Use query boosting
+  async boostQuery(query: string, boosts: Record<string, number>) {
+    return searchAPI.search(query, {
+      fieldBoosts: {
+        title: boosts.title || 2.0,
+        headings: boosts.headings || 1.5,
+        content: boosts.content || 1.0,
+        tags: boosts.tags || 3.0
+      }
+    });
+  },
+
+  // Implement query expansion
+  async expandQuery(query: string) {
+    const synonyms = await searchAPI.getSynonyms(query);
+    const expandedQuery = [query, ...synonyms].join(' OR ');
+
+    return searchAPI.search(expandedQuery, {
+      operator: 'OR',
+      minimumShouldMatch: 1
+    });
+  },
+
+  // Use faceted search
+  async facetedSearch(query: string, facets: string[]) {
+    return searchAPI.search(query, {
+      facets: facets,
+      facetFilters: {},
+      includeFacetCounts: true
+    });
+  }
+};
+```
+
+## Troubleshooting
+
+### Common Issues
+
+#### "Search Not Working"
+
+```bash
+# Verify search index exists
+ls -la _data/search/
+
+# Rebuild search index
+npm run build:search
+
+# Check search configuration
+npm run validate-search-config
+```
+
+#### "Slow Search Performance"
+
+```yaml
+# Optimize search performance
+search:
+  optimization:
+    enableCaching: true
+    maxCachedQueries: 1000
+    cacheExpiry: 3600  # 1 hour
+
+  indexing:
+    batchSize: 500
+    concurrency: 4
+    enableCompression: true
+```
+
+#### "Search Results Not Relevant"
+
+```yaml
+# Improve result relevance
+search:
+  ranking:
+    titleBoost: 3.0
+    headingBoost: 2.0
+    contentBoost: 1.0
+    exactMatchBoost: 2.0
+
+  behavior:
+    enableStemming: true
+    enableSynonyms: true
+    fuzzyThreshold: 0.7
+```
+
+### Debug Search Issues
+
+```typescript
+// Debug search functionality
+const debugSearch = {
+  // Test search index
+  async testIndex() {
+    const stats = await searchAPI.getIndexStats();
+    console.log('Index stats:', stats);
+
+    const health = await searchAPI.checkIndexHealth();
+    console.log('Index health:', health);
+  },
+
+  // Debug specific query
+  async debugQuery(query: string) {
+    const explanation = await searchAPI.explain(query, {
+      includeScoring: true,
+      includeAnalysis: true
+    });
+
+    console.log('Query explanation:', explanation);
+  },
+
+  // Test search performance
+  async benchmarkSearch(queries: string[]) {
+    const results = [];
+
+    for (const query of queries) {
+      const start = Date.now();
+      await searchAPI.search(query);
+      const duration = Date.now() - start;
+
+      results.push({ query, duration });
+    }
+
+    console.log('Search benchmark:', results);
+  }
+};
+```
+
+## Next Steps
+
+Enhance your search experience:
+
+1. **[Multi-language Support](multilingual.mdx)** - Configure search for multiple languages
+2. **[Versioning](versioning.mdx)** - Search across different documentation versions
+3. **[Themes](themes.mdx)** - Style search interface to match your theme
+
+---
+
+*Powerful search capabilities help users find exactly what they need, making your documentation more accessible and valuable.*

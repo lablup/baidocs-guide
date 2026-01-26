@@ -1,0 +1,379 @@
+# Cloning Books
+
+When you have an existing BaiDocs repository or want to work with documentation from another repository, cloning provides a seamless way to bring that content into your local BaiDocs environment.
+
+## When to Clone vs Create
+
+| Use Case | Recommendation |
+|----------|----------------|
+| Existing BaiDocs repository | **Clone** |
+| Team member joining project | **Clone** |
+| Backup/recovery | **Clone** |
+| Fork existing documentation | **Clone** then modify |
+| Starting from scratch | **Create New** |
+| Converting from other tools | **Import & Convert** |
+
+## Cloning Process
+
+### Step 1: Access Clone Feature
+
+In the BaiDocs Editor homepage, click **"Clone Repository"**:
+
+![Clone Repository Interface](../_assets/clone-repository.png)
+
+### Step 2: Repository Configuration
+
+#### Basic Information
+
+- **Repository URL**: The Git repository URL
+  ```
+  HTTPS: https://github.com/username/docs-repo.git
+  SSH:   git@github.com:username/docs-repo.git
+  ```
+
+- **Target Name**: Local directory name for the cloned book
+  - Must be unique among your books
+  - Defaults to repository name
+  - Can be customized for clarity
+
+- **Emoji**: Visual identifier for the book
+  - Optional but recommended
+  - Helps distinguish books in lists
+
+#### Repository Types
+
+BaiDocs automatically detects and handles different repository structures:
+
+##### Standard BaiDocs Repository
+
+```
+repo/
+├── book.config.yaml    # BaiDocs configuration
+├── en/                # Language directories
+│   ├── index.mdx
+│   └── ...
+├── ko/
+└── ...
+```
+
+**Auto-detection**: BaiDocs recognizes the structure and imports directly.
+
+##### Monorepo with Documentation Subdirectory
+
+```
+monorepo/
+├── src/               # Application code
+├── docs/              # Documentation subdirectory
+│   ├── book.config.yaml
+│   ├── en/
+│   └── ko/
+└── package.json
+```
+
+**Configuration Options**:
+- **Use Subdirectory**: Enable for monorepos
+- **Subdirectory Path**: Specify the documentation path (e.g., `docs`)
+- **Sparse Checkout**: Only download the documentation directory
+
+#### Branch Selection
+
+Choose which branches to work with:
+
+- **All Branches**: Clone entire repository with all branches
+- **Specific Branches**: Select only needed branches
+  - Reduces clone time and disk usage
+  - Ideal for large repositories
+  - Can add more branches later
+
+**Branch Selection Interface**:
+```
+☑ main              (Primary branch)
+☑ v2.0              (Version 2.0 docs)
+☐ experimental      (Development branch)
+☑ v1.0              (Legacy version)
+```
+
+### Step 3: Advanced Options
+
+#### Authentication
+
+**Public Repositories**: No authentication required
+
+**Private Repositories**: Configure credentials
+- **Personal Access Token** (recommended)
+- **SSH Key** (for SSH URLs)
+- **Username/Password** (less secure)
+
+#### Clone Optimization
+
+- **Shallow Clone**: Download recent history only (faster)
+- **Single Branch**: Download one branch initially
+- **Sparse Checkout**: Download only documentation files
+
+## Supported Repository Structures
+
+### 1. Standard BaiDocs Repository
+
+**Structure**:
+```
+docs-repo/
+├── book.config.yaml
+├── en/
+│   ├── index.mdx
+│   ├── getting-started/
+│   └── _assets/
+└── ko/
+    ├── index.mdx
+    └── getting-started/
+```
+
+**Clone Result**: Direct integration, ready to use
+
+### 2. Monorepo with Documentation
+
+**Structure**:
+```
+project-monorepo/
+├── apps/
+├── packages/
+├── docs/                   ← Documentation here
+│   ├── book.config.yaml
+│   └── en/
+└── README.md
+```
+
+**Clone Configuration**:
+- Enable "Use Subdirectory"
+- Set "Subdirectory Path" to `docs`
+- BaiDocs automatically detects the structure
+
+### 3. Legacy Documentation Repository
+
+**Structure**:
+```
+old-docs/
+├── README.md
+├── docs/
+│   ├── chapter1.md
+│   ├── chapter2.md
+│   └── _assets/
+└── config.yml
+```
+
+**Clone Result**:
+- May need manual configuration
+- Convert to BaiDocs structure after clone
+- Use Import & Convert for better results
+
+## Post-Clone Configuration
+
+### Automatic Detection
+
+BaiDocs automatically detects:
+
+- **Book Configuration**: Reads `book.config.yaml`
+- **Language Structure**: Identifies language directories
+- **Navigation**: Uses existing navigation or generates from files
+- **Git Configuration**: Preserves Git history and remote connections
+
+### Manual Configuration (if needed)
+
+If automatic detection fails or is incomplete:
+
+#### Update book.config.yaml
+
+```yaml
+# Add missing configuration
+id: cloned-book
+title: Documentation Title
+description: Imported documentation
+emoji: 📖
+type: document
+languages:
+  - en
+  - ko
+defaultLanguage: en
+```
+
+#### Fix Navigation Structure
+
+```yaml
+navigation:
+  en:
+    - title: "Home"
+      path: "index.mdx"
+    - title: "Getting Started"
+      items:
+        - title: "Installation"
+          path: "getting-started/installation.md"
+        - title: "Quick Start"
+          path: "getting-started/quick-start.md"
+```
+
+## Working with Cloned Books
+
+### Sync with Remote
+
+Keep your local copy updated:
+
+```bash
+cd content/cloned-book
+git pull origin main
+```
+
+### Contributing Changes
+
+Make changes and push back to the original repository:
+
+```bash
+# Make changes in BaiDocs Editor
+cd content/cloned-book
+git add .
+git commit -m "Update documentation"
+git push origin main
+```
+
+### Branch Management
+
+Work with different versions:
+
+```bash
+# Switch to different branch
+git checkout v2.0
+
+# Create feature branch
+git checkout -b feature/new-section
+# Make changes, commit, push
+git push origin feature/new-section
+```
+
+## Advanced Cloning Scenarios
+
+### Clone with Sparse Checkout
+
+For large repositories, clone only documentation:
+
+```bash
+git clone --filter=blob:none --sparse https://github.com/user/repo.git
+cd repo
+git sparse-checkout set docs/
+```
+
+### Clone Specific Branch
+
+Clone only a specific branch:
+
+```bash
+git clone --branch v2.0 --single-branch https://github.com/user/repo.git
+```
+
+### Clone with Different Name
+
+Clone to a different local name:
+
+```bash
+git clone https://github.com/user/repo.git my-local-name
+```
+
+## Troubleshooting
+
+### Common Issues
+
+#### "Repository not found"
+- Verify repository URL is correct
+- Check if repository is public or if you have access
+- For private repos, ensure authentication is configured
+
+#### "Permission denied"
+- Check Git credentials
+- Verify repository access permissions
+- Use personal access token instead of password
+
+#### "Directory already exists"
+- Choose a different target name
+- Remove existing directory if safe
+- Use force clone (overwrites existing)
+
+#### "No documentation found"
+- Repository might not be BaiDocs-compatible
+- Check subdirectory path configuration
+- Consider using Import & Convert instead
+
+### Recovery Actions
+
+#### Re-clone Repository
+```bash
+rm -rf content/problematic-clone
+# Clone again with corrected settings
+```
+
+#### Fix Remote Connection
+```bash
+cd content/cloned-book
+git remote -v  # Check current remotes
+git remote set-url origin https://correct-url.git
+```
+
+#### Reset to Remote State
+```bash
+cd content/cloned-book
+git fetch origin
+git reset --hard origin/main
+```
+
+## Best Practices
+
+### Before Cloning
+
+- **Verify Repository**: Ensure it contains BaiDocs-compatible content
+- **Check Access**: Confirm you have appropriate repository permissions
+- **Plan Structure**: Decide on local naming and organization
+
+### During Cloning
+
+- **Choose Branches Carefully**: Only clone branches you'll actively use
+- **Use Sparse Checkout**: For large repositories, clone only necessary files
+- **Configure Authentication**: Set up proper credentials for private repositories
+
+### After Cloning
+
+- **Verify Configuration**: Check that book.config.yaml is complete
+- **Test Locally**: Ensure all content renders correctly
+- **Set Up Sync**: Establish workflow for keeping content updated
+
+## Integration with Teams
+
+### Team Workflow
+
+1. **Central Repository**: Maintain documentation in shared repository
+2. **Individual Clones**: Team members clone to their BaiDocs instances
+3. **Collaborative Editing**: Use Git workflow for changes
+4. **Automated Deployment**: Deploy from main branch
+
+### Permission Management
+
+- **Read Access**: For viewing and cloning documentation
+- **Write Access**: For contributing changes
+- **Admin Access**: For repository settings and branch protection
+
+### Branching Strategy
+
+```
+main                 ← Production documentation
+├── develop         ← Integration branch
+├── feature/api-v2  ← Feature branches
+└── hotfix/typo     ← Quick fixes
+```
+
+## Next Steps
+
+After cloning a book:
+
+1. **[Explore Content](../writing/markdown-basics.mdx)**: Understand the existing structure
+2. **[Customize Configuration](../advanced/multilingual.mdx)**: Adapt to your needs
+3. **[Contribute Changes](../writing/mdx-features.mdx)**: Add your improvements
+4. **[Deploy Updates](../deployment/vercel.mdx)**: Share your changes
+
+---
+
+*Cloned repositories bring existing documentation into your BaiDocs workflow seamlessly.*

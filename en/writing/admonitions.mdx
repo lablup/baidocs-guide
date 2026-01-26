@@ -1,0 +1,556 @@
+# Admonitions
+
+Admonitions are special callout boxes that help you highlight important information, warnings, tips, and notes in your documentation. BaiDocs provides a rich set of built-in admonition types with customizable styling.
+
+## Basic Admonitions
+
+### Note
+
+Use notes for general information and helpful context:
+
+```mdx
+:::note
+This is a note admonition. Use it to provide additional context or helpful information that doesn't require immediate action.
+:::
+
+:::note Custom Title
+You can also provide a custom title for your note.
+:::
+```
+
+**Result:**
+
+:::note
+This is a note admonition. Use it to provide additional context or helpful information that doesn't require immediate action.
+:::
+
+### Tip
+
+Use tips for helpful suggestions and best practices:
+
+```mdx
+:::tip
+Here's a helpful tip for improving your documentation workflow!
+:::
+
+:::tip Pro Tip
+Always test your documentation with real users to ensure clarity and completeness.
+:::
+```
+
+**Result:**
+
+:::tip
+Here's a helpful tip for improving your documentation workflow!
+:::
+
+### Warning
+
+Use warnings to highlight potential issues or important considerations:
+
+```mdx
+:::warning
+Be careful when modifying production configurations. Always backup your data first.
+:::
+
+:::warning Important
+This action cannot be undone. Make sure you understand the consequences before proceeding.
+:::
+```
+
+**Result:**
+
+:::warning
+Be careful when modifying production configurations. Always backup your data first.
+:::
+
+### Danger
+
+Use danger for critical warnings that could cause data loss or system issues:
+
+```mdx
+:::danger
+Running this command will permanently delete all data. This action cannot be reversed.
+:::
+
+:::danger Critical Security Warning
+Never expose your API keys in public repositories or client-side code.
+:::
+```
+
+**Result:**
+
+:::danger
+Running this command will permanently delete all data. This action cannot be reversed.
+:::
+
+### Info
+
+Use info for neutral informational content:
+
+```mdx
+:::info
+The maintenance window is scheduled for Sunday, 2:00 AM - 4:00 AM UTC.
+:::
+
+:::info System Requirements
+- Node.js 18.0 or higher
+- Git 2.0 or higher
+- 4GB RAM minimum
+:::
+```
+
+**Result:**
+
+:::info
+The maintenance window is scheduled for Sunday, 2:00 AM - 4:00 AM UTC.
+:::
+
+### Success
+
+Use success to highlight positive outcomes or completed actions:
+
+```mdx
+:::success
+Configuration updated successfully! Your changes are now active.
+:::
+
+:::success Setup Complete
+Your BaiDocs installation is ready. You can now start creating documentation.
+:::
+```
+
+**Result:**
+
+:::success
+Configuration updated successfully! Your changes are now active.
+:::
+
+## Advanced Admonition Features
+
+### Nested Content
+
+Admonitions can contain complex content including lists, code blocks, and other Markdown elements:
+
+```mdx
+:::warning Prerequisites Check
+Before proceeding with the installation, ensure you have:
+
+1. **Node.js 18+** installed on your system
+2. **Git** configured with your credentials
+3. **Write permissions** for the target directory
+
+```bash
+# Verify your setup
+node --version  # Should be 18.0 or higher
+git --version   # Should be 2.0 or higher
+```
+
+If any of these requirements are not met, please refer to the [installation guide](../getting-started/installation.mdx).
+:::
+```
+
+**Result:**
+
+:::warning Prerequisites Check
+Before proceeding with the installation, ensure you have:
+
+1. **Node.js 18+** installed on your system
+2. **Git** configured with your credentials
+3. **Write permissions** for the target directory
+
+```bash
+# Verify your setup
+node --version  # Should be 18.0 or higher
+git --version   # Should be 2.0 or higher
+```
+
+If any of these requirements are not met, please refer to the [installation guide](../getting-started/installation.mdx).
+:::
+
+### Collapsible Admonitions
+
+Create collapsible admonitions for detailed information:
+
+```mdx
+:::details Click to expand detailed explanation
+This content is hidden by default and only shows when the user clicks to expand it.
+
+This is useful for:
+- Detailed technical explanations
+- Optional advanced configurations
+- Troubleshooting steps
+- Additional examples
+
+```javascript
+// Example code that might be too detailed for the main flow
+const advancedConfig = {
+  cache: {
+    enabled: true,
+    ttl: 3600,
+    strategy: 'LRU'
+  },
+  compression: {
+    algorithm: 'gzip',
+    level: 6
+  }
+};
+```
+:::
+```
+
+**Result:**
+
+:::details Click to expand detailed explanation
+This content is hidden by default and only shows when the user clicks to expand it.
+
+This is useful for:
+- Detailed technical explanations
+- Optional advanced configurations
+- Troubleshooting steps
+- Additional examples
+
+```javascript
+// Example code that might be too detailed for the main flow
+const advancedConfig = {
+  cache: {
+    enabled: true,
+    ttl: 3600,
+    strategy: 'LRU'
+  },
+  compression: {
+    algorithm: 'gzip',
+    level: 6
+  }
+};
+```
+:::
+
+## Custom Admonition Types
+
+### Creating Custom Types
+
+You can create custom admonition types for specific use cases:
+
+```mdx
+:::api API Reference
+**Endpoint:** `GET /api/users`
+
+**Parameters:**
+- `limit` (optional): Maximum number of users to return (default: 10)
+- `offset` (optional): Number of users to skip (default: 0)
+
+**Response:**
+```json
+{
+  "users": [...],
+  "total": 150,
+  "limit": 10,
+  "offset": 0
+}
+```
+:::
+
+:::example Code Example
+Here's how to implement user authentication:
+
+```javascript
+import { authenticateUser } from './auth';
+
+async function loginUser(email, password) {
+  try {
+    const user = await authenticateUser(email, password);
+    return { success: true, user };
+  } catch (error) {
+    return { success: false, error: error.message };
+  }
+}
+```
+:::
+```
+
+### Themed Admonitions
+
+Create admonitions that match your brand or specific themes:
+
+```mdx
+:::theme-primary Brand Message
+This admonition uses your primary brand colors and styling.
+:::
+
+:::theme-secondary Additional Information
+This uses secondary brand colors for less prominent information.
+:::
+
+:::theme-accent Highlighted Content
+Use accent colors for content that needs special attention.
+:::
+```
+
+## Best Practices
+
+### When to Use Each Type
+
+| Type | Use Case | Example |
+|------|----------|---------|
+| **Note** | General information, context | "Note that this feature requires authentication" |
+| **Tip** | Best practices, suggestions | "Tip: Use descriptive commit messages" |
+| **Info** | Neutral information | "The API rate limit is 1000 requests/hour" |
+| **Warning** | Potential issues | "Warning: This will overwrite existing files" |
+| **Danger** | Critical warnings | "Danger: This action permanently deletes data" |
+| **Success** | Positive outcomes | "Success: Installation completed" |
+
+### Content Guidelines
+
+**Be Concise**:
+```mdx
+<!-- Good -->
+:::warning
+Backup your data before proceeding.
+:::
+
+<!-- Avoid -->
+:::warning
+It is highly recommended that you should consider creating a backup of all your important data files before you continue with this process because there might be a chance that something could go wrong.
+:::
+```
+
+**Use Active Voice**:
+```mdx
+<!-- Good -->
+:::tip
+Run tests before deploying to production.
+:::
+
+<!-- Avoid -->
+:::tip
+Tests should be run before deployment to production is done.
+:::
+```
+
+**Provide Context**:
+```mdx
+<!-- Good -->
+:::warning File Permissions
+Ensure the web server has write permissions to the uploads directory. On Unix systems, use `chmod 755 uploads/`.
+:::
+
+<!-- Avoid -->
+:::warning
+Check permissions.
+:::
+```
+
+### Visual Hierarchy
+
+Use admonitions strategically to create clear visual hierarchy:
+
+```mdx
+# Main Topic
+
+Regular content introducing the topic.
+
+:::info Prerequisites
+List of requirements before starting.
+:::
+
+## Step 1: Setup
+
+Regular instruction content.
+
+:::warning
+Important consideration for this step.
+:::
+
+## Step 2: Configuration
+
+More instruction content.
+
+:::tip Pro Tip
+Advanced technique for experienced users.
+:::
+
+## Troubleshooting
+
+:::danger Critical Issue
+Solution for a critical problem.
+:::
+
+:::note Common Issues
+Solutions for common problems.
+:::
+```
+
+## Styling and Customization
+
+### Custom Icons
+
+Customize admonition icons:
+
+```mdx
+:::note 📝 Documentation Note
+Custom icon for documentation-related notes.
+:::
+
+:::tip 💡 Quick Tip
+Lightbulb icon for bright ideas.
+:::
+
+:::warning ⚠️ Important Warning
+Warning triangle for attention-grabbing alerts.
+:::
+```
+
+### Color Schemes
+
+Admonitions automatically adapt to your theme, but you can customize colors:
+
+```css
+/* Custom admonition styling */
+.admonition-note {
+  --admonition-color: #1976d2;
+}
+
+.admonition-success {
+  --admonition-color: #388e3c;
+}
+
+.admonition-warning {
+  --admonition-color: #f57c00;
+}
+
+.admonition-danger {
+  --admonition-color: #d32f2f;
+}
+```
+
+## Accessibility
+
+### Screen Reader Support
+
+Admonitions are designed with accessibility in mind:
+
+```mdx
+:::warning Screen Reader Support
+This warning will be announced to screen readers with appropriate ARIA labels and roles.
+:::
+```
+
+### Keyboard Navigation
+
+Users can navigate through admonitions using keyboard:
+- **Tab**: Move to next interactive element
+- **Enter/Space**: Expand/collapse details admonitions
+- **Escape**: Close expanded details
+
+### Color Contrast
+
+All admonition types meet WCAG 2.1 AA color contrast requirements:
+- Text contrast ratio: 4.5:1 minimum
+- Icon contrast ratio: 3:1 minimum
+- Focus indicators: High contrast borders
+
+## Advanced Examples
+
+### Multi-step Processes
+
+Break complex processes into clear steps with appropriate admonitions:
+
+```mdx
+# Database Migration Guide
+
+:::info Migration Overview
+This process will migrate your database from version 1.0 to 2.0. Expected downtime: 15-30 minutes.
+:::
+
+## Step 1: Preparation
+
+:::warning Backup Required
+Create a full database backup before starting:
+```bash
+pg_dump myapp_production > backup_$(date +%Y%m%d).sql
+```
+:::
+
+## Step 2: Run Migration
+
+:::danger Production Impact
+This step will lock the database and prevent writes:
+```bash
+npm run migrate:up
+```
+:::
+
+## Step 3: Verification
+
+:::success Verification
+Confirm the migration succeeded:
+```bash
+npm run migrate:status
+```
+:::
+
+:::tip Post-Migration
+Monitor application logs for 30 minutes after migration to ensure stability.
+:::
+```
+
+### API Documentation
+
+Use admonitions to enhance API documentation:
+
+```mdx
+# User Authentication API
+
+## POST /auth/login
+
+Authenticate a user and return an access token.
+
+:::api Request Format
+```json
+{
+  "email": "user@example.com",
+  "password": "securepassword"
+}
+```
+:::
+
+:::success Successful Response
+```json
+{
+  "success": true,
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "user": {
+    "id": 123,
+    "email": "user@example.com",
+    "name": "John Doe"
+  }
+}
+```
+:::
+
+:::warning Error Response
+```json
+{
+  "success": false,
+  "error": "Invalid credentials"
+}
+```
+:::
+
+:::note Rate Limiting
+This endpoint is rate-limited to 5 attempts per minute per IP address.
+:::
+```
+
+## Next Steps
+
+Master admonitions to create more engaging documentation:
+
+1. **[Explore Advanced Features](../advanced/themes.mdx)** - Customize themes and styling
+2. **[Learn About PDF Generation](../advanced/pdf-generation.mdx)** - Include admonitions in PDFs
+3. **[Multi-language Support](../advanced/multilingual.mdx)** - Translate admonition content
+
+---
+
+*Well-placed admonitions guide readers through your documentation and highlight critical information effectively.*

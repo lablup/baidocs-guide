@@ -1,0 +1,876 @@
+# Versioning & Branch Management
+
+BaiDocs provides powerful versioning capabilities through Git branch integration, allowing you to maintain multiple versions of your documentation with seamless switching, version-specific content, and automated version management.
+
+## Overview
+
+### Versioning Features
+
+- **Git Branch Integration**: Each documentation version corresponds to a Git branch
+- **Automatic Version Detection**: Automatically detect and list available versions
+- **Version Switching**: Seamless switching between different documentation versions
+- **Version-Specific Content**: Content that varies between versions
+- **Legacy Support**: Maintain old versions while developing new ones
+- **Release Management**: Automated version tagging and release processes
+- **Version Comparison**: Compare content between different versions
+
+### Common Versioning Scenarios
+
+- **Product Releases**: Maintain docs for v1.0, v2.0, v3.0
+- **API Versions**: Document different API versions (v1, v2, latest)
+- **Feature Branches**: Preview documentation for upcoming features
+- **Environment-Specific**: Different docs for staging, production environments
+- **Localized Versions**: Different versions per region or customer segment
+
+## Branch-Based Versioning
+
+### Version Configuration
+
+Configure versioning in your book settings:
+
+```yaml
+# book.config.yaml
+id: my-documentation
+title: My Documentation
+description: Multi-version documentation
+
+# Git configuration
+git:
+  repository: "https://github.com/myorg/docs.git"
+  branch: main  # Default branch
+
+# Version configuration
+versioning:
+  enabled: true
+  strategy: "branch"  # or "tag", "directory"
+
+  # Version mapping
+  versions:
+    - branch: "main"
+      version: "latest"
+      label: "Latest (v3.0)"
+      isDefault: true
+      status: "active"
+
+    - branch: "v2.x"
+      version: "v2"
+      label: "Version 2.x"
+      status: "active"
+
+    - branch: "v1.x"
+      version: "v1"
+      label: "Version 1.x"
+      status: "maintenance"
+
+    - branch: "develop"
+      version: "beta"
+      label: "Beta (v3.1)"
+      status: "preview"
+
+  # Version-specific settings
+  versionConfig:
+    latest:
+      supportStatus: "active"
+      endOfLife: null
+      releaseDate: "2024-01-26"
+
+    v2:
+      supportStatus: "maintenance"
+      endOfLife: "2024-12-31"
+      releaseDate: "2023-01-15"
+
+    v1:
+      supportStatus: "legacy"
+      endOfLife: "2024-06-30"
+      releaseDate: "2022-01-10"
+```
+
+### Git Branch Structure
+
+Organize your Git branches for versioning:
+
+```
+Git Repository Structure:
+
+main                    ← Latest stable version (v3.0)
+├── content/
+│   ├── book.config.yaml
+│   ├── en/
+│   └── ko/
+
+v2.x                    ← Version 2.x maintenance
+├── content/
+│   ├── book.config.yaml  (version-specific config)
+│   ├── en/
+│   └── ko/
+
+v1.x                    ← Legacy version 1.x
+├── content/
+│   ├── book.config.yaml  (older configuration)
+│   ├── en/
+│   └── ko/
+
+develop                 ← Development branch (v3.1 beta)
+├── content/
+│   ├── book.config.yaml
+│   ├── en/
+│   └── ko/
+
+feature/new-api         ← Feature preview
+├── content/
+│   ├── book.config.yaml
+│   ├── en/
+│   └── ko/
+```
+
+## Version Management
+
+### Creating New Versions
+
+#### Release Version from Main
+
+Create a new stable version:
+
+```bash
+# Create version branch from main
+git checkout main
+git checkout -b v3.x
+
+# Update version configuration
+# Edit book.config.yaml to reflect new version
+
+# Push new version branch
+git push origin v3.x
+
+# Continue development on main for next version
+git checkout main
+# Update version to indicate next version in development
+```
+
+#### Feature Branch Preview
+
+Create preview version for new features:
+
+```bash
+# Create feature branch
+git checkout -b feature/new-authentication
+
+# Update book.config.yaml for preview
+git add content/book.config.yaml
+git commit -m "Configure preview version for new authentication"
+git push origin feature/new-authentication
+```
+
+### Version-Specific Configuration
+
+Each version can have its own configuration:
+
+```yaml
+# main branch - book.config.yaml
+id: my-documentation
+title: "My Documentation v3.0"
+version: "3.0"
+
+# Version-specific metadata
+versionInfo:
+  major: 3
+  minor: 0
+  patch: 0
+  prerelease: null
+  status: "stable"
+
+# Version-specific navigation
+navigation:
+  en:
+    - title: "Home"
+      path: "index.mdx"
+    - title: "New Features"  # Only in v3.0
+      path: "new-features.mdx"
+    - title: "API Reference"
+      items:
+        - title: "v3 API"      # Version-specific API docs
+          path: "api/v3/index.mdx"
+```
+
+```yaml
+# v2.x branch - book.config.yaml
+id: my-documentation
+title: "My Documentation v2.x"
+version: "2.x"
+
+versionInfo:
+  major: 2
+  minor: 8
+  patch: 3
+  prerelease: null
+  status: "maintenance"
+
+# Different navigation for v2.x
+navigation:
+  en:
+    - title: "Home"
+      path: "index.mdx"
+    - title: "Migration Guide"  # Help users migrate to v3
+      path: "migration-to-v3.mdx"
+    - title: "API Reference"
+      items:
+        - title: "v2 API"      # Legacy API docs
+          path: "api/v2/index.mdx"
+```
+
+## Version-Aware Content
+
+### Conditional Content
+
+Display content based on version:
+
+```mdx
+import { useVersion } from '@baidocs/versioning'
+
+# API Authentication
+
+Authentication methods vary by version:
+
+<VersionContent version="3.x">
+
+## OAuth 2.0 Authentication (v3.0+)
+
+Version 3.0 introduces OAuth 2.0 for enhanced security:
+
+```javascript
+const auth = new OAuth2Client({
+  clientId: 'your-client-id',
+  redirectUri: 'https://your-app.com/callback'
+});
+
+await auth.authenticate();
+```
+
+</VersionContent>
+
+<VersionContent version={["2.x", "1.x"]}>
+
+## API Key Authentication (v1.x - v2.x)
+
+Legacy versions use API key authentication:
+
+```javascript
+const client = new APIClient({
+  apiKey: 'your-api-key'
+});
+```
+
+:::warning Deprecated
+API key authentication is deprecated in v3.0. Please migrate to OAuth 2.0.
+:::
+
+</VersionContent>
+
+<VersionContent version="1.x">
+
+## Basic Authentication (v1.x only)
+
+Version 1.x also supports basic authentication:
+
+```javascript
+const client = new APIClient({
+  username: 'your-username',
+  password: 'your-password'
+});
+```
+
+:::danger Security Notice
+Basic authentication is removed in v2.0+ for security reasons.
+:::
+
+</VersionContent>
+```
+
+### Version Comparison
+
+Compare features across versions:
+
+```mdx
+import { VersionTable, VersionCompare } from '@baidocs/components'
+
+## Feature Comparison
+
+<VersionTable>
+| Feature | v1.x | v2.x | v3.x |
+|---------|------|------|------|
+| Basic Auth | ✅ | ❌ | ❌ |
+| API Keys | ❌ | ✅ | ⚠️ Deprecated |
+| OAuth 2.0 | ❌ | ❌ | ✅ |
+| Rate Limiting | Basic | Advanced | Smart |
+| WebSocket API | ❌ | ✅ | ✅ Enhanced |
+| GraphQL | ❌ | ❌ | ✅ |
+</VersionTable>
+
+<VersionCompare versions={['2.x', '3.x']}>
+
+### Migration from v2.x to v3.x
+
+Key changes when upgrading:
+
+#### Breaking Changes
+- API key authentication deprecated
+- WebSocket protocol updated
+- Some endpoint URLs changed
+
+#### New Features
+- OAuth 2.0 authentication
+- GraphQL API
+- Enhanced rate limiting
+
+</VersionCompare>
+```
+
+### Version-Specific Admonitions
+
+Create version-aware callouts:
+
+```mdx
+import { VersionAdmonition } from '@baidocs/components'
+
+<VersionAdmonition type="added" version="3.0">
+**New in v3.0:** OAuth 2.0 authentication provides enhanced security and user experience.
+</VersionAdmonition>
+
+<VersionAdmonition type="changed" version="2.5">
+**Changed in v2.5:** WebSocket connection handling has been improved for better reliability.
+</VersionAdmonition>
+
+<VersionAdmonition type="deprecated" version="3.0" removeVersion="4.0">
+**Deprecated in v3.0:** API key authentication will be removed in v4.0. Please migrate to OAuth 2.0.
+</VersionAdmonition>
+
+<VersionAdmonition type="removed" version="2.0" previousVersion="1.x">
+**Removed in v2.0:** Basic authentication has been removed for security reasons.
+</VersionAdmonition>
+```
+
+## Version Switcher Interface
+
+### Version Selector Component
+
+Create version switching interface:
+
+```typescript
+// components/VersionSwitcher.tsx
+import React, { useState } from 'react';
+import { useRouter } from 'next/router';
+import { useVersioning } from '@baidocs/versioning';
+
+interface Version {
+  branch: string;
+  version: string;
+  label: string;
+  status: 'active' | 'maintenance' | 'legacy' | 'preview';
+  isDefault: boolean;
+}
+
+export function VersionSwitcher() {
+  const router = useRouter();
+  const { currentVersion, availableVersions, switchVersion } = useVersioning();
+  const [isOpen, setIsOpen] = useState(false);
+
+  const handleVersionSwitch = async (version: Version) => {
+    try {
+      await switchVersion(version.version);
+
+      // Update URL to reflect version change
+      const currentPath = router.asPath;
+      const newPath = currentPath.replace(
+        `/docs/${currentVersion}/`,
+        `/docs/${version.version}/`
+      );
+
+      router.push(newPath);
+      setIsOpen(false);
+    } catch (error) {
+      console.error('Failed to switch version:', error);
+    }
+  };
+
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'active': return '#10b981';
+      case 'maintenance': return '#f59e0b';
+      case 'legacy': return '#ef4444';
+      case 'preview': return '#8b5cf6';
+      default: return '#6b7280';
+    }
+  };
+
+  const getStatusLabel = (status: string) => {
+    switch (status) {
+      case 'active': return 'Active';
+      case 'maintenance': return 'Maintenance';
+      case 'legacy': return 'Legacy';
+      case 'preview': return 'Preview';
+      default: return '';
+    }
+  };
+
+  const currentVersionInfo = availableVersions.find(v => v.version === currentVersion);
+
+  return (
+    <div className="version-switcher">
+      <button
+        className="version-trigger"
+        onClick={() => setIsOpen(!isOpen)}
+        aria-label="Select version"
+        aria-haspopup="listbox"
+        aria-expanded={isOpen}
+      >
+        <span className="current-version">
+          {currentVersionInfo?.label || currentVersion}
+        </span>
+        <span
+          className="version-status"
+          style={{ color: getStatusColor(currentVersionInfo?.status || '') }}
+        >
+          {getStatusLabel(currentVersionInfo?.status || '')}
+        </span>
+        <span className="dropdown-arrow">▼</span>
+      </button>
+
+      {isOpen && (
+        <div className="version-dropdown" role="listbox">
+          <div className="version-dropdown-header">
+            <span>Select Version</span>
+          </div>
+
+          {availableVersions.map((version) => (
+            <button
+              key={version.version}
+              onClick={() => handleVersionSwitch(version)}
+              className={`version-option ${
+                version.version === currentVersion ? 'active' : ''
+              }`}
+              role="option"
+              aria-selected={version.version === currentVersion}
+            >
+              <div className="version-info">
+                <span className="version-label">{version.label}</span>
+                <span
+                  className="version-status-badge"
+                  style={{ backgroundColor: getStatusColor(version.status) }}
+                >
+                  {getStatusLabel(version.status)}
+                </span>
+              </div>
+
+              {version.isDefault && (
+                <span className="default-badge">Default</span>
+              )}
+
+              {version.version === currentVersion && (
+                <span className="current-indicator">✓</span>
+              )}
+            </button>
+          ))}
+
+          <div className="version-dropdown-footer">
+            <a href="/releases" className="release-notes-link">
+              View Release Notes
+            </a>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+```
+
+### Version Banner
+
+Display version information:
+
+```typescript
+// components/VersionBanner.tsx
+import React from 'react';
+import { useVersioning } from '@baidocs/versioning';
+
+export function VersionBanner() {
+  const { currentVersion, versionConfig } = useVersioning();
+  const config = versionConfig[currentVersion];
+
+  if (!config || config.status === 'active') {
+    return null;
+  }
+
+  const bannerTypes = {
+    maintenance: {
+      className: 'version-banner-warning',
+      icon: '⚠️',
+      message: 'This version is in maintenance mode.'
+    },
+    legacy: {
+      className: 'version-banner-danger',
+      icon: '⚠️',
+      message: 'This is a legacy version.'
+    },
+    preview: {
+      className: 'version-banner-info',
+      icon: '🧪',
+      message: 'This is a preview version.'
+    }
+  };
+
+  const bannerInfo = bannerTypes[config.status] || bannerTypes.maintenance;
+
+  return (
+    <div className={`version-banner ${bannerInfo.className}`}>
+      <div className="version-banner-content">
+        <span className="version-banner-icon">{bannerInfo.icon}</span>
+        <div className="version-banner-text">
+          <strong>{bannerInfo.message}</strong>
+          {config.endOfLife && (
+            <span> Support ends {new Date(config.endOfLife).toLocaleDateString()}.</span>
+          )}
+          <a href="/latest" className="version-banner-link">
+            Switch to latest version
+          </a>
+        </div>
+      </div>
+    </div>
+  );
+}
+```
+
+## Automated Version Management
+
+### Release Automation
+
+Automate version creation and management:
+
+```yaml
+# .github/workflows/release.yml
+name: Create Documentation Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  create-docs-version:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Extract version from tag
+        id: version
+        run: |
+          VERSION=${GITHUB_REF#refs/tags/}
+          MAJOR_MINOR=$(echo $VERSION | sed 's/\.[0-9]*$//')
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "major_minor=${MAJOR_MINOR}.x" >> $GITHUB_OUTPUT
+
+      - name: Create version branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          # Create version branch
+          git checkout -b ${{ steps.version.outputs.major_minor }}
+
+          # Update book configuration for new version
+          sed -i 's/version: ".*"/version: "${{ steps.version.outputs.version }}"/' content/book.config.yaml
+
+          # Commit version update
+          git add content/book.config.yaml
+          git commit -m "Create documentation for ${{ steps.version.outputs.version }}"
+
+          # Push version branch
+          git push origin ${{ steps.version.outputs.major_minor }}
+
+      - name: Update main branch for next version
+        run: |
+          git checkout main
+
+          # Update version to next development version
+          NEXT_MINOR=$(($(echo ${{ steps.version.outputs.version }} | cut -d. -f2) + 1))
+          NEXT_VERSION="$(echo ${{ steps.version.outputs.version }} | cut -d. -f1).$NEXT_MINOR.0-dev"
+
+          sed -i "s/version: \".*\"/version: \"$NEXT_VERSION\"/" content/book.config.yaml
+
+          git add content/book.config.yaml
+          git commit -m "Prepare for next version: $NEXT_VERSION"
+          git push origin main
+
+      - name: Deploy versioned documentation
+        run: |
+          # Trigger deployment of new version
+          curl -X POST \
+            -H "Authorization: Bearer ${{ secrets.DEPLOY_TOKEN }}" \
+            -H "Content-Type: application/json" \
+            -d '{"version": "${{ steps.version.outputs.major_minor }}"}' \
+            https://api.yoursite.com/deploy/docs
+```
+
+### Version Cleanup
+
+Automatically cleanup old versions:
+
+```yaml
+# .github/workflows/cleanup-versions.yml
+name: Cleanup Old Documentation Versions
+
+on:
+  schedule:
+    - cron: '0 0 1 * *'  # Monthly cleanup
+
+jobs:
+  cleanup-old-versions:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Identify old versions
+        id: old-versions
+        run: |
+          # Get all version branches
+          git fetch --all
+          BRANCHES=$(git branch -r | grep "origin/v[0-9]" | sed 's/origin\///')
+
+          # Find versions older than 2 years
+          OLD_BRANCHES=""
+          for branch in $BRANCHES; do
+            LAST_COMMIT_DATE=$(git log -1 --format=%ct origin/$branch)
+            TWO_YEARS_AGO=$(($(date +%s) - 63072000))  # 2 years in seconds
+
+            if [ $LAST_COMMIT_DATE -lt $TWO_YEARS_AGO ]; then
+              OLD_BRANCHES="$OLD_BRANCHES $branch"
+            fi
+          done
+
+          echo "old_branches=$OLD_BRANCHES" >> $GITHUB_OUTPUT
+
+      - name: Archive old versions
+        if: steps.old-versions.outputs.old_branches != ''
+        run: |
+          # Create archives of old versions before deletion
+          for branch in ${{ steps.old-versions.outputs.old_branches }}; do
+            git checkout origin/$branch
+            tar -czf "archive-$branch.tar.gz" content/
+            # Upload to archive storage
+          done
+
+      - name: Delete old version branches
+        if: steps.old-versions.outputs.old_branches != ''
+        run: |
+          for branch in ${{ steps.old-versions.outputs.old_branches }}; do
+            git push origin --delete $branch
+          done
+
+      - name: Update version configuration
+        run: |
+          # Remove old versions from main branch configuration
+          # Update book.config.yaml to remove archived versions
+          git checkout main
+          # ... update logic ...
+          git add content/book.config.yaml
+          git commit -m "Remove archived versions from configuration"
+          git push origin main
+```
+
+## Version Analytics
+
+### Track Version Usage
+
+Monitor which versions users access:
+
+```typescript
+// Version analytics
+interface VersionAnalytics {
+  version: string;
+  pageviews: number;
+  uniqueUsers: number;
+  avgSessionDuration: number;
+  bounceRate: number;
+  lastAccess: string;
+}
+
+async function getVersionAnalytics(timeframe: string = '30d'): Promise<VersionAnalytics[]> {
+  const analytics = await analyticsAPI.getVersionStats({
+    timeframe,
+    metrics: ['pageviews', 'users', 'session_duration', 'bounce_rate']
+  });
+
+  return analytics.versions.map(version => ({
+    version: version.name,
+    pageviews: version.pageviews,
+    uniqueUsers: version.unique_users,
+    avgSessionDuration: version.avg_session_duration,
+    bounceRate: version.bounce_rate,
+    lastAccess: version.last_access
+  }));
+}
+
+// Version deprecation notifications
+async function notifyVersionDeprecation() {
+  const analytics = await getVersionAnalytics('90d');
+
+  for (const version of analytics) {
+    const versionConfig = await getVersionConfig(version.version);
+
+    if (versionConfig.status === 'legacy' && version.pageviews > 1000) {
+      // Still heavily used legacy version - send notification
+      await sendDeprecationNotification({
+        version: version.version,
+        usage: version.pageviews,
+        endOfLife: versionConfig.endOfLife,
+        migrationGuide: `/migrate-from-${version.version}`
+      });
+    }
+  }
+}
+```
+
+## Best Practices
+
+### Version Strategy
+
+#### Semantic Versioning
+
+Follow semantic versioning principles:
+
+```yaml
+# Version branch naming strategy
+versions:
+  - branch: "main"        # Latest development
+    version: "4.0.0-dev"
+
+  - branch: "v3.x"        # Current stable (3.x.x)
+    version: "3.2.1"
+
+  - branch: "v2.x"        # Previous stable (2.x.x)
+    version: "2.8.5"
+
+  - branch: "v1.x"        # Legacy (1.x.x)
+    version: "1.15.3"
+```
+
+#### Version Lifecycle
+
+Manage version lifecycle:
+
+1. **Development** (`main`): Active development, frequent changes
+2. **Release Candidate** (`rc/v3.0`): Feature complete, testing
+3. **Stable** (`v3.x`): Released version, bug fixes only
+4. **Maintenance** (`v2.x`): Security fixes, critical bugs
+5. **Legacy** (`v1.x`): End-of-life timeline announced
+6. **Archived**: No longer maintained, documentation preserved
+
+### Content Management
+
+#### Version-Specific Content
+
+```mdx
+<!-- Good: Clear version indicators -->
+:::info Version 3.0+
+This feature is available in version 3.0 and later.
+:::
+
+<!-- Good: Migration guidance -->
+<VersionMigration from="2.x" to="3.x">
+In version 2.x, you used `oldMethod()`. In 3.x, use `newMethod()` instead.
+</VersionMigration>
+
+<!-- Avoid: Unclear versioning -->
+This new feature is now available!
+```
+
+#### Consistent Navigation
+
+Maintain consistent navigation structure across versions when possible:
+
+```yaml
+# Template navigation used across all versions
+navigationTemplate:
+  - title: "Getting Started"
+    items:
+      - title: "Installation"
+        path: "installation.mdx"
+      - title: "Quick Start"
+        path: "quick-start.mdx"
+
+  - title: "API Reference"
+    items:
+      # Version-specific API documentation
+      - title: "Authentication"
+        path: "api/auth.mdx"
+      - title: "Endpoints"
+        path: "api/endpoints.mdx"
+```
+
+## Troubleshooting
+
+### Common Issues
+
+#### "Version Not Found"
+
+```bash
+# Verify version configuration
+cat content/book.config.yaml | grep -A 20 "versioning:"
+
+# Check available branches
+git branch -r | grep "v[0-9]"
+
+# Verify version branch exists
+git ls-remote origin v3.x
+```
+
+#### "Version Switch Failed"
+
+```typescript
+// Debug version switching
+const debugVersionSwitch = async (targetVersion: string) => {
+  try {
+    // Check if version exists
+    const available = await getAvailableVersions();
+    if (!available.includes(targetVersion)) {
+      throw new Error(`Version ${targetVersion} not available`);
+    }
+
+    // Check if content exists for version
+    const content = await fetchVersionContent(targetVersion);
+    if (!content) {
+      throw new Error(`No content found for version ${targetVersion}`);
+    }
+
+    console.log(`Version ${targetVersion} is valid and has content`);
+  } catch (error) {
+    console.error('Version switch debug:', error);
+  }
+};
+```
+
+#### "Cross-Version Links Broken"
+
+```typescript
+// Fix cross-version links
+const fixCrossVersionLinks = (content: string, currentVersion: string) => {
+  // Convert absolute version links to relative
+  return content.replace(
+    /\/docs\/v[\d\.]+\/(.*?)\.md/g,
+    (match, path) => `/docs/${currentVersion}/${path}.mdx`
+  );
+};
+```
+
+## Next Steps
+
+Advanced versioning topics:
+
+1. **[Multi-language Support](multilingual.mdx)** - Version management for multiple languages
+2. **[Deployment](../deployment/vercel.mdx)** - Deploy multiple versions
+3. **[Search Configuration](search.mdx)** - Version-aware search
+
+---
+
+*Effective versioning ensures users can access documentation appropriate to their software version while allowing you to evolve your documentation alongside your product.*

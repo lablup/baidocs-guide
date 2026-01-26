@@ -1,0 +1,463 @@
+# Importing & Converting Documentation
+
+BaiDocs can import and convert documentation from popular documentation tools, creating a clean, optimized BaiDocs repository from your existing content.
+
+## Supported Import Sources
+
+| Tool | Import Support | Conversion Features |
+|------|----------------|-------------------|
+| **Sphinx** | ✅ Full Support | RST → MDX, navigation, configuration, assets |
+| **MkDocs** | ✅ Full Support | Markdown → MDX, mkdocs.yml → book.config.yaml |
+| **GitBook** | ✅ Full Support | GitBook format → BaiDocs structure |
+| **Generic Markdown** | ✅ Basic Support | File structure preservation, basic navigation |
+| **Confluence** | 🔄 Coming Soon | Export → MDX conversion |
+| **Notion** | 🔄 Coming Soon | Database → Documentation structure |
+
+## Import Process Overview
+
+The import & convert process creates a completely new, clean BaiDocs repository:
+
+```
+Original Tool Repository          BaiDocs Repository
+├── sphinx/                      ├── book.config.yaml
+│   ├── conf.py                 ├── en/
+│   ├── index.rst               │   ├── index.mdx
+│   ├── _build/                 │   ├── getting-started/
+│   └── ...                     │   └── _assets/
+                                └── .git/ (clean history)
+```
+
+### Key Benefits
+
+✅ **Clean Repository**: New Git history without legacy artifacts
+✅ **Optimized Structure**: BaiDocs-native organization
+✅ **Asset Migration**: Images and files properly organized
+✅ **Format Conversion**: Modern MDX with enhanced features
+✅ **Navigation Generation**: Intelligent navigation structure
+
+## Importing from Sphinx
+
+### Preparation
+
+Ensure your Sphinx project has:
+- `conf.py` configuration file
+- Structured documentation with `.rst` files
+- Built HTML version (for reference)
+
+### Import Configuration
+
+![Sphinx Import Configuration](../_assets/sphinx-import-config.png)
+
+#### Source Configuration
+
+- **Repository URL**: `https://github.com/your-org/sphinx-docs.git`
+- **Branch**: Source branch (usually `main` or `master`)
+- **Format**: Select "Sphinx"
+
+#### Target Configuration
+
+- **Target Name**: New BaiDocs book name (e.g., `api-documentation`)
+- **Display Title**: Human-readable title
+- **Emoji**: Visual identifier for the book
+
+#### Conversion Options
+
+- **Language Mapping**: Map Sphinx languages to BaiDocs
+  ```
+  Sphinx: en → BaiDocs: en
+  Sphinx: es → BaiDocs: es
+  ```
+
+- **Content Processing**:
+  - ✅ Convert RST to MDX
+  - ✅ Extract navigation from toctree
+  - ✅ Migrate images and assets
+  - ✅ Convert code blocks with syntax highlighting
+
+### Conversion Results
+
+**Before (Sphinx)**:
+```python
+# conf.py
+project = 'My API Documentation'
+html_theme = 'sphinx_rtd_theme'
+extensions = ['sphinx.ext.autodoc']
+```
+
+```rst
+.. index.rst
+My API Documentation
+====================
+
+Welcome to the API documentation.
+
+.. toctree::
+   :maxdepth: 2
+
+   getting-started
+   api-reference
+```
+
+**After (BaiDocs)**:
+```yaml
+# book.config.yaml
+id: api-documentation
+title: My API Documentation
+description: Converted from Sphinx
+navigation:
+  en:
+    - title: "Home"
+      path: "index.mdx"
+    - title: "Getting Started"
+      path: "getting-started.mdx"
+    - title: "API Reference"
+      path: "api-reference.mdx"
+```
+
+```mdx
+# index.mdx
+# My API Documentation
+
+Welcome to the API documentation.
+
+This documentation has been converted from Sphinx to BaiDocs format.
+```
+
+## Importing from MkDocs
+
+### Preparation
+
+Verify your MkDocs project includes:
+- `mkdocs.yml` configuration file
+- Markdown files in `docs/` directory
+- Properly structured navigation
+
+### Import Configuration
+
+#### Source Analysis
+
+BaiDocs analyzes your MkDocs configuration:
+
+```yaml
+# mkdocs.yml (original)
+site_name: User Guide
+site_description: Complete user documentation
+nav:
+  - Home: index.md
+  - Getting Started:
+    - Installation: getting-started/install.md
+    - Quickstart: getting-started/quickstart.md
+  - Advanced: advanced.md
+```
+
+#### Conversion Process
+
+- **Configuration Migration**: `mkdocs.yml` → `book.config.yaml`
+- **Content Conversion**: Markdown → MDX (enhanced features)
+- **Theme Translation**: MkDocs themes → BaiDocs styling
+- **Plugin Conversion**: Common plugins → BaiDocs equivalents
+
+### Conversion Results
+
+**After Conversion**:
+```yaml
+# book.config.yaml
+id: user-guide
+title: User Guide
+description: Complete user documentation
+navigation:
+  en:
+    - title: "Home"
+      path: "index.mdx"
+    - title: "Getting Started"
+      items:
+        - title: "Installation"
+          path: "getting-started/install.mdx"
+        - title: "Quickstart"
+          path: "getting-started/quickstart.mdx"
+    - title: "Advanced"
+      path: "advanced.mdx"
+```
+
+### Plugin Conversion
+
+Common MkDocs plugins and their BaiDocs equivalents:
+
+| MkDocs Plugin | BaiDocs Feature |
+|---------------|-----------------|
+| `search` | Built-in search |
+| `admonitions` | Native admonitions |
+| `codehilite` | Syntax highlighting |
+| `toc` | Automatic TOC |
+| `mkdocs-material` | Built-in responsive theme |
+
+## Importing from GitBook
+
+### GitBook Legacy Format
+
+For GitBook Legacy (v1) repositories:
+
+```
+gitbook-repo/
+├── SUMMARY.md          # GitBook navigation
+├── README.md          # Homepage
+├── chapter1/
+│   ├── README.md
+│   └── section1.md
+└── assets/
+    └── _assets/
+```
+
+### GitBook V2 Format
+
+For modern GitBook exports:
+
+```
+gitbook-export/
+├── .gitbook.yaml      # GitBook configuration
+├── README.md
+├── getting-started/
+└── reference/
+```
+
+### Conversion Process
+
+#### Navigation Conversion
+
+**GitBook SUMMARY.md**:
+```markdown
+# Summary
+
+* [Introduction](README.md)
+* [Getting Started](getting-started/README.md)
+  * [Installation](getting-started/installation.md)
+  * [Configuration](getting-started/configuration.md)
+* [Advanced Topics](advanced/README.md)
+```
+
+**BaiDocs book.config.yaml**:
+```yaml
+navigation:
+  en:
+    - title: "Introduction"
+      path: "index.mdx"
+    - title: "Getting Started"
+      items:
+        - title: "Installation"
+          path: "getting-started/installation.mdx"
+        - title: "Configuration"
+          path: "getting-started/configuration.mdx"
+    - title: "Advanced Topics"
+      path: "advanced/index.mdx"
+```
+
+#### Content Enhancement
+
+During conversion, BaiDocs enhances GitBook content:
+
+- **Hint Blocks** → **Admonitions**
+- **Code Tabs** → **MDX Code Components**
+- **Embedded Content** → **React Components**
+- **GitBook Variables** → **MDX Variables**
+
+## Generic Markdown Import
+
+For repositories with Markdown files but no specific documentation tool:
+
+### Automatic Structure Detection
+
+BaiDocs analyzes the repository structure:
+
+```
+generic-docs/
+├── README.md          # Becomes index.mdx
+├── docs/
+│   ├── guide.md
+│   ├── tutorial.md
+│   └── reference/
+│       └── api.md
+└── _assets/
+```
+
+### Navigation Generation
+
+BaiDocs automatically generates navigation based on:
+
+1. **File Structure**: Directory hierarchy
+2. **Frontmatter**: YAML metadata in files
+3. **Headers**: First-level headers in files
+4. **File Naming**: Semantic file names
+
+**Generated Navigation**:
+```yaml
+navigation:
+  en:
+    - title: "Home"
+      path: "index.mdx"
+    - title: "Guide"
+      path: "guide.mdx"
+    - title: "Tutorial"
+      path: "tutorial.mdx"
+    - title: "Reference"
+      items:
+        - title: "API"
+          path: "reference/api.mdx"
+```
+
+## Advanced Import Options
+
+### Target Structure Selection
+
+Choose how to organize the imported content:
+
+#### Standalone Structure
+```
+content/imported-book/
+├── book.config.yaml
+├── en/
+└── .git/
+```
+
+#### Monorepo Structure
+```
+content/imported-book/
+├── docs/              # Subdirectory
+│   ├── book.config.yaml
+│   ├── en/
+│   └── ko/
+└── .git/
+```
+
+### Content Processing Options
+
+#### Format Conversion
+
+- **Markdown → MDX**: Enhanced with JSX capabilities
+- **RST → MDX**: Sphinx reStructuredText conversion
+- **HTML → MDX**: Clean conversion from HTML sources
+
+#### Asset Processing
+
+- **Image Optimization**: Automatic image compression and optimization
+- **Path Correction**: Fix relative paths and references
+- **Asset Organization**: Centralize images and files
+
+#### Content Enhancement
+
+- **Syntax Highlighting**: Upgrade code blocks
+- **Admonitions**: Convert callouts and note boxes
+- **Cross-references**: Maintain internal links
+- **Table Enhancement**: Improve table formatting
+
+## Post-Import Optimization
+
+After import, BaiDocs performs cleanup and optimization:
+
+### Repository Cleanup
+
+1. **Clean Git History**: New repository with clean commit history
+2. **Remove Build Artifacts**: No `_build/`, `site/`, or other generated files
+3. **Optimize Structure**: BaiDocs-native organization
+4. **Update Dependencies**: Modern toolchain and dependencies
+
+### Content Optimization
+
+1. **Navigation Refinement**: Logical navigation structure
+2. **Content Validation**: Check for broken links and references
+3. **Format Standardization**: Consistent formatting throughout
+4. **Asset Optimization**: Compressed images and optimized media
+
+### Configuration Enhancement
+
+```yaml
+# Enhanced book.config.yaml after import
+id: imported-documentation
+title: Imported Documentation
+description: Converted from [Original Tool] to BaiDocs
+emoji: 🔄
+type: document
+languages:
+  - en
+defaultLanguage: en
+# Conversion metadata
+conversion:
+  source: sphinx
+  originalRepo: https://github.com/org/original-docs
+  convertedAt: 2024-01-26T00:00:00Z
+navigation:
+  # Generated navigation structure
+```
+
+## Troubleshooting Import Issues
+
+### Common Import Problems
+
+#### "Unsupported source format"
+- Verify the repository contains documentation in a supported format
+- Check for required configuration files (conf.py, mkdocs.yml, etc.)
+- Consider using generic Markdown import
+
+#### "Navigation extraction failed"
+- Source navigation may be complex or non-standard
+- Manual navigation editing may be required after import
+- Check for malformed navigation files
+
+#### "Asset conversion errors"
+- Some assets may have unsupported formats
+- Review asset paths in source documentation
+- Manual asset migration may be needed
+
+### Recovery and Manual Fixes
+
+#### Post-import Manual Editing
+
+1. **Review Generated Navigation**: Adjust structure as needed
+2. **Fix Broken Links**: Update references that didn't convert correctly
+3. **Enhance Content**: Add BaiDocs-specific features
+4. **Test All Pages**: Verify content renders correctly
+
+#### Re-import with Different Settings
+
+```bash
+# Remove failed import
+rm -rf content/failed-import
+
+# Try with different configuration:
+# - Different target structure
+# - Modified source branch
+# - Alternative format detection
+```
+
+## Best Practices
+
+### Before Import
+
+- **Backup Original**: Ensure original documentation is safely backed up
+- **Clean Source**: Remove unnecessary files and artifacts
+- **Document Process**: Note custom configurations or special requirements
+
+### During Import
+
+- **Monitor Progress**: Watch import logs for warnings or errors
+- **Review Configurations**: Verify target settings are correct
+- **Test Incrementally**: Import small sections first for complex projects
+
+### After Import
+
+- **Content Review**: Manually review converted content
+- **Link Verification**: Check all internal and external links
+- **Navigation Testing**: Ensure navigation works correctly
+- **Team Review**: Have team members review converted content
+
+## Next Steps
+
+After successful import:
+
+1. **[Content Enhancement](../writing/mdx-features.mdx)**: Add BaiDocs-specific features
+2. **[Navigation Refinement](../advanced/multilingual.mdx)**: Optimize structure
+3. **[Search Configuration](../advanced/search.mdx)**: Set up search functionality
+4. **[Deployment](../deployment/vercel.mdx)**: Publish your converted documentation
+
+---
+
+*Import & Convert brings your existing documentation into the modern BaiDocs ecosystem with enhanced features and clean structure.*

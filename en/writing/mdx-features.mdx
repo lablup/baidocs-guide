@@ -1,0 +1,676 @@
+# MDX Features
+
+MDX (Markdown + JSX) is the heart of BaiDocs content creation. It combines the simplicity of Markdown with the power of React components, allowing you to create rich, interactive documentation.
+
+## What is MDX?
+
+MDX allows you to write JSX directly in your Markdown files. This means you can:
+
+- Use React components in your documentation
+- Create custom layouts and styling
+- Embed interactive elements
+- Build reusable content blocks
+
+```mdx
+# Regular Markdown Header
+
+This is regular markdown content with **bold** text.
+
+<div style={{backgroundColor: '#f0f8ff', padding: '1rem', borderRadius: '8px'}}>
+  This is a JSX component with custom styling!
+</div>
+
+import CustomComponent from '../components/CustomComponent'
+
+<CustomComponent data="example" />
+```
+
+## JSX in MDX
+
+### Inline JSX Elements
+
+You can use any HTML/JSX element directly in your content:
+
+```mdx
+<div className="highlight-box">
+  This content is in a custom container.
+</div>
+
+<span style={{color: 'red', fontWeight: 'bold'}}>
+  Important red text
+</span>
+
+<details>
+  <summary>Click to expand</summary>
+  <p>Hidden content that can be toggled.</p>
+</details>
+```
+
+**Result:**
+
+<div style={{backgroundColor: '#f0f8ff', padding: '1rem', borderRadius: '8px'}}>
+  This content is in a custom container.
+</div>
+
+<span style={{color: 'red', fontWeight: 'bold'}}>
+  Important red text
+</span>
+
+### JavaScript Expressions
+
+Use JavaScript expressions within your content:
+
+```mdx
+Current date: {new Date().toLocaleDateString()}
+
+Math calculation: {2 + 3 = {2 + 3}}
+
+Conditional content: {true ? 'This shows' : 'This does not show'}
+
+{/* This is a JSX comment */}
+```
+
+**Result:**
+Current date: {new Date().toLocaleDateString()}
+
+Math calculation: 2 + 3 = {2 + 3}
+
+## Custom Components
+
+### Importing Components
+
+You can import and use React components in your MDX files:
+
+```mdx
+import { Button } from '../components/Button'
+import CodeDemo from '../components/CodeDemo'
+import { Alert } from '../components/Alert'
+
+<Alert type="info">
+  This is a custom alert component.
+</Alert>
+
+<Button onClick={() => alert('Clicked!')}>
+  Click me
+</Button>
+
+<CodeDemo language="javascript">
+  console.log('Interactive code demo');
+</CodeDemo>
+```
+
+### Creating Reusable Components
+
+Create components for repeated content:
+
+```mdx
+export const FeatureBox = ({ title, children, icon }) => (
+  <div style={{
+    border: '2px solid #e0e0e0',
+    borderRadius: '8px',
+    padding: '1.5rem',
+    margin: '1rem 0'
+  }}>
+    <h3 style={{marginTop: 0}}>
+      {icon && <span>{icon} </span>}
+      {title}
+    </h3>
+    {children}
+  </div>
+)
+
+<FeatureBox title="Easy to Use" icon="🎯">
+  BaiDocs makes documentation creation simple and intuitive.
+</FeatureBox>
+
+<FeatureBox title="Powerful Features" icon="⚡">
+  Advanced features for complex documentation needs.
+</FeatureBox>
+```
+
+## Advanced Layout Techniques
+
+### Multi-column Layouts
+
+Create responsive column layouts:
+
+```mdx
+<div style={{
+  display: 'grid',
+  gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
+  gap: '1rem',
+  marginTop: '1rem'
+}}>
+  <div style={{padding: '1rem', backgroundColor: '#f9f9f9'}}>
+    <h4>Column 1</h4>
+    <p>Content for the first column.</p>
+  </div>
+
+  <div style={{padding: '1rem', backgroundColor: '#f9f9f9'}}>
+    <h4>Column 2</h4>
+    <p>Content for the second column.</p>
+  </div>
+
+  <div style={{padding: '1rem', backgroundColor: '#f9f9f9'}}>
+    <h4>Column 3</h4>
+    <p>Content for the third column.</p>
+  </div>
+</div>
+```
+
+### Flexible Containers
+
+Create flexible content containers:
+
+```mdx
+<div style={{
+  display: 'flex',
+  flexDirection: 'row',
+  gap: '1rem',
+  alignItems: 'flex-start'
+}}>
+  <div style={{flex: '1', backgroundColor: '#e3f2fd', padding: '1rem'}}>
+    <h4>Main Content</h4>
+    <p>This section takes up most of the space.</p>
+  </div>
+
+  <div style={{flex: '0 0 200px', backgroundColor: '#fff3e0', padding: '1rem'}}>
+    <h4>Sidebar</h4>
+    <p>Fixed-width sidebar content.</p>
+  </div>
+</div>
+```
+
+### Responsive Design
+
+Create mobile-friendly layouts:
+
+```mdx
+<div style={{
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '1rem'
+}}>
+  <div style={{
+    '@media (min-width: 768px)': {
+      display: 'flex',
+      flexDirection: 'row',
+      gap: '2rem'
+    }
+  }}>
+    <div style={{flex: 1}}>
+      <h4>Responsive Section 1</h4>
+      <p>Stacks vertically on mobile, side-by-side on desktop.</p>
+    </div>
+
+    <div style={{flex: 1}}>
+      <h4>Responsive Section 2</h4>
+      <p>Automatically adapts to screen size.</p>
+    </div>
+  </div>
+</div>
+```
+
+## Interactive Elements
+
+### Tabs Component
+
+Create tabbed content sections:
+
+```mdx
+export const Tabs = ({ children, defaultTab = 0 }) => {
+  const [activeTab, setActiveTab] = useState(defaultTab);
+  const tabs = React.Children.toArray(children);
+
+  return (
+    <div style={{border: '1px solid #ddd', borderRadius: '8px'}}>
+      <div style={{display: 'flex', borderBottom: '1px solid #ddd'}}>
+        {tabs.map((tab, index) => (
+          <button
+            key={index}
+            onClick={() => setActiveTab(index)}
+            style={{
+              padding: '0.75rem 1rem',
+              border: 'none',
+              backgroundColor: activeTab === index ? '#f0f0f0' : 'transparent',
+              cursor: 'pointer'
+            }}
+          >
+            {tab.props.title}
+          </button>
+        ))}
+      </div>
+      <div style={{padding: '1rem'}}>
+        {tabs[activeTab]}
+      </div>
+    </div>
+  );
+};
+
+export const TabPanel = ({ title, children }) => <div>{children}</div>;
+
+<Tabs>
+  <TabPanel title="JavaScript">
+    ```javascript
+    const greeting = 'Hello, World!';
+    console.log(greeting);
+    ```
+  </TabPanel>
+
+  <TabPanel title="Python">
+    ```python
+    greeting = 'Hello, World!'
+    print(greeting)
+    ```
+  </TabPanel>
+
+  <TabPanel title="Go">
+    ```go
+    package main
+    import "fmt"
+
+    func main() {
+        fmt.Println("Hello, World!")
+    }
+    ```
+  </TabPanel>
+</Tabs>
+```
+
+### Collapsible Content
+
+Create expandable sections:
+
+```mdx
+export const Collapsible = ({ title, children, defaultOpen = false }) => {
+  const [isOpen, setIsOpen] = useState(defaultOpen);
+
+  return (
+    <div style={{
+      border: '1px solid #ddd',
+      borderRadius: '8px',
+      marginBottom: '1rem'
+    }}>
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        style={{
+          width: '100%',
+          padding: '1rem',
+          textAlign: 'left',
+          backgroundColor: '#f8f9fa',
+          border: 'none',
+          borderRadius: '8px 8px 0 0',
+          cursor: 'pointer',
+          fontWeight: 'bold'
+        }}
+      >
+        {title} {isOpen ? '▼' : '▶'}
+      </button>
+      {isOpen && (
+        <div style={{padding: '1rem'}}>
+          {children}
+        </div>
+      )}
+    </div>
+  );
+};
+
+<Collapsible title="Advanced Configuration">
+  This content is hidden by default and can be expanded by clicking the title.
+
+  ```yaml
+  advanced:
+    cache: true
+    compression: gzip
+    timeout: 30000
+  ```
+</Collapsible>
+
+<Collapsible title="API Reference" defaultOpen={true}>
+  This section is open by default.
+
+  - `GET /api/users` - Get all users
+  - `POST /api/users` - Create a new user
+  - `PUT /api/users/:id` - Update a user
+</Collapsible>
+```
+
+## Code Enhancement
+
+### Code with Copy Button
+
+Create code blocks with copy functionality:
+
+```mdx
+export const CodeBlock = ({ children, language, copyable = true }) => {
+  const [copied, setCopied] = useState(false);
+
+  const copyCode = () => {
+    navigator.clipboard.writeText(children);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  return (
+    <div style={{position: 'relative'}}>
+      {copyable && (
+        <button
+          onClick={copyCode}
+          style={{
+            position: 'absolute',
+            top: '0.5rem',
+            right: '0.5rem',
+            padding: '0.25rem 0.5rem',
+            fontSize: '0.8rem',
+            backgroundColor: copied ? '#4caf50' : '#2196f3',
+            color: 'white',
+            border: 'none',
+            borderRadius: '4px',
+            cursor: 'pointer'
+          }}
+        >
+          {copied ? 'Copied!' : 'Copy'}
+        </button>
+      )}
+      <pre style={{
+        backgroundColor: '#f5f5f5',
+        padding: '1rem',
+        borderRadius: '8px',
+        overflow: 'auto'
+      }}>
+        <code>{children}</code>
+      </pre>
+    </div>
+  );
+};
+
+<CodeBlock language="bash">
+npm install @baidocs/cli
+baidocs init my-docs
+cd my-docs
+baidocs dev
+</CodeBlock>
+```
+
+### Highlighted Code Lines
+
+Emphasize specific lines in code blocks:
+
+```mdx
+export const HighlightedCode = ({ children, highlightLines = [] }) => {
+  const lines = children.split('\n');
+
+  return (
+    <pre style={{backgroundColor: '#f5f5f5', padding: '1rem', borderRadius: '8px'}}>
+      {lines.map((line, index) => (
+        <div
+          key={index}
+          style={{
+            backgroundColor: highlightLines.includes(index + 1) ? '#fff3cd' : 'transparent',
+            padding: '0 0.5rem',
+            margin: '0 -0.5rem'
+          }}
+        >
+          <code>{line}</code>
+        </div>
+      ))}
+    </pre>
+  );
+};
+
+<HighlightedCode highlightLines={[2, 4]}>
+{`function example() {
+  const important = 'This line is highlighted';
+  const normal = 'This line is normal';
+  const alsoImportant = 'This line is also highlighted';
+  return { important, normal, alsoImportant };
+}`}
+</HighlightedCode>
+```
+
+## Data Visualization
+
+### Simple Charts
+
+Create basic charts and visualizations:
+
+```mdx
+export const ProgressBar = ({ value, max = 100, label }) => (
+  <div style={{marginBottom: '1rem'}}>
+    {label && <div style={{marginBottom: '0.5rem', fontWeight: 'bold'}}>{label}</div>}
+    <div style={{
+      width: '100%',
+      height: '20px',
+      backgroundColor: '#e0e0e0',
+      borderRadius: '10px',
+      overflow: 'hidden'
+    }}>
+      <div style={{
+        width: `${(value / max) * 100}%`,
+        height: '100%',
+        backgroundColor: '#4caf50',
+        transition: 'width 0.3s ease'
+      }} />
+    </div>
+    <div style={{textAlign: 'right', fontSize: '0.9rem', marginTop: '0.25rem'}}>
+      {value} / {max} ({Math.round((value / max) * 100)}%)
+    </div>
+  </div>
+);
+
+<ProgressBar value={75} max={100} label="Project Completion" />
+<ProgressBar value={45} max={60} label="Documentation Coverage" />
+<ProgressBar value={12} max={15} label="Team Members" />
+```
+
+### Comparison Tables
+
+Create enhanced comparison tables:
+
+```mdx
+export const ComparisonTable = ({ data, highlight = [] }) => (
+  <div style={{overflowX: 'auto'}}>
+    <table style={{width: '100%', borderCollapse: 'collapse'}}>
+      <thead>
+        <tr style={{backgroundColor: '#f0f0f0'}}>
+          {data.headers.map((header, index) => (
+            <th key={index} style={{
+              padding: '0.75rem',
+              textAlign: 'left',
+              borderBottom: '2px solid #ddd',
+              backgroundColor: highlight.includes(index) ? '#e3f2fd' : '#f0f0f0'
+            }}>
+              {header}
+            </th>
+          ))}
+        </tr>
+      </thead>
+      <tbody>
+        {data.rows.map((row, rowIndex) => (
+          <tr key={rowIndex}>
+            {row.map((cell, cellIndex) => (
+              <td key={cellIndex} style={{
+                padding: '0.75rem',
+                borderBottom: '1px solid #ddd',
+                backgroundColor: highlight.includes(cellIndex) ? '#f3e5f5' : 'transparent'
+              }}>
+                {cell}
+              </td>
+            ))}
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+);
+
+<ComparisonTable
+  highlight={[1]}
+  data={{
+    headers: ['Feature', 'Basic', 'Pro', 'Enterprise'],
+    rows: [
+      ['Users', '1', '10', 'Unlimited'],
+      ['Storage', '1GB', '100GB', 'Unlimited'],
+      ['Support', 'Email', '24/7 Chat', 'Phone + Dedicated'],
+      ['API Calls', '1,000/month', '100,000/month', 'Unlimited']
+    ]
+  }}
+/>
+```
+
+## Best Practices for MDX
+
+### Component Organization
+
+Structure your components logically:
+
+```mdx
+// At the top of your file
+import { Button, Alert, CodeBlock } from '../components'
+
+// Define simple components inline
+export const Highlight = ({ children, color = 'yellow' }) => (
+  <mark style={{backgroundColor: color, padding: '0.1rem 0.2rem'}}>
+    {children}
+  </mark>
+)
+
+// Use components throughout your content
+<Alert type="warning">
+  Make sure to <Highlight color="orange">backup your data</Highlight> before proceeding.
+</Alert>
+```
+
+### Performance Considerations
+
+**Lazy Load Heavy Components**:
+```mdx
+import { lazy, Suspense } from 'react'
+
+const HeavyChart = lazy(() => import('../components/HeavyChart'))
+
+<Suspense fallback={<div>Loading chart...</div>}>
+  <HeavyChart data={chartData} />
+</Suspense>
+```
+
+**Optimize Inline Styles**:
+```mdx
+// Good: Define styles once
+export const cardStyle = {
+  border: '1px solid #ddd',
+  borderRadius: '8px',
+  padding: '1rem',
+  marginBottom: '1rem'
+}
+
+<div style={cardStyle}>Content</div>
+<div style={cardStyle}>More content</div>
+
+// Avoid: Inline styles everywhere
+<div style={{border: '1px solid #ddd', borderRadius: '8px'}}>Content</div>
+```
+
+### Accessibility
+
+Make your components accessible:
+
+```mdx
+export const AccessibleButton = ({ children, onClick, ...props }) => (
+  <button
+    onClick={onClick}
+    style={{
+      padding: '0.75rem 1.5rem',
+      fontSize: '1rem',
+      border: '2px solid #2196f3',
+      backgroundColor: '#2196f3',
+      color: 'white',
+      borderRadius: '8px',
+      cursor: 'pointer'
+    }}
+    // Accessibility attributes
+    role="button"
+    aria-label={props.ariaLabel}
+    tabIndex={0}
+    {...props}
+  >
+    {children}
+  </button>
+)
+
+<AccessibleButton
+  ariaLabel="Download the installation guide"
+  onClick={() => downloadGuide()}
+>
+  Download Guide
+</AccessibleButton>
+```
+
+## Common MDX Patterns
+
+### Documentation Cards
+
+```mdx
+export const DocCard = ({ title, description, link, icon }) => (
+  <div style={{
+    border: '1px solid #e0e0e0',
+    borderRadius: '8px',
+    padding: '1.5rem',
+    marginBottom: '1rem',
+    transition: 'box-shadow 0.2s',
+    ':hover': {
+      boxShadow: '0 4px 8px rgba(0,0,0,0.1)'
+    }
+  }}>
+    <h3 style={{marginTop: 0}}>
+      {icon && <span style={{marginRight: '0.5rem'}}>{icon}</span>}
+      {title}
+    </h3>
+    <p>{description}</p>
+    {link && (
+      <a href={link} style={{
+        color: '#2196f3',
+        textDecoration: 'none',
+        fontWeight: 'bold'
+      }}>
+        Learn more →
+      </a>
+    )}
+  </div>
+)
+
+<div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1rem'}}>
+  <DocCard
+    title="Getting Started"
+    description="Learn the basics of BaiDocs"
+    link="../getting-started/overview.mdx"
+    icon="🚀"
+  />
+
+  <DocCard
+    title="Advanced Features"
+    description="Explore powerful capabilities"
+    link="../advanced/themes.mdx"
+    icon="⚡"
+  />
+
+  <DocCard
+    title="Deployment"
+    description="Deploy your documentation"
+    link="../deployment/vercel.mdx"
+    icon="☁️"
+  />
+</div>
+```
+
+## Next Steps
+
+With MDX mastery, you can create:
+
+1. **[Rich Admonitions](admonitions.mdx)** - Eye-catching callouts and alerts
+2. **[Advanced Layouts](../advanced/themes.mdx)** - Custom themes and styling
+3. **[Interactive Components](../advanced/search.mdx)** - Dynamic functionality
+
+---
+
+*MDX combines the best of Markdown simplicity with React component power for truly dynamic documentation.*

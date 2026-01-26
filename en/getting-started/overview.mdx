@@ -1,0 +1,190 @@
+# Overview
+
+BaiDocs is a modern documentation framework that separates content creation from content presentation, providing a flexible and powerful solution for teams of all sizes.
+
+## Architecture Overview
+
+BaiDocs follows a **dual-application architecture** that separates concerns between editing and viewing:
+
+![BaiDocs Architecture](../_assets/architecture-overview.png)
+
+### 📝 **Editor Application** (`/apps/editor`)
+
+The Editor is a Next.js application that provides:
+
+- **Content Management**: Create, edit, and organize documentation
+- **Git Integration**: Connect to remote repositories, manage branches
+- **Import Tools**: Convert from Sphinx, MkDocs, GitBook formats
+- **Live Preview**: Real-time preview of content changes
+- **Multi-language Support**: Manage translations and language-specific content
+
+**Primary Use Case**: Content creators and documentation maintainers use the Editor locally to create and manage documentation.
+
+### 👀 **Viewer Application** (`/apps/viewer`)
+
+The Viewer is a Next.js application optimized for public consumption:
+
+- **Fast Rendering**: Optimized for performance and SEO
+- **Responsive Design**: Mobile-first, accessible interface
+- **Search Integration**: Full-text search across all content
+- **Version Support**: Browse different versions/branches
+- **Deployment Ready**: Easy deployment to Vercel, Netlify, etc.
+
+**Primary Use Case**: End users and documentation consumers access the Viewer for reading documentation.
+
+## Project Structure
+
+```
+baidocs/
+├── apps/
+│   ├── editor/          # Content creation & management
+│   └── viewer/          # Public documentation site
+├── content/             # Documentation books
+│   ├── book1/
+│   │   ├── book.config.yaml
+│   │   ├── en/          # English content
+│   │   └── ko/          # Korean content
+│   └── book2/
+├── packages/
+│   └── ui/              # Shared UI components
+└── ...
+```
+
+### Content Organization
+
+Each documentation book follows this structure:
+
+```
+content/your-book/
+├── book.config.yaml     # Book configuration
+├── en/                  # English content
+│   ├── index.mdx       # Homepage
+│   ├── getting-started/
+│   └── _assets/         # Assets
+├── ko/                 # Korean content (optional)
+│   ├── index.mdx
+│   └── ...
+└── .git/               # Git repository (optional)
+```
+
+## Version Control with Git Branches
+
+BaiDocs leverages Git branches for powerful version management:
+
+### 🌿 **Branch-based Versioning**
+
+- **Multiple Versions**: Each Git branch represents a different version
+- **Live Switching**: Readers can switch between versions in the Viewer
+- **Independent Content**: Each branch can have different content structure
+
+```
+main          ← Latest stable version
+├── v2.0      ← Version 2.0 documentation
+├── v1.0      ← Version 1.0 documentation
+└── dev       ← Development/preview version
+```
+
+### 🌍 **Language Support**
+
+BaiDocs provides native multi-language support:
+
+- **Per-language Directories**: Each language gets its own folder (`en/`, `ko/`, `fr/`)
+- **Shared Configuration**: Navigation and metadata in `book.config.yaml`
+- **Independent Translation**: Each language can have different content structure
+- **Language Switching**: Automatic language detection and switching in Viewer
+
+## MDX: Enhanced Markdown
+
+BaiDocs uses **MDX** (Markdown + JSX) as its primary content format:
+
+### 📄 **Standard Markdown**
+All standard Markdown syntax is supported:
+- Headers, lists, links, images
+- Code blocks with syntax highlighting
+- Tables, blockquotes
+
+### ⚡ **MDX Extensions**
+- **React Components**: Embed interactive components
+- **Custom Styling**: Use JSX for advanced layouts
+- **Dynamic Content**: JavaScript expressions in content
+
+```mdx
+# Regular Markdown Header
+
+This is regular markdown content.
+
+<div style={{backgroundColor: '#f0f0f0', padding: '1rem'}}>
+  This is JSX content mixed with **markdown**.
+</div>
+
+import CustomComponent from './components/CustomComponent'
+
+<CustomComponent data="example" />
+```
+
+### 🎨 **BaiDocs Extensions**
+- **Admonitions**: Special callout boxes for notes, warnings, tips
+- **Code Tabs**: Multi-language code examples
+- **Image Optimization**: Automatic image processing and optimization
+
+## Import & Conversion Capabilities
+
+BaiDocs can import and convert documentation from popular formats:
+
+### 📚 **Supported Formats**
+
+| Format | Import Support | Conversion Features |
+|--------|---------------|-------------------|
+| **Sphinx** | ✅ Full | RST → MDX, navigation, assets |
+| **MkDocs** | ✅ Full | YAML config, themes, extensions |
+| **GitBook** | ✅ Full | GitBook format → BaiDocs structure |
+| **Generic Markdown** | ✅ Basic | File structure preservation |
+
+### 🧹 **Clean Import Process**
+
+When you import documentation:
+
+1. **Analysis**: BaiDocs analyzes the source structure
+2. **Conversion**: Content is converted to MDX format
+3. **Clean Repository**: Creates a new, clean Git repository
+4. **Structure Optimization**: Organizes content in BaiDocs format
+5. **Asset Migration**: Images and files are properly organized
+
+The result is a clean, optimized BaiDocs repository without the baggage of the original tooling.
+
+## Monorepo Support
+
+BaiDocs automatically detects and supports monorepo setups:
+
+### 🏢 **Automatic Detection**
+
+BaiDocs will automatically detect if your documentation is part of a larger repository:
+
+```
+your-monorepo/
+├── src/                 # Application code
+├── docs/               # BaiDocs content (auto-detected!)
+│   ├── book.config.yaml
+│   ├── en/
+│   └── ko/
+└── package.json
+```
+
+### 🔧 **Configuration**
+
+For monorepos, BaiDocs can be configured with:
+- **Subdirectory Path**: Specify where documentation lives
+- **Build Integration**: Integrate with existing CI/CD pipelines
+- **Selective Deployment**: Deploy only documentation changes
+
+## Next Steps
+
+Now that you understand BaiDocs architecture and capabilities:
+
+1. **[Install BaiDocs](installation.mdx)** - Set up your development environment
+2. **[Create Your First Book](first-book.mdx)** - Build your first documentation project
+3. **[Managing Books](../books/creating-books.mdx)** - Learn advanced book management
+
+---
+
+*Understanding BaiDocs architecture helps you make the most of its powerful features. Ready to get your hands dirty?*

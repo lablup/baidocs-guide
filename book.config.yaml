@@ -1,130 +1,101 @@
 id: baidocs-guide
-title: BaiDocs Documentation
-description: Complete documentation for BaiDocs - a modern documentation framework with MDX support and advanced features
-emoji: 📖
-type: standalone
+title: BaiDocs Guide
+description: Complete guide to using BaiDocs for creating and managing documentation
+emoji: 📚
+type: document
+branch: main
 languages:
   - en
   - ko
 defaultLanguage: en
 navigation:
   en:
-    - title: Introduction
-      path: introduction
+    - title: "Home"
+      path: "index.mdx"
+    - title: "Getting Started"
       items:
-        - title: Welcome
-          path: introduction/index.md
-        - title: What is BaiDocs
-          path: introduction/overview.md
-        - title: Key Features
-          path: introduction/features.md
-    - title: Getting Started
-      path: getting-started
+        - title: "Overview"
+          path: "getting-started/overview.mdx"
+        - title: "Installation"
+          path: "getting-started/installation.mdx"
+        - title: "First Book"
+          path: "getting-started/first-book.mdx"
+    - title: "Managing Books"
       items:
-        - title: Installation
-          path: getting-started/installation.md
-        - title: Creating Your First Book
-          path: getting-started/first-book.md
-        - title: Project Structure
-          path: getting-started/project-structure.md
-        - title: Version Control Integration
-          path: getting-started/version-control.md
-    - title: Content Authoring
-      path: content-authoring
+        - title: "Creating Books"
+          path: "books/creating-books.mdx"
+        - title: "Cloning Books"
+          path: "books/cloning-books.mdx"
+        - title: "Importing & Converting"
+          path: "books/importing-books.mdx"
+    - title: "Writing Content"
       items:
-        - title: Markdown Fundamentals
-          path: content-authoring/markdown-basics.md
-        - title: Extended Markdown Syntax
-          path: content-authoring/markdown-extended.md
-        - title: Admonitions and Callouts
-          path: content-authoring/admonitions.md
-        - title: Code Blocks and Syntax Highlighting
-          path: content-authoring/code-blocks.md
-        - title: Tables and Lists
-          path: content-authoring/tables-lists.md
-        - title: Images and Media
-          path: content-authoring/media.md
-    - title: Advanced Features
-      path: advanced
+        - title: "Markdown Basics"
+          path: "writing/markdown-basics.mdx"
+        - title: "MDX Features"
+          path: "writing/mdx-features.mdx"
+        - title: "Admonitions"
+          path: "writing/admonitions.mdx"
+    - title: "Advanced Features"
       items:
-        - title: Theme Customization
-          path: advanced/themes.md
-        - title: PDF Generation
-          path: advanced/pdf-generation.md
-        - title: Search Configuration
-          path: advanced/search.md
-        - title: Multi-language Support
-          path: advanced/multilingual.md
-    - title: Deployment
-      path: deployment
+        - title: "Themes"
+          path: "advanced/themes.mdx"
+        - title: "PDF Generation"
+          path: "advanced/pdf-generation.mdx"
+        - title: "Search"
+          path: "advanced/search.mdx"
+        - title: "Multi-language"
+          path: "advanced/multilingual.mdx"
+        - title: "Versioning"
+          path: "advanced/versioning.mdx"
+    - title: "Deployment"
       items:
-        - title: Build Process
-          path: deployment/building.md
-        - title: Hosting Options
-          path: deployment/hosting.md
+        - title: "Local Deployment"
+          path: "deployment/local.mdx"
+        - title: "Vercel Deployment"
+          path: "deployment/vercel.mdx"
   ko:
-    - title: 소개
-      path: introduction
+    - title: "홈"
+      path: "index.mdx"
+    - title: "시작하기"
       items:
-        - title: 시작하기
-          path: introduction/index.md
-        - title: BaiDocs란 무엇인가
-          path: introduction/overview.md
-        - title: 주요 기능
-          path: introduction/features.md
-    - title: 시작하기
-      path: getting-started
+        - title: "개요"
+          path: "getting-started/overview.mdx"
+        - title: "설치"
+          path: "getting-started/installation.mdx"
+        - title: "첫 번째 책"
+          path: "getting-started/first-book.mdx"
+    - title: "책 관리"
       items:
-        - title: 설치
-          path: getting-started/installation.md
-        - title: 첫 번째 책 만들기
-          path: getting-started/first-book.md
-        - title: 프로젝트 구조
-          path: getting-started/project-structure.md
-        - title: 버전 관리 연동
-          path: getting-started/version-control.md
-    - title: 콘텐츠 작성
-      path: content-authoring
+        - title: "책 생성하기"
+          path: "books/creating-books.mdx"
+        - title: "책 복제하기"
+          path: "books/cloning-books.mdx"
+        - title: "가져오기 & 변환"
+          path: "books/importing-books.mdx"
+    - title: "콘텐츠 작성"
       items:
-        - title: 마크다운 기초
-          path: content-authoring/markdown-basics.md
-        - title: 확장 마크다운 문법
-          path: content-authoring/markdown-extended.md
-        - title: 경고문과 콜아웃
-          path: content-authoring/admonitions.md
-        - title: 코드 블록과 구문 강조
-          path: content-authoring/code-blocks.md
-        - title: 표와 목록
-          path: content-authoring/tables-lists.md
-        - title: 이미지와 미디어
-          path: content-authoring/media.md
-    - title: 고급 기능
-      path: advanced
+        - title: "마크다운 기초"
+          path: "writing/markdown-basics.mdx"
+        - title: "MDX 기능"
+          path: "writing/mdx-features.mdx"
+        - title: "어드모니션"
+          path: "writing/admonitions.mdx"
+    - title: "고급 기능"
       items:
-        - title: 테마 커스터마이징
-          path: advanced/themes.md
-        - title: PDF 생성
-          path: advanced/pdf-generation.md
-        - title: 검색 설정
-          path: advanced/search.md
-        - title: 다국어 지원
-          path: advanced/multilingual.md
-    - title: 배포
-      path: deployment
+        - title: "테마"
+          path: "advanced/themes.mdx"
+        - title: "PDF 생성"
+          path: "advanced/pdf-generation.mdx"
+        - title: "검색"
+          path: "advanced/search.mdx"
+        - title: "다중 언어"
+          path: "advanced/multilingual.mdx"
+        - title: "버전 관리"
+          path: "advanced/versioning.mdx"
+    - title: "배포"
       items:
-        - title: 빌드 프로세스
-          path: deployment/building.md
-        - title: 호스팅 옵션
-          path: deployment/hosting.md
-pdf:
-  split: chapter
-  cover:
-    title: BaiDocs Documentation
-    subtitle: Complete Guide to Modern Documentation Framework
-  imageOptimization:
-    enabled: true
-    maxWidth: 1200
-    quality: 85
-repoUrl: https://github.com/lablup/baidocs-guide
-createdAt: 2026-01-20T12:00:00.000Z
-updatedAt: 2026-01-20T12:00:00.000Z
+        - title: "로컬 배포"
+          path: "deployment/local.mdx"
+        - title: "Vercel 배포"
+          path: "deployment/vercel.mdx"

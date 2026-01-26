@@ -1,0 +1,351 @@
+# Creating Books
+
+BaiDocs provides multiple ways to create documentation books, each suited for different workflows and requirements.
+
+## Creating a New Book
+
+### Access the New Book Modal
+
+In the BaiDocs Editor, click the **"New Book"** button on the homepage:
+
+![New Book Modal](../_assets/new-book-modal.png)
+
+### Basic Configuration
+
+#### Book Information
+
+- **Book Name**: The directory name for your book (e.g., `api-documentation`)
+  - Must be lowercase, no spaces
+  - Use hyphens for word separation
+  - Will become the URL path
+
+- **Display Title**: The human-readable title (e.g., `API Documentation`)
+  - Shown in navigation and page titles
+  - Can contain spaces and special characters
+
+- **Description**: Brief description of the book's purpose
+  - Helps users understand the book's content
+  - Used in search results and metadata
+
+- **Emoji**: Optional emoji to represent your book
+  - Makes navigation more visual and memorable
+  - Displayed in book lists and navigation
+
+#### Language Settings
+
+- **Default Language**: Primary language for your documentation
+  - Usually `en` (English)
+  - Determines the default content language
+
+- **Additional Languages**: You can add more languages later
+  - Each language gets its own content directory
+  - Navigation can be translated per language
+
+#### Template Selection
+
+Choose a template that matches your documentation type:
+
+- **Empty**: Minimal structure, maximum flexibility
+- **Documentation**: Standard technical documentation
+- **API Reference**: Structured for API documentation
+- **Tutorial**: Step-by-step guide format
+
+## Git Integration Options
+
+BaiDocs offers three approaches to Git integration:
+
+### Option 1: Local Git Repository
+
+**Best for**: New projects, local development, gradual adoption
+
+```
+✅ Advantages:
+- Quick setup
+- No external dependencies
+- Full local control
+- Easy to connect to remote later
+
+❌ Considerations:
+- Manual backup required
+- No built-in collaboration
+- Remote setup needed later
+```
+
+**Configuration**:
+- **Git Type**: Local
+- **Branch**: `main` (recommended)
+
+**What happens**:
+1. Local Git repository is initialized
+2. Initial commit is created
+3. Working branch is set to specified branch
+4. Ready for local development
+
+### Option 2: Connect to Remote Repository
+
+**Best for**: Existing empty repositories, team collaboration
+
+```
+✅ Advantages:
+- Immediate backup to remote
+- Team collaboration ready
+- CI/CD integration possible
+- Version history preserved
+
+❌ Considerations:
+- Repository must exist and be empty
+- Git credentials required
+- Network dependency
+```
+
+**Configuration**:
+- **Git Type**: Remote
+- **Repository URL**: `https://github.com/username/repo.git`
+- **Branch**: `main` or your preferred branch
+
+**Prerequisites**:
+- Empty Git repository exists
+- You have push access to the repository
+- Git credentials configured
+
+**What happens**:
+1. Local content is created
+2. Git repository is initialized
+3. Remote origin is configured
+4. Initial commit and push to remote
+
+### Option 3: Create First, Connect Later
+
+**Best for**: Uncertain remote setup, experimental projects
+
+```
+✅ Advantages:
+- Start immediately
+- No upfront remote setup
+- Test locally first
+- Connect when ready
+
+❌ Considerations:
+- Manual remote connection required
+- Potential merge conflicts later
+- Extra setup steps
+```
+
+**Process**:
+1. Create book with **Local** git type
+2. Develop content locally
+3. Create remote repository when ready
+4. Connect local to remote manually
+
+## Connecting Local to Remote Later
+
+If you started with a local repository, you can connect it to a remote:
+
+### Step 1: Create Remote Repository
+
+Create an empty repository on GitHub, GitLab, or your Git provider.
+
+### Step 2: Add Remote Origin
+
+```bash
+cd content/your-book-name
+git remote add origin https://github.com/username/repo.git
+```
+
+### Step 3: Push to Remote
+
+```bash
+git push -u origin main
+```
+
+### Step 4: Verify Connection
+
+```bash
+git remote -v
+# Should show:
+# origin  https://github.com/username/repo.git (fetch)
+# origin  https://github.com/username/repo.git (push)
+```
+
+## Book Structure After Creation
+
+Once created, your book will have this structure:
+
+```
+content/your-book/
+├── book.config.yaml     # Book configuration
+├── en/                  # Default language content
+│   ├── index.mdx       # Homepage
+│   ├── getting-started/
+│   │   └── README.md   # Getting started section
+│   └── _assets/         # Images and assets
+├── .git/               # Git repository (if enabled)
+├── .gitignore          # Git ignore rules
+└── README.md           # Repository documentation
+```
+
+### Understanding book.config.yaml
+
+This file controls your book's behavior and metadata:
+
+```yaml
+id: your-book
+title: Your Book Title
+description: Description of your documentation
+emoji: 📚
+type: document
+branch: main
+languages:
+  - en
+defaultLanguage: en
+navigation:
+  en:
+    - title: "Home"
+      path: "index.mdx"
+    - title: "Getting Started"
+      path: "getting-started/README.md"
+```
+
+**Key Configuration Options**:
+
+- `id`: Unique identifier (matches directory name)
+- `title`: Display title for the book
+- `description`: Brief description
+- `emoji`: Visual identifier
+- `type`: Document type (`document` is standard)
+- `branch`: Default Git branch
+- `languages`: Supported languages array
+- `defaultLanguage`: Primary language
+- `navigation`: Per-language navigation structure
+
+## Advanced Creation Options
+
+### Environment-specific Books
+
+For different environments (development, staging, production):
+
+```yaml
+# book.config.yaml
+id: api-docs-dev
+title: API Documentation (Development)
+description: Development environment API docs
+baseUrl: https://dev-api.example.com
+```
+
+### Multi-repository Books
+
+For books that span multiple repositories:
+
+```yaml
+# book.config.yaml
+externalSources:
+  - name: "API Specs"
+    repository: "https://github.com/company/api-specs.git"
+    path: "docs/"
+  - name: "SDK Examples"
+    repository: "https://github.com/company/sdk-examples.git"
+    path: "examples/"
+```
+
+### Custom Branch Strategies
+
+For complex branching strategies:
+
+```yaml
+# book.config.yaml
+git:
+  defaultBranch: main
+  developmentBranch: develop
+  branchPrefix: "docs/"
+  autoMerge: false
+```
+
+## Best Practices
+
+### Naming Conventions
+
+**Book Names**:
+- Use kebab-case: `api-documentation`
+- Be descriptive: `user-guide` not `guide`
+- Avoid versions in names: `api-docs` not `api-docs-v2`
+
+**Directory Structure**:
+```
+getting-started/     # Good: clear purpose
+basics/             # Good: descriptive
+misc/               # Avoid: too vague
+temp/               # Avoid: not permanent
+```
+
+### Content Organization
+
+**Logical Hierarchy**:
+```
+en/
+├── index.mdx           # Always have a homepage
+├── getting-started/    # Start here content
+├── user-guide/         # How-to information
+├── reference/          # Detailed reference
+├── advanced/           # Expert topics
+└── troubleshooting/    # Problem resolution
+```
+
+### Git Workflow Integration
+
+**For Teams**:
+- Use feature branches for major changes
+- Require pull request reviews
+- Set up automatic deployment from main branch
+- Use conventional commit messages
+
+**Branch Protection**:
+```bash
+# Protect main branch
+git branch --set-upstream-to=origin/main main
+```
+
+## Troubleshooting
+
+### Common Issues
+
+**"Repository already exists"**:
+- Repository is not empty
+- Use different repository or clean existing one
+
+**"Permission denied"**:
+- Check Git credentials
+- Verify repository access permissions
+- Use SSH keys if HTTPS fails
+
+**"Could not push to remote"**:
+- Repository may not be empty
+- Check branch names match
+- Verify network connectivity
+
+### Recovery Steps
+
+**Start Over**:
+```bash
+rm -rf content/problematic-book
+# Create again with different settings
+```
+
+**Fix Remote Connection**:
+```bash
+cd content/your-book
+git remote set-url origin https://github.com/correct-url/repo.git
+git push -u origin main
+```
+
+## Next Steps
+
+After creating your book:
+
+1. **[Write Content](../writing/markdown-basics.mdx)**: Learn MDX syntax and features
+2. **[Configure Navigation](../advanced/multilingual.mdx)**: Set up navigation structure
+3. **[Add Languages](../advanced/multilingual.mdx)**: Support multiple languages
+4. **[Deploy](../deployment/local.mdx)**: Make your documentation available
+
+---
+
+*Your book is ready! Start filling it with amazing content.*

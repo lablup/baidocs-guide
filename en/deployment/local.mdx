@@ -1,0 +1,783 @@
+# Local Deployment
+
+BaiDocs can be deployed locally for development, testing, or private documentation hosting. This guide covers setting up BaiDocs on your local machine or private server for complete control over your documentation environment.
+
+## Overview
+
+### Local Deployment Benefits
+
+- **Complete Control**: Full control over the hosting environment
+- **Privacy**: Keep sensitive documentation internal
+- **Customization**: Unlimited customization possibilities
+- **Performance**: Optimized for your specific needs
+- **Integration**: Easy integration with internal systems
+
+### Deployment Architecture
+
+```
+Local BaiDocs Deployment:
+┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
+│   Editor App    │    │   Viewer App    │    │ Content Storage │
+│  (localhost:3001)│    │ (localhost:3000)│    │ (File System)   │
+│                 │    │                 │    │                 │
+│ - File editing  │    │ - Documentation │    │ - Git repos     │
+│ - Live preview  │    │ - Search        │    │ - Assets        │
+│ - Git integration│   │ - Navigation    │    │ - Builds        │
+└─────────────────┘    └─────────────────┘    └─────────────────┘
+```
+
+## Installation Requirements
+
+### System Requirements
+
+**Minimum Requirements:**
+- **Node.js**: 18.0 or higher
+- **RAM**: 4GB minimum, 8GB recommended
+- **Storage**: 10GB for installation + content
+- **Git**: Version 2.0 or higher
+
+**Recommended Requirements:**
+- **Node.js**: Latest LTS version
+- **RAM**: 16GB for large documentation sets
+- **Storage**: SSD for better performance
+- **CPU**: Multi-core processor for faster builds
+
+### Software Dependencies
+
+```bash
+# Check Node.js version
+node --version  # Should be 18.0+
+
+# Check npm version
+npm --version   # Should be 8.0+
+
+# Check Git version
+git --version   # Should be 2.0+
+
+# Optional: Check available memory
+free -h         # Linux
+vm_stat         # macOS
+```
+
+## Installation Process
+
+### 1. Download BaiDocs
+
+Clone the BaiDocs repository:
+
+```bash
+# Clone from GitHub
+git clone https://github.com/lablup/baidocs.git
+cd baidocs
+
+# Or download specific version
+git clone --branch v3.0.0 https://github.com/lablup/baidocs.git
+cd baidocs
+```
+
+### 2. Install Dependencies
+
+Install all required packages:
+
+```bash
+# Install dependencies
+npm install
+
+# Verify installation
+npm run --version
+```
+
+### 3. Environment Configuration
+
+Create environment configuration:
+
+```bash
+# Copy example environment file
+cp .env.example .env.local
+
+# Edit environment variables
+nano .env.local
+```
+
+Basic environment configuration:
+
+```bash
+# .env.local
+
+# Application URLs
+NEXT_PUBLIC_EDITOR_URL=http://localhost:3001
+NEXT_PUBLIC_VIEWER_URL=http://localhost:3000
+
+# Content directory (absolute path)
+CONTENT_PATH=/absolute/path/to/your/content
+
+# Optional: Custom port configuration
+EDITOR_PORT=3001
+VIEWER_PORT=3000
+
+# Optional: Development settings
+NODE_ENV=production
+DEBUG=false
+
+# Optional: Git configuration
+GIT_USER_NAME="BaiDocs Bot"
+GIT_USER_EMAIL="baidocs@your-domain.com"
+
+# Optional: Search configuration
+ENABLE_SEARCH=true
+SEARCH_INDEX_PATH=/absolute/path/to/search/index
+
+# Optional: PDF generation
+ENABLE_PDF_GENERATION=true
+PDF_OUTPUT_PATH=/absolute/path/to/pdfs
+```
+
+### 4. Content Directory Setup
+
+Create and configure your content directory:
+
+```bash
+# Create content directory
+mkdir -p /path/to/your/content
+cd /path/to/your/content
+
+# Initialize with sample content
+git init
+git remote add origin https://github.com/your-org/docs-content.git
+
+# Or create a new book
+mkdir -p my-docs/en
+cd my-docs
+
+# Create basic configuration
+cat > book.config.yaml << EOF
+id: my-docs
+title: My Documentation
+description: Local documentation
+emoji: 📚
+type: document
+languages:
+  - en
+defaultLanguage: en
+navigation:
+  en:
+    - title: "Home"
+      path: "index.mdx"
+EOF
+
+# Create home page
+cat > en/index.mdx << EOF
+# Welcome to My Documentation
+
+This is your local BaiDocs installation.
+EOF
+```
+
+## Running BaiDocs
+
+### Development Mode
+
+Run both editor and viewer in development:
+
+```bash
+# Start development servers
+npm run dev
+
+# Or start individually
+npm run dev:editor    # Editor on port 3001
+npm run dev:viewer    # Viewer on port 3000
+```
+
+### Production Mode
+
+Run optimized production build:
+
+```bash
+# Build for production
+npm run build
+
+# Start production servers
+npm run start
+
+# Or start individually
+npm run start:editor
+npm run start:viewer
+```
+
+### Process Manager (Recommended)
+
+Use PM2 for production process management:
+
+```bash
+# Install PM2 globally
+npm install -g pm2
+
+# Create PM2 configuration
+cat > ecosystem.config.js << EOF
+module.exports = {
+  apps: [
+    {
+      name: 'baidocs-editor',
+      script: 'npm',
+      args: 'run start:editor',
+      cwd: '/path/to/baidocs',
+      env: {
+        NODE_ENV: 'production',
+        PORT: 3001
+      },
+      instances: 1,
+      autorestart: true,
+      watch: false,
+      max_memory_restart: '1G'
+    },
+    {
+      name: 'baidocs-viewer',
+      script: 'npm',
+      args: 'run start:viewer',
+      cwd: '/path/to/baidocs',
+      env: {
+        NODE_ENV: 'production',
+        PORT: 3000
+      },
+      instances: 'max',
+      autorestart: true,
+      watch: false,
+      max_memory_restart: '1G'
+    }
+  ]
+};
+EOF
+
+# Start with PM2
+pm2 start ecosystem.config.js
+
+# Save PM2 configuration
+pm2 save
+pm2 startup
+```
+
+## Reverse Proxy Setup
+
+### Nginx Configuration
+
+Set up Nginx as reverse proxy:
+
+```nginx
+# /etc/nginx/sites-available/baidocs
+server {
+    listen 80;
+    server_name your-docs-domain.com;
+
+    # Redirect HTTP to HTTPS
+    return 301 https://$server_name$request_uri;
+}
+
+server {
+    listen 443 ssl http2;
+    server_name your-docs-domain.com;
+
+    # SSL certificates
+    ssl_certificate /path/to/ssl/certificate.crt;
+    ssl_certificate_key /path/to/ssl/private.key;
+
+    # SSL configuration
+    ssl_protocols TLSv1.2 TLSv1.3;
+    ssl_ciphers ECDHE+AESGCM:ECDHE+AES256:ECDHE+AES128:!aNULL:!MD5:!DSS;
+    ssl_prefer_server_ciphers on;
+
+    # Security headers
+    add_header X-Frame-Options DENY;
+    add_header X-Content-Type-Options nosniff;
+    add_header X-XSS-Protection "1; mode=block";
+    add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
+
+    # Editor application (admin only)
+    location /editor {
+        # Restrict access to editor
+        allow 192.168.1.0/24;  # Local network
+        allow 10.0.0.0/8;      # VPN users
+        deny all;
+
+        proxy_pass http://localhost:3001;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_cache_bypass $http_upgrade;
+        proxy_read_timeout 86400;
+    }
+
+    # Viewer application (public access)
+    location / {
+        proxy_pass http://localhost:3000;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_cache_bypass $http_upgrade;
+
+        # Cache static assets
+        location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2)$ {
+            expires 1y;
+            add_header Cache-Control "public, immutable";
+        }
+
+        # Cache generated PDFs
+        location /pdfs/ {
+            expires 1w;
+            add_header Cache-Control "public";
+        }
+    }
+
+    # Health check endpoint
+    location /health {
+        access_log off;
+        return 200 "healthy\n";
+        add_header Content-Type text/plain;
+    }
+
+    # Security and error handling
+    location = /favicon.ico { access_log off; log_not_found off; }
+    location = /robots.txt  { access_log off; log_not_found off; }
+
+    # Block access to sensitive files
+    location ~ /\. { deny all; access_log off; log_not_found off; }
+    location ~ ~$ { deny all; access_log off; log_not_found off; }
+}
+```
+
+Enable the configuration:
+
+```bash
+# Enable site
+sudo ln -s /etc/nginx/sites-available/baidocs /etc/nginx/sites-enabled/
+
+# Test configuration
+sudo nginx -t
+
+# Reload Nginx
+sudo systemctl reload nginx
+```
+
+### Apache Configuration
+
+Alternative Apache setup:
+
+```apache
+# /etc/apache2/sites-available/baidocs.conf
+<VirtualHost *:80>
+    ServerName your-docs-domain.com
+    Redirect permanent / https://your-docs-domain.com/
+</VirtualHost>
+
+<VirtualHost *:443>
+    ServerName your-docs-domain.com
+
+    # SSL configuration
+    SSLEngine on
+    SSLCertificateFile /path/to/ssl/certificate.crt
+    SSLCertificateKeyFile /path/to/ssl/private.key
+
+    # Security headers
+    Header always set X-Frame-Options DENY
+    Header always set X-Content-Type-Options nosniff
+    Header always set X-XSS-Protection "1; mode=block"
+    Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
+
+    # Editor proxy (restricted access)
+    <Location /editor>
+        Require ip 192.168.1.0/24
+        Require ip 10.0.0.0/8
+
+        ProxyPreserveHost On
+        ProxyPass http://localhost:3001/
+        ProxyPassReverse http://localhost:3001/
+    </Location>
+
+    # Viewer proxy (public access)
+    <Location />
+        ProxyPreserveHost On
+        ProxyPass http://localhost:3000/
+        ProxyPassReverse http://localhost:3000/
+    </Location>
+
+    # Static file caching
+    <LocationMatch "\.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2)$">
+        ExpiresActive On
+        ExpiresDefault "access plus 1 year"
+        Header set Cache-Control "public, immutable"
+    </LocationMatch>
+
+    # PDF caching
+    <Location /pdfs/>
+        ExpiresActive On
+        ExpiresDefault "access plus 1 week"
+        Header set Cache-Control "public"
+    </Location>
+</VirtualHost>
+```
+
+## Service Configuration
+
+### Systemd Service
+
+Create systemd service for automatic startup:
+
+```bash
+# Create service file
+sudo cat > /etc/systemd/system/baidocs.service << EOF
+[Unit]
+Description=BaiDocs Documentation Platform
+After=network.target
+Wants=network.target
+
+[Service]
+Type=forking
+User=baidocs
+Group=baidocs
+WorkingDirectory=/opt/baidocs
+ExecStart=/usr/bin/pm2 start /opt/baidocs/ecosystem.config.js --no-daemon
+ExecReload=/usr/bin/pm2 reload /opt/baidocs/ecosystem.config.js
+ExecStop=/usr/bin/pm2 kill
+Environment=NODE_ENV=production
+Environment=PATH=/usr/bin:/usr/local/bin
+Environment=PM2_HOME=/home/baidocs/.pm2
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+# Reload systemd and enable service
+sudo systemctl daemon-reload
+sudo systemctl enable baidocs
+sudo systemctl start baidocs
+
+# Check status
+sudo systemctl status baidocs
+```
+
+## Docker Deployment
+
+### Dockerfile
+
+Create Docker configuration:
+
+```dockerfile
+# Dockerfile
+FROM node:18-alpine AS base
+
+# Install dependencies only when needed
+FROM base AS deps
+RUN apk add --no-cache libc6-compat git
+WORKDIR /app
+
+# Copy package files
+COPY package.json package-lock.json ./
+RUN npm ci --only=production
+
+# Rebuild the source code only when needed
+FROM base AS builder
+WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules
+COPY . .
+
+# Build applications
+RUN npm run build
+
+# Production image
+FROM base AS runner
+WORKDIR /app
+
+ENV NODE_ENV production
+RUN addgroup --system --gid 1001 baidocs
+RUN adduser --system --uid 1001 baidocs
+
+# Copy necessary files
+COPY --from=builder /app/public ./public
+COPY --from=builder /app/.next/standalone ./
+COPY --from=builder /app/.next/static ./.next/static
+
+# Create content directory
+RUN mkdir -p /app/content && chown -R baidocs:baidocs /app/content
+
+USER baidocs
+
+EXPOSE 3000 3001
+
+ENV PORT 3000
+ENV HOSTNAME "0.0.0.0"
+
+CMD ["node", "server.js"]
+```
+
+### Docker Compose
+
+```yaml
+# docker-compose.yml
+version: '3.8'
+
+services:
+  baidocs:
+    build: .
+    ports:
+      - "3000:3000"
+      - "3001:3001"
+    volumes:
+      - ./content:/app/content
+      - ./data:/app/data
+    environment:
+      - NODE_ENV=production
+      - CONTENT_PATH=/app/content
+      - NEXT_PUBLIC_EDITOR_URL=http://localhost:3001
+      - NEXT_PUBLIC_VIEWER_URL=http://localhost:3000
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+      - ./ssl:/etc/nginx/ssl
+    depends_on:
+      - baidocs
+    restart: unless-stopped
+
+volumes:
+  content:
+  data:
+```
+
+### Running with Docker
+
+```bash
+# Build and start services
+docker-compose up -d
+
+# View logs
+docker-compose logs -f
+
+# Scale viewer instances
+docker-compose up -d --scale baidocs=3
+
+# Update services
+docker-compose pull
+docker-compose up -d
+```
+
+## Backup and Maintenance
+
+### Automated Backup
+
+Create backup script:
+
+```bash
+#!/bin/bash
+# backup-baidocs.sh
+
+# Configuration
+BACKUP_DIR="/backups/baidocs"
+CONTENT_DIR="/path/to/baidocs/content"
+DATA_DIR="/path/to/baidocs/data"
+RETENTION_DAYS=30
+
+# Create backup directory
+mkdir -p "$BACKUP_DIR"
+
+# Generate backup filename
+BACKUP_FILE="baidocs-backup-$(date +%Y%m%d-%H%M%S).tar.gz"
+
+echo "Starting BaiDocs backup..."
+
+# Create compressed backup
+tar -czf "$BACKUP_DIR/$BACKUP_FILE" \
+    --exclude='node_modules' \
+    --exclude='.git' \
+    --exclude='*.log' \
+    -C "$(dirname $CONTENT_DIR)" \
+    "$(basename $CONTENT_DIR)" \
+    -C "$(dirname $DATA_DIR)" \
+    "$(basename $DATA_DIR)"
+
+# Verify backup
+if [ $? -eq 0 ]; then
+    echo "Backup completed successfully: $BACKUP_FILE"
+
+    # Remove old backups
+    find "$BACKUP_DIR" -name "baidocs-backup-*.tar.gz" -mtime +$RETENTION_DAYS -delete
+
+    echo "Old backups cleaned up (retention: $RETENTION_DAYS days)"
+else
+    echo "Backup failed!" >&2
+    exit 1
+fi
+```
+
+Schedule with cron:
+
+```bash
+# Add to crontab
+crontab -e
+
+# Add backup schedule (daily at 2 AM)
+0 2 * * * /path/to/backup-baidocs.sh >> /var/log/baidocs-backup.log 2>&1
+```
+
+### Health Monitoring
+
+Create monitoring script:
+
+```bash
+#!/bin/bash
+# monitor-baidocs.sh
+
+# Configuration
+EDITOR_URL="http://localhost:3001/health"
+VIEWER_URL="http://localhost:3000/health"
+ALERT_EMAIL="admin@your-domain.com"
+
+# Check editor health
+if ! curl -sf "$EDITOR_URL" > /dev/null; then
+    echo "ALERT: BaiDocs Editor is down!" | mail -s "BaiDocs Editor Down" "$ALERT_EMAIL"
+fi
+
+# Check viewer health
+if ! curl -sf "$VIEWER_URL" > /dev/null; then
+    echo "ALERT: BaiDocs Viewer is down!" | mail -s "BaiDocs Viewer Down" "$ALERT_EMAIL"
+fi
+
+# Check disk space
+DISK_USAGE=$(df /opt/baidocs | tail -1 | awk '{print $5}' | sed 's/%//')
+if [ "$DISK_USAGE" -gt 85 ]; then
+    echo "ALERT: High disk usage: $DISK_USAGE%" | mail -s "BaiDocs High Disk Usage" "$ALERT_EMAIL"
+fi
+
+# Check memory usage
+MEMORY_USAGE=$(free | grep Mem | awk '{printf("%.0f\n", $3/$2 * 100.0)}')
+if [ "$MEMORY_USAGE" -gt 90 ]; then
+    echo "ALERT: High memory usage: $MEMORY_USAGE%" | mail -s "BaiDocs High Memory Usage" "$ALERT_EMAIL"
+fi
+```
+
+## Security Considerations
+
+### Access Control
+
+**Editor Access Restriction:**
+- Limit editor access to trusted networks
+- Use VPN for remote admin access
+- Implement authentication for sensitive environments
+
+**File System Permissions:**
+```bash
+# Set proper permissions
+sudo chown -R baidocs:baidocs /opt/baidocs
+sudo chmod -R 750 /opt/baidocs
+sudo chmod -R 640 /opt/baidocs/content
+```
+
+### SSL Configuration
+
+**SSL Certificate Setup:**
+```bash
+# Using Let's Encrypt
+sudo certbot --nginx -d your-docs-domain.com
+
+# Or using custom certificate
+sudo cp your-certificate.crt /etc/ssl/certs/
+sudo cp your-private.key /etc/ssl/private/
+sudo chmod 600 /etc/ssl/private/your-private.key
+```
+
+### Firewall Configuration
+
+```bash
+# Configure UFW (Ubuntu/Debian)
+sudo ufw allow ssh
+sudo ufw allow 80/tcp
+sudo ufw allow 443/tcp
+sudo ufw deny 3000  # Block direct access to apps
+sudo ufw deny 3001
+sudo ufw enable
+```
+
+## Troubleshooting
+
+### Common Issues
+
+#### "Port Already in Use"
+
+```bash
+# Check what's using the port
+sudo netstat -tulpn | grep :3000
+sudo lsof -i :3000
+
+# Kill process using port
+sudo kill -9 <PID>
+
+# Or use different ports
+PORT=3002 npm run start:viewer
+PORT=3003 npm run start:editor
+```
+
+#### "Permission Denied" Errors
+
+```bash
+# Fix file permissions
+sudo chown -R $USER:$USER /path/to/baidocs
+chmod -R 755 /path/to/baidocs
+
+# Fix content directory permissions
+sudo chown -R baidocs:baidocs /path/to/content
+chmod -R 750 /path/to/content
+```
+
+#### "Out of Memory" Errors
+
+```bash
+# Increase Node.js memory limit
+node --max-old-space-size=4096 apps/viewer/server.js
+
+# Or set in environment
+export NODE_OPTIONS="--max-old-space-size=4096"
+```
+
+### Log Analysis
+
+```bash
+# View application logs
+tail -f ~/.pm2/logs/*.log
+
+# View system logs
+sudo journalctl -u baidocs -f
+
+# View Nginx logs
+sudo tail -f /var/log/nginx/access.log
+sudo tail -f /var/log/nginx/error.log
+```
+
+## Next Steps
+
+Complete your local deployment:
+
+1. **[Vercel Deployment](vercel.mdx)** - Deploy to cloud for global access
+2. **[Search Configuration](../advanced/search.mdx)** - Optimize search for your content
+3. **[Multi-language Support](../advanced/multilingual.mdx)** - Add international languages
+
+---
+
+*Local deployment gives you complete control over your documentation environment while maintaining the full power of BaiDocs features.*
