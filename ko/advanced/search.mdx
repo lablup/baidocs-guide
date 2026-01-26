@@ -1,0 +1,817 @@
+# 검색 설정
+
+BaiDocs는 고급 필터링, 하이라이팅, 다국어 지원과 함께 모든 문서 콘텐츠에서 즉시 지능적 검색을 제공하는 강력한 내장 검색 시스템을 포함합니다.
+
+## 검색 시스템 개요
+
+### 기능
+
+- **즉시 검색**: 입력하는 동안 실시간 결과
+- **전체 텍스트 검색**: 모든 콘텐츠, 헤딩, 메타데이터에서 검색
+- **다국어 지원**: 특정 언어 또는 모든 언어에서 검색
+- **고급 필터링**: 책, 섹션, 콘텐츠 유형, 태그별 필터링
+- **지능적 순위 매기기**: 관련성과 맥락별로 결과 순위 매김
+- **키보드 네비게이션**: 접근성을 위한 완전한 키보드 지원
+- **하이라이팅**: 결과와 콘텐츠에서 검색어 하이라이트
+
+### 검색 아키텍처
+
+```
+검색 인덱스 생성:
+콘텐츠 파일 → 인덱싱 → 검색 데이터베이스 → 검색 API → 사용자 인터페이스
+
+구성요소:
+├── Content Indexer      # MDX 파일 처리
+├── Search Database      # 인덱싱된 콘텐츠 저장
+├── Search API          # 쿼리 처리
+├── Search UI           # 사용자 인터페이스
+└── Result Highlighting # 용어 하이라이팅
+```
+
+## 자동 검색 설정
+
+### 기본 설정
+
+검색은 기본적으로 활성화되며 다음을 자동으로 인덱싱합니다:
+
+- 모든 MDX 콘텐츠 파일
+- 페이지 제목과 헤딩
+- 프론트매터 메타데이터
+- 네비게이션 구조
+- 코드 블록 (선택적)
+- 이미지 대체 텍스트
+
+### 빌드 시간 인덱싱
+
+검색 인덱스는 빌드 중에 생성됩니다:
+
+```bash
+npm run build
+# 검색 인덱스 자동 생성
+# 출력: _data/search/index.json
+```
+
+## 검색 설정
+
+### 기본 설정
+
+책 설정에서 검색을 구성하세요:
+
+```yaml
+# book.config.yaml
+id: my-documentation
+title: 내 문서
+
+# 검색 설정
+search:
+  enabled: true
+
+  # 인덱싱 옵션
+  indexing:
+    includeContent: true
+    includeHeadings: true
+    includeCodeBlocks: true
+    includeFrontmatter: true
+
+    # 콘텐츠 처리
+    minWordLength: 3
+    maxResultsPerPage: 10
+    excerptLength: 150
+
+  # UI 설정
+  ui:
+    placeholder: "문서 검색..."
+    noResultsMessage: "결과를 찾을 수 없습니다"
+    shortcut: "/"
+    showRecentSearches: true
+    showSearchStats: true
+```
+
+### 고급 검색 옵션
+
+```yaml
+# book.config.yaml
+search:
+  # 고급 인덱싱
+  indexing:
+    # 특정 파일 유형 포함/제외
+    includeFiles:
+      - "*.mdx"
+      - "*.md"
+    excludeFiles:
+      - "**/README.md"
+      - "**/_*.mdx"
+
+    # 콘텐츠 섹션 가중치 (높을수록 더 중요)
+    sectionWeights:
+      title: 10
+      heading1: 8
+      heading2: 6
+      heading3: 4
+      content: 1
+      codeblock: 2
+
+    # 언어별 어간 추출
+    stemming:
+      enabled: true
+      languages:
+        - en
+        - ko
+
+    # 불용어 (무시할 단어)
+    stopWords:
+      en: ["the", "is", "at", "which", "on"]
+      ko: ["이", "그", "저", "것", "등"]
+
+  # 검색 동작
+  behavior:
+    # 퍼지 매칭 허용 오차
+    fuzzyThreshold: 0.6
+
+    # 최소 쿼리 길이
+    minQueryLength: 2
+
+    # 결과 하이라이팅
+    highlighting:
+      enabled: true
+      className: "search-highlight"
+      maxHighlights: 3
+
+    # 자동 제안
+    suggestions:
+      enabled: true
+      maxSuggestions: 5
+      includePopular: true
+```
+
+## 검색 UI 사용자 정의
+
+### 사용자 정의 검색 컴포넌트
+
+사용자 정의 검색 인터페이스 생성:
+
+```typescript
+// components/CustomSearch.tsx
+import React, { useState, useEffect } from 'react';
+import { useSearch } from '@baidocs/search';
+
+interface SearchResult {
+  id: string;
+  title: string;
+  excerpt: string;
+  url: string;
+  type: string;
+  score: number;
+  highlights: string[];
+}
+
+export function CustomSearch() {
+  const [query, setQuery] = useState('');
+  const [results, setResults] = useState<SearchResult[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const { search } = useSearch();
+
+  useEffect(() => {
+    if (query.length < 2) {
+      setResults([]);
+      return;
+    }
+
+    setIsLoading(true);
+
+    search(query, {
+      limit: 20,
+      includeHighlights: true,
+      filters: {
+        type: ['page', 'section'],
+        language: 'ko'
+      }
+    })
+    .then(setResults)
+    .finally(() => setIsLoading(false));
+  }, [query, search]);
+
+  return (
+    <div className="search-container">
+      <div className="search-input-wrapper">
+        <input
+          type="text"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder="문서 검색..."
+          className="search-input"
+          aria-label="문서 검색"
+        />
+        {isLoading && <div className="search-loading">검색 중...</div>}
+      </div>
+
+      {results.length > 0 && (
+        <div className="search-results">
+          <div className="search-stats">
+            {results.length}개의 결과를 찾았습니다
+          </div>
+
+          {results.map((result) => (
+            <div key={result.id} className="search-result">
+              <a href={result.url} className="search-result-link">
+                <h3 className="search-result-title">
+                  <span dangerouslySetInnerHTML={{ __html: result.title }} />
+                </h3>
+                <p className="search-result-excerpt">
+                  <span dangerouslySetInnerHTML={{ __html: result.excerpt }} />
+                </p>
+                <div className="search-result-meta">
+                  <span className="search-result-type">{result.type}</span>
+                  <span className="search-result-score">점수: {result.score.toFixed(2)}</span>
+                </div>
+              </a>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {query.length >= 2 && results.length === 0 && !isLoading && (
+        <div className="search-no-results">
+          <p>"{query}"에 대한 결과를 찾을 수 없습니다</p>
+          <div className="search-suggestions">
+            <p>다시 시도해보세요:</p>
+            <ul>
+              <li>맞춤법 확인</li>
+              <li>다른 키워드 사용</li>
+              <li>더 일반적인 용어 사용</li>
+            </ul>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+```
+
+### 검색 스타일링
+
+사용자 정의 검색 인터페이스 스타일링:
+
+```css
+/* styles/search.css */
+
+.search-container {
+  position: relative;
+  width: 100%;
+  max-width: 600px;
+}
+
+.search-input-wrapper {
+  position: relative;
+}
+
+.search-input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 2px solid #e5e7eb;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  transition: border-color 0.2s ease;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.search-loading {
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+.search-results {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  z-index: 50;
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+.search-stats {
+  padding: 0.75rem 1rem;
+  font-size: 0.875rem;
+  color: #6b7280;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.search-result {
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.search-result:last-child {
+  border-bottom: none;
+}
+
+.search-result-link {
+  display: block;
+  padding: 1rem;
+  text-decoration: none;
+  color: inherit;
+  transition: background-color 0.2s ease;
+}
+
+.search-result-link:hover {
+  background-color: #f9fafb;
+}
+
+.search-result-title {
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0 0 0.5rem 0;
+  color: #1f2937;
+}
+
+.search-result-excerpt {
+  font-size: 0.875rem;
+  color: #6b7280;
+  line-height: 1.5;
+  margin: 0 0 0.5rem 0;
+}
+
+.search-result-meta {
+  display: flex;
+  gap: 1rem;
+  font-size: 0.75rem;
+  color: #9ca3af;
+}
+
+.search-result-type {
+  background: #f3f4f6;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+/* 검색 하이라이팅 */
+.search-highlight {
+  background-color: #fef3c7;
+  color: #92400e;
+  font-weight: 600;
+  padding: 0.125rem 0.25rem;
+  border-radius: 0.25rem;
+}
+
+/* 결과 없음 상태 */
+.search-no-results {
+  padding: 2rem 1rem;
+  text-align: center;
+}
+
+.search-suggestions {
+  margin-top: 1rem;
+  text-align: left;
+}
+
+.search-suggestions ul {
+  margin: 0.5rem 0;
+  padding-left: 1.5rem;
+}
+
+.search-suggestions li {
+  margin: 0.25rem 0;
+  color: #6b7280;
+  font-size: 0.875rem;
+}
+
+/* 다크 모드 지원 */
+@media (prefers-color-scheme: dark) {
+  .search-input {
+    background: #1f2937;
+    border-color: #374151;
+    color: #f9fafb;
+  }
+
+  .search-input:focus {
+    border-color: #60a5fa;
+    box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.1);
+  }
+
+  .search-results {
+    background: #1f2937;
+    border-color: #374151;
+  }
+
+  .search-result-link:hover {
+    background-color: #374151;
+  }
+
+  .search-result-title {
+    color: #f9fafb;
+  }
+
+  .search-result-excerpt {
+    color: #d1d5db;
+  }
+
+  .search-highlight {
+    background-color: #fbbf24;
+    color: #92400e;
+  }
+}
+```
+
+## 검색 API
+
+### 검색 쿼리 API
+
+프로그래밍적으로 검색에 액세스:
+
+```typescript
+// 검색 API 사용
+import { searchAPI } from '@baidocs/search';
+
+// 기본 검색
+const results = await searchAPI.search('설치 가이드', {
+  limit: 10,
+  offset: 0,
+  language: 'ko'
+});
+
+// 필터가 있는 고급 검색
+const advancedResults = await searchAPI.search('설정', {
+  limit: 20,
+  filters: {
+    book: ['사용자-가이드', 'api-참조'],
+    type: ['page', 'heading'],
+    tags: ['초보자'],
+    section: ['시작하기']
+  },
+  highlighting: {
+    enabled: true,
+    preTag: '<mark>',
+    postTag: '</mark>'
+  },
+  sort: 'relevance', // 또는 'date', 'title'
+  fuzzy: {
+    enabled: true,
+    threshold: 0.7
+  }
+});
+
+// 검색 제안
+const suggestions = await searchAPI.suggest('설정', {
+  limit: 5,
+  includePopular: true
+});
+
+// 검색 분석
+const analytics = await searchAPI.getAnalytics({
+  timeframe: '30d',
+  metrics: ['queries', 'clicks', 'zero_results']
+});
+```
+
+### 검색 결과 인터페이스
+
+```typescript
+interface SearchResult {
+  // 콘텐츠 식별
+  id: string;
+  url: string;
+  title: string;
+  excerpt: string;
+
+  // 콘텐츠 분류
+  type: 'page' | 'heading' | 'section' | 'code';
+  book: string;
+  language: string;
+  section?: string;
+
+  // 검색 메타데이터
+  score: number;
+  highlights: SearchHighlight[];
+  matchedTerms: string[];
+
+  // 콘텐츠 메타데이터
+  lastModified: string;
+  wordCount: number;
+  tags: string[];
+  author?: string;
+}
+
+interface SearchHighlight {
+  field: string; // 'title', 'content', 'heading'
+  highlights: string[];
+  positions: Array<{ start: number; end: number }>;
+}
+```
+
+## 다국어 검색
+
+### 언어별 설정
+
+여러 언어에 대한 검색 구성:
+
+```yaml
+# book.config.yaml
+languages:
+  - en
+  - ko
+  - es
+
+search:
+  # 언어별 설정
+  languages:
+    en:
+      stemming: true
+      stopWords: ["the", "is", "at", "which", "on"]
+      synonyms:
+        setup: ["installation", "configuration"]
+        guide: ["tutorial", "walkthrough"]
+
+    ko:
+      stemming: false  # 한국어는 전통적인 어간 추출 사용 안 함
+      stopWords: ["이", "그", "저", "것", "등"]
+      wordSegmentation: true  # 한국어/중국어/일본어에 활성화
+
+    es:
+      stemming: true
+      stopWords: ["el", "la", "es", "en", "de"]
+
+  # 언어 간 검색
+  crossLanguage:
+    enabled: true
+    defaultLanguage: en
+    translateQueries: true
+```
+
+### 언어 감지
+
+검색 쿼리에 대한 자동 언어 감지:
+
+```typescript
+// 자동 언어 감지
+const searchWithAutoDetect = async (query: string) => {
+  const detectedLanguage = await searchAPI.detectLanguage(query);
+
+  const results = await searchAPI.search(query, {
+    language: detectedLanguage,
+    fallbackLanguages: ['en'], // 결과가 없을 경우 대체
+    includeTranslations: true
+  });
+
+  return results;
+};
+```
+
+## 검색 분석
+
+### 사용량 추적
+
+검색 사용량과 성능 추적:
+
+```yaml
+# book.config.yaml
+search:
+  analytics:
+    enabled: true
+
+    # 검색 이벤트 추적
+    tracking:
+      queries: true
+      results: true
+      clicks: true
+      zeroResults: true
+
+    # 개인정보보호 설정
+    privacy:
+      anonymizeQueries: true
+      retentionDays: 90
+      excludePersonalInfo: true
+
+    # 성능 모니터링
+    performance:
+      trackLatency: true
+      trackIndexSize: true
+      slowQueryThreshold: 500  # ms
+```
+
+### 검색 메트릭 대시보드
+
+검색 분석에 액세스:
+
+```typescript
+// 검색 분석
+const analytics = await searchAPI.getAnalytics({
+  timeframe: '30d',
+  metrics: [
+    'total_queries',
+    'unique_queries',
+    'click_through_rate',
+    'zero_result_rate',
+    'average_latency',
+    'popular_queries',
+    'popular_results'
+  ]
+});
+
+// 인기 검색어
+const popularQueries = await searchAPI.getPopularQueries({
+  timeframe: '7d',
+  limit: 10,
+  language: 'ko'
+});
+
+// 검색 성능
+const performance = await searchAPI.getPerformanceMetrics({
+  timeframe: '24h',
+  includeSlowQueries: true
+});
+```
+
+## 검색 최적화
+
+### 인덱스 최적화
+
+더 나은 성능을 위해 검색 인덱스를 최적화:
+
+```yaml
+# book.config.yaml
+search:
+  optimization:
+    # 인덱스 압축
+    compression:
+      enabled: true
+      algorithm: 'gzip'
+      level: 6
+
+    # 인덱스 분할
+    segmentation:
+      enabled: true
+      maxDocumentsPerSegment: 1000
+      mergeThreshold: 10
+
+    # 메모리 최적화
+    memory:
+      indexCacheSize: '100MB'
+      queryCacheSize: '50MB'
+      enableLazyLoading: true
+
+    # 업데이트 전략
+    updates:
+      incremental: true
+      batchSize: 100
+      debounceMs: 1000
+```
+
+### 쿼리 최적화
+
+검색 쿼리 최적화:
+
+```typescript
+// 쿼리 최적화 기법
+const optimizedSearch = {
+  // 쿼리 부스팅 사용
+  async boostQuery(query: string, boosts: Record<string, number>) {
+    return searchAPI.search(query, {
+      fieldBoosts: {
+        title: boosts.title || 2.0,
+        headings: boosts.headings || 1.5,
+        content: boosts.content || 1.0,
+        tags: boosts.tags || 3.0
+      }
+    });
+  },
+
+  // 쿼리 확장 구현
+  async expandQuery(query: string) {
+    const synonyms = await searchAPI.getSynonyms(query);
+    const expandedQuery = [query, ...synonyms].join(' OR ');
+
+    return searchAPI.search(expandedQuery, {
+      operator: 'OR',
+      minimumShouldMatch: 1
+    });
+  },
+
+  // 패싯 검색 사용
+  async facetedSearch(query: string, facets: string[]) {
+    return searchAPI.search(query, {
+      facets: facets,
+      facetFilters: {},
+      includeFacetCounts: true
+    });
+  }
+};
+```
+
+## 문제 해결
+
+### 일반적인 문제
+
+#### "검색이 작동하지 않음"
+
+```bash
+# 검색 인덱스가 존재하는지 확인
+ls -la _data/search/
+
+# 검색 인덱스 재빌드
+npm run build:search
+
+# 검색 설정 확인
+npm run validate-search-config
+```
+
+#### "느린 검색 성능"
+
+```yaml
+# 검색 성능 최적화
+search:
+  optimization:
+    enableCaching: true
+    maxCachedQueries: 1000
+    cacheExpiry: 3600  # 1시간
+
+  indexing:
+    batchSize: 500
+    concurrency: 4
+    enableCompression: true
+```
+
+#### "관련 없는 검색 결과"
+
+```yaml
+# 결과 관련성 개선
+search:
+  ranking:
+    titleBoost: 3.0
+    headingBoost: 2.0
+    contentBoost: 1.0
+    exactMatchBoost: 2.0
+
+  behavior:
+    enableStemming: true
+    enableSynonyms: true
+    fuzzyThreshold: 0.7
+```
+
+### 검색 문제 디버그
+
+```typescript
+// 검색 기능 디버그
+const debugSearch = {
+  // 검색 인덱스 테스트
+  async testIndex() {
+    const stats = await searchAPI.getIndexStats();
+    console.log('인덱스 통계:', stats);
+
+    const health = await searchAPI.checkIndexHealth();
+    console.log('인덱스 상태:', health);
+  },
+
+  // 특정 쿼리 디버그
+  async debugQuery(query: string) {
+    const explanation = await searchAPI.explain(query, {
+      includeScoring: true,
+      includeAnalysis: true
+    });
+
+    console.log('쿼리 설명:', explanation);
+  },
+
+  // 검색 성능 테스트
+  async benchmarkSearch(queries: string[]) {
+    const results = [];
+
+    for (const query of queries) {
+      const start = Date.now();
+      await searchAPI.search(query);
+      const duration = Date.now() - start;
+
+      results.push({ query, duration });
+    }
+
+    console.log('검색 벤치마크:', results);
+  }
+};
+```
+
+## 다음 단계
+
+검색 경험을 향상시키세요:
+
+1. **[다국어 지원](multilingual.mdx)** - 여러 언어에 대한 검색 구성
+2. **[버전 관리](versioning.mdx)** - 다양한 문서 버전에서 검색
+3. **[테마](themes.mdx)** - 테마에 맞게 검색 인터페이스 스타일링
+
+---
+
+*강력한 검색 기능은 사용자가 필요한 것을 정확히 찾을 수 있게 도와 문서를 더 접근하기 쉽고 가치 있게 만듭니다.*

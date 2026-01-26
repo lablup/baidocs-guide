@@ -1,0 +1,921 @@
+# 다국어 지원
+
+BaiDocs는 자동 언어 감지, 번역 워크플로우, 현지화된 사용자 경험과 함께 여러 언어로 문서를 만들 수 있는 포괄적인 다국어 지원을 제공합니다.
+
+## 개요
+
+### 다국어 기능
+
+- **다중 언어 지원**: 어떤 수의 언어로든 콘텐츠 생성
+- **언어별 네비게이션**: 언어당 독립적인 네비게이션 구조
+- **자동 언어 감지**: 사용자의 선호 언어 감지
+- **언어 전환**: 언어 버전 간 매끄러운 전환
+- **RTL 지원**: 우에서 좌로 쓰는 언어 지원 (아랍어, 히브리어 등)
+- **현지화된 UI**: 인터페이스 요소와 메시지 번역
+- **검색 통합**: 언어 인식 검색 기능
+
+### 지원 언어
+
+BaiDocs는 적절한 로케일 코드가 있는 모든 언어를 지원합니다:
+
+- **서양 언어**: English (en), Spanish (es), French (fr), German (de), Italian (it)
+- **아시아 언어**: Korean (ko), Japanese (ja), Chinese Simplified (zh-cn), Chinese Traditional (zh-tw)
+- **RTL 언어**: Arabic (ar), Hebrew (he), Persian (fa)
+- **기타 언어**: Russian (ru), Portuguese (pt), Dutch (nl), 그리고 많은 기타 언어
+
+## 언어 설정
+
+### 기본 다국어 설정
+
+책 설정에서 언어를 구성하세요:
+
+```yaml
+# book.config.yaml
+id: my-documentation
+title: 내 문서
+description: 다국어 문서
+
+# 언어 설정
+languages:
+  - en
+  - ko
+  - es
+  - fr
+
+# 기본 언어 (지정되지 않으면 첫 번째로 대체)
+defaultLanguage: en
+
+# 언어별 메타데이터
+languageConfig:
+  en:
+    title: "My Documentation"
+    description: "Complete user guide in English"
+    direction: ltr
+
+  ko:
+    title: "내 문서"
+    description: "한국어 사용자 가이드"
+    direction: ltr
+
+  es:
+    title: "Mi Documentación"
+    description: "Guía completa del usuario en español"
+    direction: ltr
+
+  fr:
+    title: "Ma Documentation"
+    description: "Guide utilisateur complet en français"
+    direction: ltr
+```
+
+### 고급 언어 설정
+
+```yaml
+# book.config.yaml
+languageConfig:
+  en:
+    title: "Documentation"
+    description: "Complete user guide"
+    direction: ltr
+    locale: "en-US"
+    dateFormat: "MM/DD/YYYY"
+    timeFormat: "12h"
+    numberFormat: "1,234.56"
+    currency: "USD"
+
+  ko:
+    title: "문서"
+    description: "완전한 사용자 가이드"
+    direction: ltr
+    locale: "ko-KR"
+    dateFormat: "YYYY-MM-DD"
+    timeFormat: "24h"
+    numberFormat: "1,234.56"
+    currency: "KRW"
+
+  ar:
+    title: "الوثائق"
+    description: "دليل المستخدم الكامل"
+    direction: rtl
+    locale: "ar-SA"
+    dateFormat: "DD/MM/YYYY"
+    timeFormat: "24h"
+    numberFormat: "1٬234٫56"
+    currency: "SAR"
+```
+
+## 디렉토리 구조
+
+### 언어 기반 구조
+
+언어 디렉토리별로 콘텐츠를 구성하세요:
+
+```
+content/my-documentation/
+├── book.config.yaml
+├── en/                          # English 콘텐츠
+│   ├── index.mdx
+│   ├── getting-started/
+│   │   ├── overview.mdx
+│   │   └── installation.mdx
+│   ├── guides/
+│   │   ├── basic-usage.mdx
+│   │   └── advanced-features.mdx
+│   └── _assets/
+│       ├── screenshot-en-1.png
+│       └── logo-en.svg
+├── ko/                          # Korean 콘텐츠
+│   ├── index.mdx
+│   ├── getting-started/
+│   │   ├── overview.mdx
+│   │   └── installation.mdx
+│   ├── guides/
+│   │   ├── basic-usage.mdx
+│   │   └── advanced-features.mdx
+│   └── _assets/
+│       ├── screenshot-ko-1.png
+│       └── logo-ko.svg
+├── es/                          # Spanish 콘텐츠
+│   ├── index.mdx
+│   └── ...
+└── shared/                      # 공유 자산
+    ├── _assets/
+    │   ├── diagram.svg
+    │   └── architecture.png
+    └── downloads/
+        └── sample-file.zip
+```
+
+## 네비게이션 설정
+
+### 언어별 네비게이션
+
+각 언어에 대한 독립적인 네비게이션을 구성하세요:
+
+```yaml
+# book.config.yaml
+navigation:
+  en:
+    - title: "Home"
+      path: "index.mdx"
+    - title: "Getting Started"
+      items:
+        - title: "Overview"
+          path: "getting-started/overview.mdx"
+        - title: "Installation"
+          path: "getting-started/installation.mdx"
+    - title: "Guides"
+      items:
+        - title: "Basic Usage"
+          path: "guides/basic-usage.mdx"
+        - title: "Advanced Features"
+          path: "guides/advanced-features.mdx"
+
+  ko:
+    - title: "홈"
+      path: "index.mdx"
+    - title: "시작하기"
+      items:
+        - title: "개요"
+          path: "getting-started/overview.mdx"
+        - title: "설치"
+          path: "getting-started/installation.mdx"
+    - title: "가이드"
+      items:
+        - title: "기본 사용법"
+          path: "guides/basic-usage.mdx"
+        - title: "고급 기능"
+          path: "guides/advanced-features.mdx"
+
+  es:
+    - title: "Inicio"
+      path: "index.mdx"
+    - title: "Comenzando"
+      items:
+        - title: "Resumen"
+          path: "getting-started/overview.mdx"
+        - title: "Instalación"
+          path: "getting-started/installation.mdx"
+    - title: "Guías"
+      items:
+        - title: "Uso Básico"
+          path: "guides/basic-usage.mdx"
+        - title: "Características Avanzadas"
+          path: "guides/advanced-features.mdx"
+```
+
+### 공유 네비게이션 구조
+
+언어 간 일관된 구조를 위해 템플릿 네비게이션을 사용하세요:
+
+```yaml
+# book.config.yaml
+navigationTemplate:
+  - title: "{nav.home}"
+    path: "index.mdx"
+  - title: "{nav.getting_started}"
+    items:
+      - title: "{nav.overview}"
+        path: "getting-started/overview.mdx"
+      - title: "{nav.installation}"
+        path: "getting-started/installation.mdx"
+
+# 언어 문자열
+languageStrings:
+  en:
+    nav:
+      home: "Home"
+      getting_started: "Getting Started"
+      overview: "Overview"
+      installation: "Installation"
+
+  ko:
+    nav:
+      home: "홈"
+      getting_started: "시작하기"
+      overview: "개요"
+      installation: "설치"
+
+  es:
+    nav:
+      home: "Inicio"
+      getting_started: "Comenzando"
+      overview: "Resumen"
+      installation: "Instalación"
+```
+
+## 콘텐츠 번역
+
+### 번역 워크플로우
+
+#### 1. 기본 콘텐츠 생성
+
+주요 언어(보통 영어)로 시작하세요:
+
+```mdx
+<!-- en/getting-started/overview.mdx -->
+---
+title: Getting Started Overview
+description: Learn the basics of using our platform
+tags: ["beginner", "overview", "introduction"]
+---
+
+# Getting Started Overview
+
+Welcome to our platform! This guide will help you understand the core concepts and get you started quickly.
+
+## What You'll Learn
+
+- Core platform concepts
+- How to set up your account
+- Basic navigation and features
+- Next steps for advanced usage
+
+:::tip Quick Start
+If you're in a hurry, check out our [Quick Start Guide](quick-start.mdx) for the essentials.
+:::
+
+## Prerequisites
+
+Before you begin, make sure you have:
+
+- A valid account
+- Basic understanding of web technologies
+- Access to our platform
+
+## Next Steps
+
+Once you've read this overview:
+
+1. [Install the platform](installation.mdx)
+2. [Complete the tutorial](tutorial.mdx)
+3. [Explore advanced features](../advanced/index.mdx)
+```
+
+#### 2. 번역된 버전 생성
+
+구조를 유지하면서 콘텐츠를 번역하세요:
+
+```mdx
+<!-- ko/getting-started/overview.mdx -->
+---
+title: 시작하기 개요
+description: 우리 플랫폼 사용의 기본을 배우세요
+tags: ["초보자", "개요", "소개"]
+---
+
+# 시작하기 개요
+
+우리 플랫폼에 오신 것을 환영합니다! 이 가이드는 핵심 개념을 이해하고 빠르게 시작할 수 있도록 도와드립니다.
+
+## 학습할 내용
+
+- 핵심 플랫폼 개념
+- 계정 설정 방법
+- 기본 네비게이션 및 기능
+- 고급 사용을 위한 다음 단계
+
+:::tip 빠른 시작
+급하시다면 [빠른 시작 가이드](quick-start.mdx)에서 필수 사항을 확인하세요.
+:::
+
+## 전제 조건
+
+시작하기 전에 다음이 필요합니다:
+
+- 유효한 계정
+- 웹 기술에 대한 기본 이해
+- 우리 플랫폼에 대한 액세스
+
+## 다음 단계
+
+이 개요를 읽은 후:
+
+1. [플랫폼 설치](installation.mdx)
+2. [튜토리얼 완료](tutorial.mdx)
+3. [고급 기능 탐색](../advanced/index.mdx)
+```
+
+### 번역 모범 사례
+
+#### 콘텐츠 구조 일관성
+
+모든 언어에서 일관된 구조를 유지하세요:
+
+```mdx
+<!-- 모든 언어에서 유지할 템플릿 구조 -->
+
+<!-- 프론트매터 (값은 번역, 키는 유지) -->
+---
+title: "번역된 제목"
+description: "번역된 설명"
+tags: ["번역된", "태그"]
+---
+
+<!-- 페이지 제목 -->
+# 번역된 페이지 제목
+
+<!-- 소개 단락 -->
+번역된 소개 콘텐츠...
+
+<!-- 섹션 헤더 (계층 유지) -->
+## 번역된 섹션 1
+### 번역된 하위 섹션 1.1
+
+<!-- 콘텐츠 블록 -->
+번역된 콘텐츠...
+
+<!-- 어드모니션 (콘텐츠는 번역, 타입은 유지) -->
+:::tip 번역된 팁 제목
+번역된 팁 콘텐츠...
+:::
+
+<!-- 코드 예제 (주석은 번역, 코드는 유지) -->
+```javascript
+// 번역된 주석
+const example = "code remains same";
+```
+
+<!-- 네비게이션 링크 (텍스트는 번역, 경로는 필요시 업데이트) -->
+[번역된 링크 텍스트](relative-path-same.mdx)
+```
+
+#### 이미지 현지화
+
+언어별 이미지 처리:
+
+```mdx
+<!-- 언어별 이미지 -->
+![번역된 대체 텍스트](../_assets/screenshot-ko.png "번역된 캡션")
+
+<!-- 공유 이미지 -->
+![번역된 대체 텍스트](../../shared/_assets/diagram.svg "번역된 캡션")
+
+<!-- 조건부 이미지 -->
+import { useLanguage } from '@baidocs/hooks'
+
+export const LocalizedImage = () => {
+  const language = useLanguage();
+
+  const images = {
+    en: "/_assets/tutorial-en.png",
+    ko: "/_assets/tutorial-ko.png",
+    es: "/_assets/tutorial-es.png"
+  };
+
+  return (
+    <img
+      src={images[language] || images.en}
+      alt={language === 'ko' ? '튜토리얼 스크린샷' : 'Tutorial screenshot'}
+    />
+  );
+};
+
+<LocalizedImage />
+```
+
+## 언어별 기능
+
+### 날짜 및 시간 형식
+
+로케일별 형식 처리:
+
+```mdx
+import { formatDate, formatTime, formatNumber } from '@baidocs/i18n'
+
+<!-- 언어에 따른 자동 형식 -->
+**최종 업데이트:** {formatDate(new Date(), { language: 'auto' })}
+
+**빌드 시간:** {formatTime('14:30', { language: 'ko', format: '24h' })}
+
+**다운로드 크기:** {formatNumber(1234567, { language: 'ko', style: 'bytes' })}
+
+<!-- 언어별 콘텐츠 -->
+export const LocalizedMetrics = ({ downloads, users }) => {
+  const { language } = useLanguage();
+
+  const metrics = {
+    en: {
+      downloads: `${formatNumber(downloads, { language: 'en' })} downloads`,
+      users: `${formatNumber(users, { language: 'en' })} active users`
+    },
+    ko: {
+      downloads: `다운로드 ${formatNumber(downloads, { language: 'ko' })}회`,
+      users: `활성 사용자 ${formatNumber(users, { language: 'ko' })}명`
+    }
+  };
+
+  return (
+    <div>
+      <p>{metrics[language]?.downloads}</p>
+      <p>{metrics[language]?.users}</p>
+    </div>
+  );
+};
+```
+
+### RTL 언어 지원
+
+우에서 좌로 쓰는 언어를 구성하세요:
+
+```yaml
+# book.config.yaml
+languageConfig:
+  ar:
+    title: "الوثائق"
+    description: "دليل المستخدم"
+    direction: rtl
+    locale: "ar-SA"
+
+  he:
+    title: "תיעוד"
+    description: "מדריך למשתמש"
+    direction: rtl
+    locale: "he-IL"
+```
+
+RTL 전용 스타일링:
+
+```css
+/* styles/rtl.css */
+
+/* RTL 언어 지원 */
+[dir="rtl"] {
+  direction: rtl;
+  text-align: right;
+}
+
+[dir="rtl"] .navigation {
+  border-right: none;
+  border-left: 1px solid #e5e7eb;
+}
+
+[dir="rtl"] .breadcrumbs {
+  direction: rtl;
+}
+
+[dir="rtl"] .breadcrumbs::before {
+  content: "←";
+  margin-left: 0.5rem;
+  margin-right: 0;
+}
+
+[dir="rtl"] code {
+  direction: ltr;
+  text-align: left;
+}
+
+[dir="rtl"] .admonition {
+  border-right: 4px solid var(--admonition-color);
+  border-left: none;
+  padding-right: 1rem;
+  padding-left: 0.75rem;
+}
+
+/* 반응형 RTL 조정 */
+@media (max-width: 768px) {
+  [dir="rtl"] .mobile-nav {
+    right: auto;
+    left: 0;
+  }
+}
+```
+
+## 번역 관리
+
+### 번역 워크플로우 도구
+
+#### 번역 상태 추적
+
+번역 진행률 추적:
+
+```yaml
+# translation-status.yaml
+languages:
+  en:
+    status: "complete"
+    lastUpdated: "2024-01-26"
+    pages: 45
+    wordCount: 12500
+
+  ko:
+    status: "in-progress"
+    lastUpdated: "2024-01-20"
+    pages: 32
+    wordCount: 8900
+    missing:
+      - "advanced/themes.mdx"
+      - "deployment/vercel.mdx"
+
+  es:
+    status: "planned"
+    pages: 0
+    wordCount: 0
+    assignee: "maria@company.com"
+```
+
+#### 번역 검증
+
+자동화된 번역 검증:
+
+```typescript
+// scripts/validate-translations.ts
+interface TranslationValidation {
+  missingTranslations: string[];
+  outdatedTranslations: string[];
+  structureMismatches: string[];
+  brokenLinks: string[];
+}
+
+async function validateTranslations(
+  baseLanguage: string = 'en',
+  targetLanguages: string[]
+): Promise<Record<string, TranslationValidation>> {
+  const results: Record<string, TranslationValidation> = {};
+
+  for (const lang of targetLanguages) {
+    results[lang] = {
+      missingTranslations: [],
+      outdatedTranslations: [],
+      structureMismatches: [],
+      brokenLinks: []
+    };
+
+    // 누락된 파일 확인
+    const baseFiles = await getLanguageFiles(baseLanguage);
+    const langFiles = await getLanguageFiles(lang);
+
+    for (const file of baseFiles) {
+      const langFile = file.replace(`/${baseLanguage}/`, `/${lang}/`);
+      if (!langFiles.includes(langFile)) {
+        results[lang].missingTranslations.push(langFile);
+      }
+    }
+
+    // 오래된 번역 확인
+    for (const file of langFiles) {
+      const baseFile = file.replace(`/${lang}/`, `/${baseLanguage}/`);
+      if (await isFileNewer(baseFile, file)) {
+        results[lang].outdatedTranslations.push(file);
+      }
+    }
+
+    // 네비게이션 구조 검증
+    const baseNav = await getNavigationStructure(baseLanguage);
+    const langNav = await getNavigationStructure(lang);
+
+    if (!navigationStructuresMatch(baseNav, langNav)) {
+      results[lang].structureMismatches.push('navigation structure');
+    }
+
+    // 내부 링크 깨짐 확인
+    const brokenLinks = await validateInternalLinks(lang);
+    results[lang].brokenLinks = brokenLinks;
+  }
+
+  return results;
+}
+```
+
+### 자동화된 번역 워크플로우
+
+#### CI/CD 통합
+
+자동화된 번역 워크플로우:
+
+```yaml
+# .github/workflows/translation.yml
+name: 번역 관리
+
+on:
+  push:
+    branches: [main]
+    paths: ['content/**/en/**']
+
+  pull_request:
+    paths: ['content/**/*/']
+
+jobs:
+  validate-translations:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Node.js 설정
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: 의존성 설치
+        run: npm ci
+
+      - name: 번역 검증
+        run: npm run validate:translations
+
+      - name: 번역 상태 확인
+        run: npm run translation:status
+
+      - name: 번역 리포트 생성
+        run: npm run translation:report
+
+      - name: PR에 번역 상태 댓글
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const fs = require('fs');
+            const report = fs.readFileSync('translation-report.md', 'utf8');
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: report
+            });
+
+  notify-translators:
+    if: github.ref == 'refs/heads/main'
+    needs: validate-translations
+    runs-on: ubuntu-latest
+    steps:
+      - name: 변경사항에 대해 번역자에게 알림
+        run: |
+          # 번역자에게 알림 보내기
+          # 번역 관리 시스템 업데이트
+          # 번역 작업 생성
+```
+
+## 언어 감지 및 전환
+
+### 자동 언어 감지
+
+사용자의 선호 언어 감지:
+
+```typescript
+// 언어 감지 로직
+function detectUserLanguage(
+  availableLanguages: string[],
+  defaultLanguage: string = 'en'
+): string {
+  // 1. URL 언어 매개변수
+  const urlParams = new URLSearchParams(window.location.search);
+  const urlLang = urlParams.get('lang');
+  if (urlLang && availableLanguages.includes(urlLang)) {
+    return urlLang;
+  }
+
+  // 2. 저장된 사용자 기본 설정
+  const storedLang = localStorage.getItem('preferred-language');
+  if (storedLang && availableLanguages.includes(storedLang)) {
+    return storedLang;
+  }
+
+  // 3. 브라우저 언어
+  const browserLangs = navigator.languages || [navigator.language];
+  for (const browserLang of browserLangs) {
+    // 정확한 일치
+    if (availableLanguages.includes(browserLang)) {
+      return browserLang;
+    }
+
+    // 언어 코드 일치 (en-US -> en)
+    const langCode = browserLang.split('-')[0];
+    if (availableLanguages.includes(langCode)) {
+      return langCode;
+    }
+  }
+
+  // 4. 기본 언어
+  return defaultLanguage;
+}
+```
+
+### 언어 전환기 컴포넌트
+
+언어 전환 인터페이스 생성:
+
+```typescript
+// components/LanguageSwitcher.tsx
+import React from 'react';
+import { useRouter } from 'next/router';
+import { useLanguage } from '@baidocs/hooks';
+
+interface Language {
+  code: string;
+  name: string;
+  nativeName: string;
+  flag: string;
+}
+
+const languages: Language[] = [
+  { code: 'en', name: 'English', nativeName: 'English', flag: '🇺🇸' },
+  { code: 'ko', name: 'Korean', nativeName: '한국어', flag: '🇰🇷' },
+  { code: 'es', name: 'Spanish', nativeName: 'Español', flag: '🇪🇸' },
+  { code: 'fr', name: 'French', nativeName: 'Français', flag: '🇫🇷' },
+  { code: 'ar', name: 'Arabic', nativeName: 'العربية', flag: '🇸🇦' }
+];
+
+export function LanguageSwitcher() {
+  const router = useRouter();
+  const { currentLanguage, availableLanguages, switchLanguage } = useLanguage();
+
+  const handleLanguageChange = async (newLanguage: string) => {
+    try {
+      await switchLanguage(newLanguage);
+
+      // 언어 변경을 반영하도록 URL 업데이트
+      const currentPath = router.asPath;
+      const newPath = currentPath.replace(
+        `/docs/${currentLanguage}/`,
+        `/docs/${newLanguage}/`
+      );
+
+      router.push(newPath);
+
+      // 기본 설정 저장
+      localStorage.setItem('preferred-language', newLanguage);
+    } catch (error) {
+      console.error('언어 전환 실패:', error);
+    }
+  };
+
+  const availableLanguageList = languages.filter(lang =>
+    availableLanguages.includes(lang.code)
+  );
+
+  return (
+    <div className="language-switcher">
+      <button
+        className="language-trigger"
+        aria-label="언어 선택"
+        aria-haspopup="listbox"
+      >
+        <span className="current-language-flag">
+          {languages.find(lang => lang.code === currentLanguage)?.flag}
+        </span>
+        <span className="current-language-name">
+          {languages.find(lang => lang.code === currentLanguage)?.nativeName}
+        </span>
+        <span className="dropdown-arrow">▼</span>
+      </button>
+
+      <div className="language-dropdown" role="listbox">
+        {availableLanguageList.map((language) => (
+          <button
+            key={language.code}
+            onClick={() => handleLanguageChange(language.code)}
+            className={`language-option ${
+              language.code === currentLanguage ? 'active' : ''
+            }`}
+            role="option"
+            aria-selected={language.code === currentLanguage}
+          >
+            <span className="language-flag">{language.flag}</span>
+            <span className="language-names">
+              <span className="language-native">{language.nativeName}</span>
+              <span className="language-english">{language.name}</span>
+            </span>
+            {language.code === currentLanguage && (
+              <span className="current-indicator">✓</span>
+            )}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+```
+
+## SEO 및 다국어
+
+### 언어별 SEO
+
+각 언어에 대한 SEO 구성:
+
+```mdx
+---
+# English SEO
+title: "완전한 사용자 가이드 - MyApp 문서"
+description: "포괄적인 사용자 가이드로 MyApp 사용법을 배우세요. 단계별 튜토리얼, API 참조, 모범 사례."
+keywords: ["myapp", "사용자 가이드", "문서", "튜토리얼"]
+canonical: "https://docs.myapp.com/en/guide/"
+hreflang:
+  - lang: "en"
+    url: "https://docs.myapp.com/en/guide/"
+  - lang: "ko"
+    url: "https://docs.myapp.com/ko/guide/"
+  - lang: "es"
+    url: "https://docs.myapp.com/es/guide/"
+---
+
+# 완전한 사용자 가이드
+
+이 가이드는 알아야 할 모든 것을 다룹니다...
+```
+
+```mdx
+---
+# Korean SEO
+title: "완전한 사용자 가이드 - MyApp 문서"
+description: "포괄적인 사용자 가이드로 MyApp 사용법을 배우세요. 단계별 튜토리얼, API 참조, 모범 사례를 제공합니다."
+keywords: ["myapp", "사용자 가이드", "문서", "튜토리얼"]
+canonical: "https://docs.myapp.com/ko/guide/"
+hreflang:
+  - lang: "en"
+    url: "https://docs.myapp.com/en/guide/"
+  - lang: "ko"
+    url: "https://docs.myapp.com/ko/guide/"
+  - lang: "es"
+    url: "https://docs.myapp.com/es/guide/"
+---
+
+# 완전한 사용자 가이드
+
+이 가이드는 알아야 할 모든 것을 다룹니다...
+```
+
+### 사이트맵 생성
+
+언어별 사이트맵 생성:
+
+```xml
+<!-- sitemap.xml -->
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+
+  <!-- English pages -->
+  <url>
+    <loc>https://docs.myapp.com/en/guide/</loc>
+    <lastmod>2024-01-26</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://docs.myapp.com/ko/guide/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://docs.myapp.com/es/guide/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://docs.myapp.com/en/guide/" />
+  </url>
+
+  <!-- Korean pages -->
+  <url>
+    <loc>https://docs.myapp.com/ko/guide/</loc>
+    <lastmod>2024-01-26</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://docs.myapp.com/en/guide/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://docs.myapp.com/es/guide/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://docs.myapp.com/en/guide/" />
+  </url>
+
+</urlset>
+```
+
+## 다음 단계
+
+다국어 문서를 향상시키세요:
+
+1. **[버전 관리](versioning.mdx)** - 다른 언어 버전 관리
+2. **[검색 설정](search.mdx)** - 언어별 검색 구성
+3. **[PDF 생성](pdf-generation.mdx)** - 여러 언어로 PDF 생성
+
+---
+
+*다국어 지원은 문서를 전 세계 청중에게 접근 가능하게 하여 다양한 문화와 지역에서 도달 범위와 사용성을 증가시킵니다.*
