@@ -1,0 +1,463 @@
+# 문서 가져오기 및 변환
+
+BaiDocs는 인기 있는 문서화 도구에서 문서를 가져오고 변환하여 기존 콘텐츠에서 깔끔하고 최적화된 BaiDocs 저장소를 생성할 수 있습니다.
+
+## 지원되는 가져오기 소스
+
+| 도구 | 가져오기 지원 | 변환 기능 |
+|------|----------------|-------------------|
+| **Sphinx** | ✅ 완전 지원 | RST → MDX, 내비게이션, 설정, 에셋 |
+| **MkDocs** | ✅ 완전 지원 | Markdown → MDX, mkdocs.yml → book.config.yaml |
+| **GitBook** | ✅ 완전 지원 | GitBook 형식 → BaiDocs 구조 |
+| **Generic Markdown** | ✅ 기본 지원 | 파일 구조 보존, 기본 내비게이션 |
+| **Confluence** | 🔄 준비 중 | 내보내기 → MDX 변환 |
+| **Notion** | 🔄 준비 중 | 데이터베이스 → 문서 구조 |
+
+## 가져오기 과정 개요
+
+가져오기 및 변환 과정은 완전히 새롭고 깔끔한 BaiDocs 저장소를 생성합니다:
+
+```
+원본 도구 저장소                BaiDocs 저장소
+├── sphinx/                      ├── book.config.yaml
+│   ├── conf.py                 ├── en/
+│   ├── index.rst               │   ├── index.mdx
+│   ├── _build/                 │   ├── getting-started/
+│   └── ...                     │   └── _assets/
+                                └── .git/ (깔끔한 히스토리)
+```
+
+### 주요 이점
+
+✅ **깔끔한 저장소**: 레거시 아티팩트 없이 새로운 Git 히스토리
+✅ **최적화된 구조**: BaiDocs 네이티브 구성
+✅ **에셋 마이그레이션**: 이미지와 파일이 적절히 구성됨
+✅ **형식 변환**: 향상된 기능을 가진 현대적 MDX
+✅ **내비게이션 생성**: 지능적인 내비게이션 구조
+
+## Sphinx에서 가져오기
+
+### 준비 작업
+
+Sphinx 프로젝트에 다음이 있는지 확인합니다:
+- `conf.py` 설정 파일
+- `.rst` 파일로 구성된 구조화된 문서
+- 빌드된 HTML 버전 (참조용)
+
+### 가져오기 설정
+
+![Sphinx Import Configuration](../_assets/sphinx-import-config.png)
+
+#### 소스 설정
+
+- **Repository URL**: `https://github.com/your-org/sphinx-docs.git`
+- **Branch**: 소스 브랜치 (일반적으로 `main` 또는 `master`)
+- **Format**: "Sphinx" 선택
+
+#### 대상 설정
+
+- **Target Name**: 새 BaiDocs 책 이름 (예: `api-documentation`)
+- **Display Title**: 사람이 읽기 쉬운 제목
+- **Emoji**: 책의 시각적 식별자
+
+#### 변환 옵션
+
+- **Language Mapping**: Sphinx 언어를 BaiDocs로 매핑
+  ```
+  Sphinx: en → BaiDocs: en
+  Sphinx: es → BaiDocs: es
+  ```
+
+- **Content Processing**:
+  - ✅ RST를 MDX로 변환
+  - ✅ toctree에서 내비게이션 추출
+  - ✅ 이미지와 에셋 마이그레이션
+  - ✅ 구문 강조가 있는 코드 블록 변환
+
+### 변환 결과
+
+**이전 (Sphinx)**:
+```python
+# conf.py
+project = 'My API Documentation'
+html_theme = 'sphinx_rtd_theme'
+extensions = ['sphinx.ext.autodoc']
+```
+
+```rst
+.. index.rst
+My API Documentation
+====================
+
+Welcome to the API documentation.
+
+.. toctree::
+   :maxdepth: 2
+
+   getting-started
+   api-reference
+```
+
+**이후 (BaiDocs)**:
+```yaml
+# book.config.yaml
+id: api-documentation
+title: My API Documentation
+description: Converted from Sphinx
+navigation:
+  en:
+    - title: "Home"
+      path: "index.mdx"
+    - title: "Getting Started"
+      path: "getting-started.mdx"
+    - title: "API Reference"
+      path: "api-reference.mdx"
+```
+
+```mdx
+# index.mdx
+# My API Documentation
+
+Welcome to the API documentation.
+
+This documentation has been converted from Sphinx to BaiDocs format.
+```
+
+## MkDocs에서 가져오기
+
+### 준비 작업
+
+MkDocs 프로젝트에 다음이 포함되어 있는지 확인합니다:
+- `mkdocs.yml` 설정 파일
+- `docs/` 디렉토리의 마크다운 파일
+- 적절히 구조화된 내비게이션
+
+### 가져오기 설정
+
+#### 소스 분석
+
+BaiDocs가 MkDocs 설정을 분석합니다:
+
+```yaml
+# mkdocs.yml (원본)
+site_name: User Guide
+site_description: Complete user documentation
+nav:
+  - Home: index.md
+  - Getting Started:
+    - Installation: getting-started/install.md
+    - Quickstart: getting-started/quickstart.md
+  - Advanced: advanced.md
+```
+
+#### 변환 과정
+
+- **Configuration Migration**: `mkdocs.yml` → `book.config.yaml`
+- **Content Conversion**: Markdown → MDX (향상된 기능)
+- **Theme Translation**: MkDocs 테마 → BaiDocs 스타일링
+- **Plugin Conversion**: 일반적인 플러그인 → BaiDocs 동등 기능
+
+### 변환 결과
+
+**변환 후**:
+```yaml
+# book.config.yaml
+id: user-guide
+title: User Guide
+description: Complete user documentation
+navigation:
+  en:
+    - title: "Home"
+      path: "index.mdx"
+    - title: "Getting Started"
+      items:
+        - title: "Installation"
+          path: "getting-started/install.mdx"
+        - title: "Quickstart"
+          path: "getting-started/quickstart.mdx"
+    - title: "Advanced"
+      path: "advanced.mdx"
+```
+
+### 플러그인 변환
+
+일반적인 MkDocs 플러그인과 BaiDocs 동등 기능:
+
+| MkDocs 플러그인 | BaiDocs 기능 |
+|---------------|-----------------|
+| `search` | 내장 검색 |
+| `admonitions` | 네이티브 어드모니션 |
+| `codehilite` | 구문 강조 |
+| `toc` | 자동 TOC |
+| `mkdocs-material` | 내장 반응형 테마 |
+
+## GitBook에서 가져오기
+
+### GitBook 레거시 형식
+
+GitBook Legacy (v1) 저장소의 경우:
+
+```
+gitbook-repo/
+├── SUMMARY.md          # GitBook 내비게이션
+├── README.md          # 홈페이지
+├── chapter1/
+│   ├── README.md
+│   └── section1.md
+└── assets/
+    └── _assets/
+```
+
+### GitBook V2 형식
+
+현대적인 GitBook 내보내기의 경우:
+
+```
+gitbook-export/
+├── .gitbook.yaml      # GitBook 설정
+├── README.md
+├── getting-started/
+└── reference/
+```
+
+### 변환 과정
+
+#### 내비게이션 변환
+
+**GitBook SUMMARY.md**:
+```markdown
+# Summary
+
+* [Introduction](README.md)
+* [Getting Started](getting-started/README.md)
+  * [Installation](getting-started/installation.md)
+  * [Configuration](getting-started/configuration.md)
+* [Advanced Topics](advanced/README.md)
+```
+
+**BaiDocs book.config.yaml**:
+```yaml
+navigation:
+  en:
+    - title: "Introduction"
+      path: "index.mdx"
+    - title: "Getting Started"
+      items:
+        - title: "Installation"
+          path: "getting-started/installation.mdx"
+        - title: "Configuration"
+          path: "getting-started/configuration.mdx"
+    - title: "Advanced Topics"
+      path: "advanced/index.mdx"
+```
+
+#### 콘텐츠 향상
+
+변환 중에 BaiDocs는 GitBook 콘텐츠를 향상시킵니다:
+
+- **Hint Blocks** → **Admonitions**
+- **Code Tabs** → **MDX Code Components**
+- **Embedded Content** → **React Components**
+- **GitBook Variables** → **MDX Variables**
+
+## 일반 마크다운 가져오기
+
+특정 문서화 도구 없이 마크다운 파일이 있는 저장소의 경우:
+
+### 자동 구조 감지
+
+BaiDocs가 저장소 구조를 분석합니다:
+
+```
+generic-docs/
+├── README.md          # index.mdx가 됨
+├── docs/
+│   ├── guide.md
+│   ├── tutorial.md
+│   └── reference/
+│       └── api.md
+└── _assets/
+```
+
+### 내비게이션 생성
+
+BaiDocs가 다음을 기반으로 자동으로 내비게이션을 생성합니다:
+
+1. **File Structure**: 디렉토리 계층 구조
+2. **Frontmatter**: 파일의 YAML 메타데이터
+3. **Headers**: 파일의 1단계 헤더
+4. **File Naming**: 의미 있는 파일 이름
+
+**생성된 내비게이션**:
+```yaml
+navigation:
+  en:
+    - title: "Home"
+      path: "index.mdx"
+    - title: "Guide"
+      path: "guide.mdx"
+    - title: "Tutorial"
+      path: "tutorial.mdx"
+    - title: "Reference"
+      items:
+        - title: "API"
+          path: "reference/api.mdx"
+```
+
+## 고급 가져오기 옵션
+
+### 대상 구조 선택
+
+가져온 콘텐츠를 구성하는 방법을 선택합니다:
+
+#### 독립 구조
+```
+content/imported-book/
+├── book.config.yaml
+├── en/
+└── .git/
+```
+
+#### 모노레포 구조
+```
+content/imported-book/
+├── docs/              # 하위 디렉토리
+│   ├── book.config.yaml
+│   ├── en/
+│   └── ko/
+└── .git/
+```
+
+### 콘텐츠 처리 옵션
+
+#### 형식 변환
+
+- **Markdown → MDX**: JSX 기능으로 향상
+- **RST → MDX**: Sphinx reStructuredText 변환
+- **HTML → MDX**: HTML 소스에서 깔끔한 변환
+
+#### 에셋 처리
+
+- **Image Optimization**: 자동 이미지 압축 및 최적화
+- **Path Correction**: 상대 경로 및 참조 수정
+- **Asset Organization**: 이미지와 파일 중앙화
+
+#### 콘텐츠 향상
+
+- **Syntax Highlighting**: 코드 블록 업그레이드
+- **Admonitions**: 콜아웃 및 노트 박스 변환
+- **Cross-references**: 내부 링크 유지
+- **Table Enhancement**: 테이블 형식 개선
+
+## 가져오기 후 최적화
+
+가져오기 후 BaiDocs가 정리 및 최적화를 수행합니다:
+
+### 저장소 정리
+
+1. **Clean Git History**: 깔끔한 커밋 히스토리를 가진 새 저장소
+2. **Remove Build Artifacts**: `_build/`, `site/` 또는 기타 생성된 파일 없음
+3. **Optimize Structure**: BaiDocs 네이티브 구성
+4. **Update Dependencies**: 현대적 툴체인 및 종속성
+
+### 콘텐츠 최적화
+
+1. **Navigation Refinement**: 논리적 내비게이션 구조
+2. **Content Validation**: 깨진 링크 및 참조 확인
+3. **Format Standardization**: 전체적으로 일관된 형식
+4. **Asset Optimization**: 압축된 이미지 및 최적화된 미디어
+
+### 설정 향상
+
+```yaml
+# 가져오기 후 향상된 book.config.yaml
+id: imported-documentation
+title: Imported Documentation
+description: Converted from [Original Tool] to BaiDocs
+emoji: 🔄
+type: document
+languages:
+  - en
+defaultLanguage: en
+# 변환 메타데이터
+conversion:
+  source: sphinx
+  originalRepo: https://github.com/org/original-docs
+  convertedAt: 2024-01-26T00:00:00Z
+navigation:
+  # 생성된 내비게이션 구조
+```
+
+## 가져오기 문제 해결
+
+### 일반적인 가져오기 문제
+
+#### "Unsupported source format"
+- 저장소에 지원되는 형식의 문서가 포함되어 있는지 확인
+- 필요한 설정 파일(conf.py, mkdocs.yml 등) 확인
+- 일반 마크다운 가져오기 사용 고려
+
+#### "Navigation extraction failed"
+- 소스 내비게이션이 복잡하거나 비표준일 수 있음
+- 가져오기 후 수동 내비게이션 편집이 필요할 수 있음
+- 잘못된 형식의 내비게이션 파일 확인
+
+#### "Asset conversion errors"
+- 일부 에셋이 지원되지 않는 형식일 수 있음
+- 소스 문서의 에셋 경로 검토
+- 수동 에셋 마이그레이션이 필요할 수 있음
+
+### 복구 및 수동 수정
+
+#### 가져오기 후 수동 편집
+
+1. **Review Generated Navigation**: 필요에 따라 구조 조정
+2. **Fix Broken Links**: 올바르게 변환되지 않은 참조 업데이트
+3. **Enhance Content**: BaiDocs 특정 기능 추가
+4. **Test All Pages**: 콘텐츠가 올바르게 렌더링되는지 확인
+
+#### 다른 설정으로 재가져오기
+
+```bash
+# 실패한 가져오기 제거
+rm -rf content/failed-import
+
+# 다른 설정으로 시도:
+# - 다른 대상 구조
+# - 수정된 소스 브랜치
+# - 대체 형식 감지
+```
+
+## 모범 사례
+
+### 가져오기 전
+
+- **Backup Original**: 원본 문서가 안전하게 백업되어 있는지 확인
+- **Clean Source**: 불필요한 파일과 아티팩트 제거
+- **Document Process**: 사용자 정의 설정이나 특별한 요구사항 기록
+
+### 가져오기 중
+
+- **Monitor Progress**: 경고나 오류에 대한 가져오기 로그 감시
+- **Review Configurations**: 대상 설정이 올바른지 확인
+- **Test Incrementally**: 복잡한 프로젝트의 경우 작은 섹션부터 가져오기
+
+### 가져오기 후
+
+- **Content Review**: 변환된 콘텐츠 수동 검토
+- **Link Verification**: 모든 내부 및 외부 링크 확인
+- **Navigation Testing**: 내비게이션이 올바르게 작동하는지 확인
+- **Team Review**: 팀원들이 변환된 콘텐츠 검토
+
+## 다음 단계
+
+성공적인 가져오기 후:
+
+1. **[콘텐츠 향상](../writing/mdx-features.mdx)**: BaiDocs 특정 기능 추가
+2. **[내비게이션 개선](../advanced/multilingual.mdx)**: 구조 최적화
+3. **[검색 설정](../advanced/search.mdx)**: 검색 기능 설정
+4. **[배포](../deployment/vercel.mdx)**: 변환된 문서 게시
+
+---
+
+*가져오기 및 변환은 기존 문서를 향상된 기능과 깔끔한 구조를 가진 현대적인 BaiDocs 생태계로 가져옵니다.*

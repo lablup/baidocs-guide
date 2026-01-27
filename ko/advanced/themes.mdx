@@ -1,0 +1,561 @@
+# 테마 및 사용자 정의
+
+BaiDocs는 모든 플랫폼에서 일관성과 접근성을 유지하면서 문서의 시각적 모양을 사용자 정의할 수 있는 유연한 테마 시스템을 제공합니다.
+
+## 현재 테마 시스템
+
+### 기본 테마
+
+BaiDocs는 다음과 같은 기능을 제공하는 신중하게 설계된 기본 테마를 포함합니다:
+
+- **현대적인 디자인**: 뛰어난 가독성을 갖춘 깔끔하고 전문적인 레이아웃
+- **반응형 레이아웃**: 모바일에서 데스크톱까지 모든 화면 크기에 최적화
+- **다크 모드 지원**: 사용자 기본 설정에 따른 자동 테마 전환
+- **접근성**: 적절한 색상 대비를 갖춘 WCAG 2.1 AA 준수
+- **타이포그래피**: 뛰어난 읽기 경험을 위한 최적화된 폰트 스택
+
+### 테마 아키텍처
+
+BaiDocs 테마 시스템의 구조:
+
+```
+테마 구조:
+├── 레이아웃 컴포넌트     # 네비게이션, 헤더, 푸터
+├── 콘텐츠 컴포넌트      # 타이포그래피, 코드 블록, 테이블
+├── 인터랙티브 요소     # 버튼, 폼, 검색
+├── 색상 시스템        # 라이트/다크 모드 변수
+└── 타이포그래피 스케일  # 반응형 폰트 크기 조정
+```
+
+## 사용자 정의 옵션
+
+### CSS 변수
+
+CSS 사용자 정의 속성을 사용하여 기본 스타일링을 재정의할 수 있습니다:
+
+```css
+/* 사용자 정의 테마 변수 */
+:root {
+  /* 기본 색상 */
+  --color-primary: #2563eb;
+  --color-primary-hover: #1d4ed8;
+
+  /* 배경 색상 */
+  --color-background: #ffffff;
+  --color-background-secondary: #f8fafc;
+
+  /* 텍스트 색상 */
+  --color-text-primary: #1f2937;
+  --color-text-secondary: #6b7280;
+
+  /* 테두리 및 강조 색상 */
+  --color-border: #e5e7eb;
+  --color-accent: #10b981;
+}
+
+/* 다크 모드 재정의 */
+[data-theme="dark"] {
+  --color-background: #111827;
+  --color-background-secondary: #1f2937;
+  --color-text-primary: #f9fafb;
+  --color-text-secondary: #d1d5db;
+  --color-border: #374151;
+}
+```
+
+### 타이포그래피 사용자 정의
+
+폰트와 타이포그래피 스케일을 사용자 정의할 수 있습니다:
+
+```css
+/* 타이포그래피 재정의 */
+:root {
+  /* 폰트 패밀리 */
+  --font-sans: 'Inter', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+
+  /* 폰트 크기 */
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.25rem;
+  --text-2xl: 1.5rem;
+  --text-3xl: 1.875rem;
+  --text-4xl: 2.25rem;
+
+  /* 줄 높이 */
+  --leading-none: 1;
+  --leading-tight: 1.25;
+  --leading-normal: 1.5;
+  --leading-relaxed: 1.625;
+}
+```
+
+### 컴포넌트별 스타일링
+
+특정 BaiDocs 컴포넌트를 대상으로 지정할 수 있습니다:
+
+```css
+/* 네비게이션 스타일링 */
+.navigation {
+  --nav-background: var(--color-background-secondary);
+  --nav-text: var(--color-text-primary);
+  --nav-border: var(--color-border);
+}
+
+/* 코드 블록 사용자 정의 */
+.code-block {
+  --code-background: #1e293b;
+  --code-text: #e2e8f0;
+  --code-border-radius: 0.5rem;
+  --code-padding: 1rem;
+}
+
+/* 어드모니션 스타일링 */
+.admonition {
+  --admonition-border-radius: 0.5rem;
+  --admonition-border-width: 1px;
+  --admonition-padding: 1rem;
+}
+
+.admonition-note {
+  --admonition-color: #3b82f6;
+  --admonition-background: #eff6ff;
+}
+
+.admonition-warning {
+  --admonition-color: #f59e0b;
+  --admonition-background: #fffbeb;
+}
+```
+
+## 사용자 정의 스타일링 구현
+
+### 전역 스타일
+
+문서에 사용자 정의 CSS를 추가할 수 있습니다:
+
+1. **사용자 정의 스타일시트 생성**:
+
+```css
+/* styles/custom.css */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+  --brand-primary: #6366f1;
+  --brand-secondary: #8b5cf6;
+  --brand-accent: #06b6d4;
+}
+
+/* 사용자 정의 브랜드 스타일링 */
+.header-logo {
+  color: var(--brand-primary);
+  font-weight: 600;
+}
+
+.navigation-active {
+  background-color: var(--brand-primary);
+  color: white;
+  border-radius: 0.375rem;
+}
+
+/* 향상된 코드 블록 */
+pre[class*="language-"] {
+  background: linear-gradient(135deg, #1e293b 0%, #334155 100%) !important;
+  border: 1px solid #475569;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+/* 사용자 정의 어드모니션 스타일 */
+.admonition-tip {
+  background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+  border-left: 4px solid #10b981;
+}
+
+.admonition-warning {
+  background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+  border-left: 4px solid #f59e0b;
+}
+```
+
+2. **문서에 포함**:
+
+```mdx
+<link rel="stylesheet" href="/styles/custom.css" />
+
+# 문서 제목
+
+사용자 정의 스타일링이 적용된 콘텐츠...
+```
+
+### 컴포넌트 재정의
+
+특정 BaiDocs 컴포넌트를 재정의할 수 있습니다:
+
+```css
+/* 테이블 향상 */
+.content-table {
+  border-collapse: separate;
+  border-spacing: 0;
+  border-radius: 0.75rem;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.content-table th {
+  background: linear-gradient(135deg, var(--brand-primary), var(--brand-secondary));
+  color: white;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-size: 0.875rem;
+}
+
+.content-table tr:nth-child(even) {
+  background-color: var(--color-background-secondary);
+}
+
+/* 향상된 버튼 */
+.btn-primary {
+  background: linear-gradient(135deg, var(--brand-primary), var(--brand-secondary));
+  border: none;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+```
+
+## 향후 테마 기능
+
+### 갤러리 뷰 테마 (곧 출시)
+
+BaiDocs는 다음을 포함한 향상된 테마 옵션을 개발하고 있습니다:
+
+#### 그리드 갤러리 테마
+포트폴리오, 제품 또는 시각적 콘텐츠 쇼케이스에 적합합니다:
+
+```yaml
+# book.config.yaml
+theme:
+  layout: gallery-grid
+  grid:
+    columns: 3
+    aspectRatio: "16/9"
+    spacing: "1.5rem"
+  display:
+    showTitles: true
+    showDescriptions: true
+    overlay: "on-hover"
+```
+
+#### 카드 기반 레이아웃
+API 문서, 기능 목록 또는 모듈식 콘텐츠에 이상적입니다:
+
+```yaml
+theme:
+  layout: card-deck
+  cards:
+    style: "elevated"
+    borderRadius: "12px"
+    shadow: "medium"
+    animation: "fade-in"
+```
+
+#### 타임라인 테마
+변경 로그, 로드맵 또는 프로세스 문서에 적합합니다:
+
+```yaml
+theme:
+  layout: timeline
+  timeline:
+    orientation: "vertical"
+    connector: "dotted"
+    markers: "icons"
+    dateFormat: "MMM DD, YYYY"
+```
+
+### 고급 사용자 정의 (계획됨)
+
+#### 테마 빌더
+시각적 테마 사용자 정의 인터페이스:
+
+- **색상 선택기**: 인터랙티브한 색상 체계 선택
+- **타이포그래피 컨트롤**: 폰트 패밀리 및 크기 옵션
+- **레이아웃 구성기**: 간격 및 비율 조정
+- **컴포넌트 라이브러리**: 사전 구축된 컴포넌트 변형
+- **실시간 미리보기**: 실시간 테마 미리보기
+
+#### 사용자 정의 컴포넌트
+향상된 컴포넌트 시스템:
+
+```mdx
+import { ThemeProvider, Card, Grid, Timeline } from '@baidocs/theme-components'
+
+<ThemeProvider theme="custom-brand">
+  <Grid columns={2} gap="lg">
+    <Card elevation="high" animate="slide-up">
+      <h3>기능 1</h3>
+      <p>기능에 대한 설명...</p>
+    </Card>
+
+    <Card elevation="high" animate="slide-up">
+      <h3>기능 2</h3>
+      <p>다른 기능에 대한 설명...</p>
+    </Card>
+  </Grid>
+</ThemeProvider>
+```
+
+## 모범 사례
+
+### 성능 고려사항
+
+**사용자 정의 CSS 최적화**:
+```css
+/* 좋은 예: CSS 변수 사용 */
+.custom-element {
+  color: var(--brand-primary);
+  background: var(--surface-color);
+}
+
+/* 피해야 할 예: 하드코딩된 값 */
+.custom-element {
+  color: #6366f1;
+  background: #ffffff;
+}
+```
+
+**CSS 번들 크기 최소화**:
+```css
+/* 효율적인 선택자 사용 */
+.navigation-item { /* 좋은 예 */ }
+div.nav ul li a { /* 피해야 할 예 - 너무 구체적 */ }
+
+/* 기존 유틸리티 활용 */
+.text-brand { color: var(--brand-primary); }
+.bg-surface { background: var(--surface-color); }
+```
+
+### 접근성 지침
+
+**색상 대비 유지**:
+```css
+/* WCAG AA 준수 보장 */
+:root {
+  --text-on-primary: #ffffff; /* 최소 4.5:1 비율 */
+  --text-on-surface: #1f2937; /* 높은 대비 */
+}
+
+/* 접근성 도구로 테스트 */
+.custom-link {
+  color: var(--link-color);
+  text-decoration: underline;
+  text-underline-offset: 0.125rem;
+}
+
+.custom-link:focus {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+```
+
+**다크 모드 지원**:
+```css
+/* 자동 테마 적응 */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --surface-color: #111827;
+    --text-color: #f9fafb;
+    --border-color: #374151;
+  }
+}
+
+/* 수동 테마 토글 지원 */
+[data-theme="dark"] {
+  --surface-color: #111827;
+  --text-color: #f9fafb;
+}
+```
+
+### 반응형 디자인
+
+**모바일 우선 접근법**:
+```css
+/* 모바일용 기본 스타일 */
+.custom-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+/* 태블릿 이상 */
+@media (min-width: 768px) {
+  .custom-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+}
+
+/* 데스크톱 이상 */
+@media (min-width: 1024px) {
+  .custom-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+  }
+}
+```
+
+## 구현 예제
+
+### 기업 브랜드 테마
+
+```css
+/* 기업 브랜드 구현 */
+:root {
+  /* 브랜드 색상 */
+  --brand-primary: #1e40af;
+  --brand-secondary: #3b82f6;
+  --brand-accent: #60a5fa;
+
+  /* 기업 타이포그래피 */
+  --font-heading: 'Roboto', sans-serif;
+  --font-body: 'Open Sans', sans-serif;
+
+  /* 간격 시스템 */
+  --space-unit: 0.25rem;
+  --space-sm: calc(var(--space-unit) * 2);
+  --space-md: calc(var(--space-unit) * 4);
+  --space-lg: calc(var(--space-unit) * 6);
+}
+
+/* 헤더 브랜딩 */
+.site-header {
+  background: linear-gradient(135deg, var(--brand-primary), var(--brand-secondary));
+  color: white;
+  padding: var(--space-md);
+}
+
+/* 네비게이션 스타일링 */
+.main-navigation a {
+  color: var(--brand-primary);
+  font-family: var(--font-heading);
+  font-weight: 500;
+  text-decoration: none;
+  padding: var(--space-sm) var(--space-md);
+  border-radius: 0.375rem;
+  transition: all 0.2s ease;
+}
+
+.main-navigation a:hover {
+  background-color: var(--brand-accent);
+  color: white;
+}
+
+/* 콘텐츠 향상 */
+.content h1, .content h2, .content h3 {
+  font-family: var(--font-heading);
+  color: var(--brand-primary);
+}
+
+.content blockquote {
+  border-left: 4px solid var(--brand-accent);
+  background: rgba(96, 165, 250, 0.1);
+  padding: var(--space-md);
+  margin: var(--space-lg) 0;
+}
+```
+
+### 문서 중심 테마
+
+```css
+/* 문서 최적화 테마 */
+:root {
+  /* 읽기 쉬운 색상 체계 */
+  --text-primary: #2d3748;
+  --text-secondary: #4a5568;
+  --text-muted: #718096;
+
+  /* 배경 계층 구조 */
+  --bg-primary: #ffffff;
+  --bg-secondary: #f7fafc;
+  --bg-tertiary: #edf2f7;
+
+  /* 의미론적 색상 */
+  --color-info: #3182ce;
+  --color-success: #38a169;
+  --color-warning: #d69e2e;
+  --color-error: #e53e3e;
+
+  /* 문서 간격 */
+  --content-max-width: 65ch;
+  --line-height-body: 1.6;
+  --line-height-heading: 1.2;
+}
+
+/* 최적화된 콘텐츠 레이아웃 */
+.content-area {
+  max-width: var(--content-max-width);
+  margin: 0 auto;
+  line-height: var(--line-height-body);
+}
+
+/* 향상된 코드 표현 */
+.code-block {
+  background: #1a202c;
+  color: #e2e8f0;
+  border-radius: 0.5rem;
+  padding: 1.5rem;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  overflow-x: auto;
+}
+
+/* 목차 스타일링 */
+.toc {
+  background: var(--bg-secondary);
+  border: 1px solid var(--bg-tertiary);
+  border-radius: 0.5rem;
+  padding: 1.5rem;
+}
+
+.toc-heading {
+  color: var(--text-primary);
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.toc-link {
+  color: var(--color-info);
+  text-decoration: none;
+  padding: 0.25rem 0;
+  display: block;
+  border-left: 2px solid transparent;
+  padding-left: 0.5rem;
+}
+
+.toc-link:hover {
+  border-left-color: var(--color-info);
+  background: rgba(49, 130, 206, 0.1);
+}
+```
+
+## 다음 단계
+
+사용자 정의 테마로 문서를 향상시키는 방법:
+
+1. **[PDF 생성](pdf-generation.mdx)** - PDF 내보내기에서 테마가 작동하는지 확인
+2. **[검색 설정](search.mdx)** - 스타일링된 콘텐츠에 대한 검색 최적화
+3. **[다국어 지원](multilingual.mdx)** - 모든 언어에 테마 적용
+
+---
+
+*사용자 정의 테마를 사용하면 BaiDocs가 잘 알려진 뛰어난 사용성을 유지하면서 고유한 브랜드 경험을 만들 수 있습니다.*

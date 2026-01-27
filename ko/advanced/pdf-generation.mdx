@@ -1,0 +1,591 @@
+# PDF 생성
+
+BaiDocs는 MDX 문서를 적절한 형식, 네비게이션 및 스타일링을 갖춘 고품질의 인쇄 가능한 PDF 문서로 자동 변환하는 강력한 PDF 생성 기능을 포함합니다.
+
+## 개요
+
+PDF 생성 시스템은 다음을 생성합니다:
+
+- **개별 페이지 PDF**: 각 문서 페이지를 독립적인 PDF로 생성
+- **완전한 책 PDF**: 전체 문서를 단일 PDF로 컴파일
+- **다국어 지원**: 각 언어별로 개별 PDF 생성
+- **사용자 정의 스타일링**: 일관된 브랜딩과 전문적인 형식
+- **인터랙티브 요소**: 클릭 가능한 목차 및 내부 링크
+
+## PDF 생성 과정
+
+### 자동 생성
+
+PDF는 빌드 과정에서 자동으로 생성됩니다:
+
+```bash
+npm run build
+# 모든 책과 페이지에 대한 PDF 생성
+# 출력: public/pdfs/{book-id}/{language}/
+```
+
+### 빌드 출력 구조
+
+```
+public/pdfs/
+├── baidocs-guide/
+│   ├── en/
+│   │   ├── complete-guide.pdf          # 전체 책 PDF
+│   │   ├── getting-started/
+│   │   │   ├── overview.pdf           # 개별 페이지 PDF
+│   │   │   ├── installation.pdf
+│   │   │   └── first-book.pdf
+│   │   ├── writing/
+│   │   │   ├── markdown-basics.pdf
+│   │   │   └── mdx-features.pdf
+│   │   └── advanced/
+│   │       ├── themes.pdf
+│   │       └── pdf-generation.pdf
+│   └── ko/
+│       ├── complete-guide.pdf          # 한국어 버전
+│       └── getting-started/
+│           └── overview.pdf
+└── api-docs/
+    └── en/
+        └── complete-guide.pdf
+```
+
+## 구성
+
+### book.config.yaml의 PDF 설정
+
+책에 대한 PDF 생성을 구성할 수 있습니다:
+
+```yaml
+# book.config.yaml
+id: my-documentation
+title: My Documentation
+description: Complete user guide
+
+# PDF 생성 설정
+pdf:
+  enabled: true
+
+  # 책 수준 PDF 구성
+  book:
+    title: "My Documentation - Complete Guide"
+    author: "Your Organization"
+    subject: "User Documentation"
+    creator: "BaiDocs"
+
+    # 표지 페이지 설정
+    cover:
+      enabled: true
+      title: "My Documentation"
+      subtitle: "Complete User Guide"
+      version: "v2.0"
+      date: "2024-01-26"
+      logo: "../_assets/logo.png"
+
+    # 목차
+    toc:
+      enabled: true
+      depth: 3
+      showPageNumbers: true
+
+    # 스타일링 옵션
+    styling:
+      fontSize: "12pt"
+      fontFamily: "Inter"
+      lineHeight: 1.6
+      margins:
+        top: "2cm"
+        bottom: "2cm"
+        left: "2cm"
+        right: "2cm"
+
+  # 페이지 수준 PDF 구성
+  pages:
+    header:
+      enabled: true
+      content: "{book.title} - {page.title}"
+      alignment: "center"
+      fontSize: "10pt"
+
+    footer:
+      enabled: true
+      content: "Page {page.number} of {total.pages}"
+      alignment: "center"
+      fontSize: "10pt"
+
+    # 워터마크
+    watermark:
+      enabled: false
+      text: "CONFIDENTIAL"
+      opacity: 0.1
+      angle: 45
+```
+
+### 고급 PDF 옵션
+
+#### PDF용 사용자 정의 CSS
+
+PDF 전용 스타일링을 생성할 수 있습니다:
+
+```css
+/* styles/pdf.css */
+
+/* PDF 전용 스타일 */
+@media print {
+  /* 페이지 나누기 */
+  .page-break-before {
+    page-break-before: always;
+  }
+
+  .page-break-after {
+    page-break-after: always;
+  }
+
+  .page-break-avoid {
+    page-break-inside: avoid;
+  }
+
+  /* 네비게이션 요소 숨기기 */
+  .navigation,
+  .breadcrumbs,
+  .page-actions {
+    display: none !important;
+  }
+
+  /* 인쇄용 코드 블록 최적화 */
+  pre {
+    background: #f8f9fa !important;
+    border: 1px solid #dee2e6 !important;
+    font-size: 10pt !important;
+    line-height: 1.4 !important;
+    white-space: pre-wrap !important;
+    word-wrap: break-word !important;
+  }
+
+  /* 테이블 형식 */
+  table {
+    border-collapse: collapse !important;
+    width: 100% !important;
+    margin: 1em 0 !important;
+  }
+
+  th, td {
+    border: 1px solid #dee2e6 !important;
+    padding: 8px !important;
+    text-align: left !important;
+  }
+
+  /* 인쇄용 어드모니션 스타일 */
+  .admonition {
+    border: 1px solid #dee2e6 !important;
+    background: #f8f9fa !important;
+    page-break-inside: avoid !important;
+    margin: 1em 0 !important;
+  }
+
+  /* 링크 스타일 */
+  a[href^="http"]:after {
+    content: " (" attr(href) ")";
+    font-size: 0.8em;
+    color: #666;
+  }
+
+  /* 이미지 최적화 */
+  img {
+    max-width: 100% !important;
+    height: auto !important;
+    page-break-inside: avoid !important;
+  }
+}
+
+/* PDF 표지 페이지 스타일 */
+.pdf-cover {
+  text-align: center;
+  padding: 4cm 2cm;
+  page-break-after: always;
+}
+
+.pdf-cover h1 {
+  font-size: 2.5em;
+  margin-bottom: 0.5em;
+  color: #2563eb;
+}
+
+.pdf-cover .subtitle {
+  font-size: 1.2em;
+  color: #6b7280;
+  margin-bottom: 2em;
+}
+
+.pdf-cover .metadata {
+  margin-top: 2em;
+  font-size: 0.9em;
+  color: #9ca3af;
+}
+```
+
+#### PDF 스타일 포함
+
+문서에서 PDF 스타일시트를 참조할 수 있습니다:
+
+```yaml
+# book.config.yaml
+pdf:
+  styling:
+    customCSS: "styles/pdf.css"
+```
+
+## 수동 PDF 생성
+
+### 특정 책에 대한 PDF 생성
+
+단일 책에 대한 PDF를 생성할 수 있습니다:
+
+```bash
+# 특정 책에 대한 모든 PDF 생성
+npm run build:pdfs -- --book=my-documentation
+
+# 특정 언어에 대한 PDF 생성
+npm run build:pdfs -- --book=my-documentation --language=en
+```
+
+### 개별 페이지 PDF 생성
+
+특정 페이지에 대한 PDF를 생성할 수 있습니다:
+
+```bash
+# 특정 페이지에 대한 PDF 생성
+npm run build:pdf -- --book=my-documentation --language=en --page=getting-started/overview
+```
+
+## PDF 기능
+
+### 표지 페이지 생성
+
+자동 생성되는 표지 페이지에는 다음이 포함됩니다:
+
+- **책 제목 및 부제목**: 구성에서 가져옴
+- **버전 정보**: 책 버전 및 빌드 날짜
+- **로고**: 조직 또는 프로젝트 로고
+- **메타데이터**: 작성자, 설명 및 빌드 정보
+
+표지 페이지 구성 예제:
+
+```yaml
+pdf:
+  book:
+    cover:
+      enabled: true
+      title: "BaiDocs User Guide"
+      subtitle: "Complete Documentation Platform"
+      version: "v3.0"
+      date: "January 2024"
+      logo: "../_assets/baidocs-logo.png"
+      background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)"
+      textColor: "white"
+```
+
+### 목차
+
+다음 기능을 갖춘 인터랙티브 목차:
+
+- **계층적 구조**: 네비게이션 구조를 반영
+- **페이지 번호**: 정확한 페이지 참조
+- **클릭 가능한 링크**: 섹션으로 직접 이동
+- **사용자 정의 가능한 깊이**: 포함할 제목 수준 제어
+
+### 헤더 및 푸터
+
+사용자 정의 가능한 헤더와 푸터는 다음을 지원합니다:
+
+- **동적 콘텐츠**: 책 제목, 페이지 제목, 페이지 번호
+- **사용자 정의 텍스트**: 조직 이름, 문서 분류
+- **다양한 정렬**: 왼쪽, 가운데, 오른쪽 배치
+- **변수 치환**: 동적 콘텐츠용 템플릿 변수
+
+#### 헤더/푸터 변수
+
+사용 가능한 템플릿 변수:
+
+```yaml
+# 헤더/푸터용 템플릿 변수
+variables:
+  "{book.title}": "구성에서 가져온 책 제목"
+  "{book.description}": "책 설명"
+  "{page.title}": "현재 페이지 제목"
+  "{page.number}": "현재 페이지 번호"
+  "{total.pages}": "총 페이지 수"
+  "{current.date}": "현재 날짜"
+  "{build.date}": "빌드 타임스탬프"
+  "{book.version}": "책 버전"
+```
+
+### 페이지 레이아웃 제어
+
+MDX 컴포넌트로 페이지 레이아웃을 제어할 수 있습니다:
+
+```mdx
+# 소개
+
+이 콘텐츠는 정상적으로 나타납니다.
+
+<div className="page-break-before">
+## 새 섹션 (새 페이지에서 시작)
+</div>
+
+이 섹션은 새 페이지에서 시작됩니다.
+
+<div className="page-break-avoid">
+### 중요 노트
+
+이 전체 섹션은 함께 유지되며 페이지 간에 분할되지 않습니다.
+</div>
+
+<div className="page-break-after">
+## 섹션 끝
+</div>
+
+다음 콘텐츠는 새 페이지에서 시작됩니다.
+```
+
+### 코드 블록 최적화
+
+코드 블록은 PDF용으로 자동 최적화됩니다:
+
+- **구문 강조**: 인쇄에서 보존
+- **줄 바꿈**: 긴 줄이 적절히 래핑
+- **폰트 크기**: 읽기 쉽지만 공간 효율적
+- **배경**: 인쇄에 친화적인 색상
+
+```javascript
+// 이 코드 블록은 PDF 출력용으로 최적화됩니다
+function generatePDF(book, options) {
+  const pdfOptions = {
+    format: 'A4',
+    margin: options.margins || {
+      top: '2cm',
+      bottom: '2cm',
+      left: '2cm',
+      right: '2cm'
+    },
+    printBackground: true,
+    preferCSSPageSize: true
+  };
+
+  return createPDF(book.content, pdfOptions);
+}
+```
+
+### 이미지 처리
+
+이미지는 PDF용으로 자동 처리됩니다:
+
+- **해상도 최적화**: 고품질이지만 적절한 크기
+- **형식 변환**: 인쇄에 최적화된 형식
+- **크기 조정**: 페이지 너비에 맞게 자동 스케일링
+- **품질**: 인쇄에서 선명도 유지
+
+## 빌드 통합
+
+### CI/CD에서 PDF 생성
+
+배포 파이프라인에 PDF 생성을 통합할 수 있습니다:
+
+```yaml
+# .github/workflows/deploy.yml
+name: Deploy Documentation
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build documentation
+        run: npm run build
+
+      - name: Generate PDFs
+        run: npm run build:pdfs
+
+      - name: Deploy to Vercel
+        run: npm run deploy
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+```
+
+### PDF 아티팩트
+
+생성된 PDF에 액세스할 수 있습니다:
+
+- **직접 URL**: `https://your-site.com/pdfs/book-id/language/page.pdf`
+- **다운로드 링크**: 뷰어에서 자동 다운로드 버튼
+- **아카이브 생성**: 모든 PDF의 압축 아카이브
+
+## 문제 해결
+
+### 일반적인 문제
+
+#### "PDF Generation Failed"
+
+```bash
+# 누락된 의존성 확인
+npm install puppeteer-core
+
+# 책 구성 검증
+npm run validate-config
+
+# PDF 생성 디버그
+DEBUG=pdf npm run build:pdfs
+```
+
+#### "Fonts Not Loading"
+
+```yaml
+# book.config.yaml
+pdf:
+  styling:
+    fontFamily: "Inter"
+    # 폰트가 사용 가능한지 확인하거나 웹 안전 폰트 사용
+    fontFallbacks:
+      - "Arial"
+      - "sans-serif"
+```
+
+#### "Images Missing in PDF"
+
+- 이미지 경로가 콘텐츠 디렉토리 기준 상대 경로인지 확인
+- 이미지가 존재하고 액세스 가능한지 확인
+- 이미지 형식 지원 확인 (PNG, JPG, SVG 권장)
+
+#### "Large File Sizes"
+
+```yaml
+# PDF 크기 최적화
+pdf:
+  optimization:
+    compressImages: true
+    imageQuality: 85
+    removeUnusedAssets: true
+    minimizeWhitespace: true
+```
+
+### 성능 최적화
+
+#### PDF 생성 속도 향상
+
+```bash
+# PDF를 병렬로 생성
+npm run build:pdfs -- --parallel=4
+
+# 변경되지 않은 페이지 건너뛰기
+npm run build:pdfs -- --incremental
+
+# 특정 형식만 생성
+npm run build:pdfs -- --format=pdf
+```
+
+#### 메모리 사용량 줄이기
+
+```yaml
+# book.config.yaml
+pdf:
+  performance:
+    maxMemory: "2GB"
+    batchSize: 10
+    enableGC: true
+    timeout: 30000
+```
+
+## 고급 사용 사례
+
+### 사용자 정의 PDF 템플릿
+
+다양한 문서 유형에 대한 사용자 정의 PDF 템플릿을 생성할 수 있습니다:
+
+```typescript
+// pdf-templates/api-reference.ts
+export const apiReferenceTemplate = {
+  cover: {
+    title: "{book.title}",
+    subtitle: "API Reference v{book.version}",
+    layout: "technical"
+  },
+  header: {
+    content: "{book.title} API | {page.title}",
+    style: "technical"
+  },
+  footer: {
+    content: "Page {page.number} | Last updated: {build.date}",
+    includeConfidentiality: true
+  },
+  styling: {
+    codeBlockStyle: "technical",
+    tableStyle: "compact",
+    admonitionStyle: "minimal"
+  }
+};
+```
+
+### 조건부 PDF 콘텐츠
+
+PDF 생성 기준으로 콘텐츠를 포함하거나 제외할 수 있습니다:
+
+```mdx
+import { isPDFExport } from '@baidocs/utils'
+
+# 문서 페이지
+
+모든 곳에 나타나는 일반 콘텐츠입니다.
+
+{!isPDFExport && (
+  <div className="interactive-demo">
+    이 인터랙티브 데모는 웹 버전에서만 나타납니다.
+  </div>
+)}
+
+{isPDFExport && (
+  <div className="pdf-note">
+    📋 **참고**: 이 문서에는 PDF 형식에서 사용할 수 없는 인터랙티브 요소가 포함되어 있습니다. 전체 기능을 위해 온라인 버전을 방문하세요.
+  </div>
+)}
+```
+
+### 배치 PDF 작업
+
+여러 책에 대한 PDF를 생성할 수 있습니다:
+
+```bash
+# 모든 책에 대한 PDF 생성
+npm run build:pdfs -- --all
+
+# 특정 책들에 대한 생성
+npm run build:pdfs -- --books=guide,api-reference,tutorials
+
+# 다른 디렉토리로 내보내기
+npm run build:pdfs -- --output=/path/to/pdfs/
+```
+
+## 다음 단계
+
+PDF 문서를 향상시키는 방법:
+
+1. **[검색 설정](search.mdx)** - PDF가 검색 가능한지 확인
+2. **[다국어 지원](multilingual.mdx)** - 모든 언어에 대한 PDF 생성
+3. **[버전 관리](versioning.mdx)** - 릴리스별 PDF 버전 관리
+
+---
+
+*PDF 생성 기능은 디지털 문서를 오프라인 읽기와 공식 배포에 적합한 전문적이고 공유 가능한 문서로 변환합니다.*

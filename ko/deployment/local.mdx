@@ -1,0 +1,783 @@
+# 로컬 배포
+
+BaiDocs는 개발, 테스트 또는 비공개 문서 호스팅을 위해 로컬로 배포할 수 있습니다. 이 가이드는 문서 환경을 완전히 제어할 수 있도록 로컬 머신이나 비공개 서버에 BaiDocs를 설정하는 방법을 다룹니다.
+
+## 개요
+
+### 로컬 배포의 이점
+
+- **완전한 제어**: 호스팅 환경에 대한 완전한 제어
+- **개인정보 보호**: 민감한 문서를 내부에 보관
+- **사용자 정의**: 무제한 사용자 정의 가능성
+- **성능**: 특정 요구사항에 최적화
+- **통합**: 내부 시스템과 쉬운 통합
+
+### 배포 아키텍처
+
+```
+로컬 BaiDocs 배포:
+┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
+│   에디터 앱      │    │   뷰어 앱       │    │ 콘텐츠 저장소    │
+│  (localhost:3001)│    │ (localhost:3000)│    │ (파일 시스템)    │
+│                 │    │                 │    │                 │
+│ - 파일 편집     │    │ - 문서          │    │ - Git 저장소    │
+│ - 라이브 미리보기│    │ - 검색          │    │ - 에셋          │
+│ - Git 통합      │    │ - 네비게이션     │    │ - 빌드          │
+└─────────────────┘    └─────────────────┘    └─────────────────┘
+```
+
+## 설치 요구사항
+
+### 시스템 요구사항
+
+**최소 요구사항:**
+- **Node.js**: 18.0 이상
+- **RAM**: 최소 4GB, 권장 8GB
+- **저장공간**: 설치 + 콘텐츠용 10GB
+- **Git**: 버전 2.0 이상
+
+**권장 요구사항:**
+- **Node.js**: 최신 LTS 버전
+- **RAM**: 대용량 문서 세트용 16GB
+- **저장공간**: 더 나은 성능을 위한 SSD
+- **CPU**: 더 빠른 빌드를 위한 멀티코어 프로세서
+
+### 소프트웨어 의존성
+
+```bash
+# Node.js 버전 확인
+node --version  # 18.0+ 이어야 함
+
+# npm 버전 확인
+npm --version   # 8.0+ 이어야 함
+
+# Git 버전 확인
+git --version   # 2.0+ 이어야 함
+
+# 선택사항: 사용 가능한 메모리 확인
+free -h         # Linux
+vm_stat         # macOS
+```
+
+## 설치 과정
+
+### 1. BaiDocs 다운로드
+
+BaiDocs 저장소를 복제합니다:
+
+```bash
+# GitHub에서 복제
+git clone https://github.com/lablup/baidocs.git
+cd baidocs
+
+# 또는 특정 버전 다운로드
+git clone --branch v3.0.0 https://github.com/lablup/baidocs.git
+cd baidocs
+```
+
+### 2. 의존성 설치
+
+필요한 모든 패키지를 설치합니다:
+
+```bash
+# 의존성 설치
+npm install
+
+# 설치 확인
+npm run --version
+```
+
+### 3. 환경 구성
+
+환경 구성을 생성합니다:
+
+```bash
+# 예제 환경 파일 복사
+cp .env.example .env.local
+
+# 환경 변수 편집
+nano .env.local
+```
+
+기본 환경 구성:
+
+```bash
+# .env.local
+
+# 애플리케이션 URL
+NEXT_PUBLIC_EDITOR_URL=http://localhost:3001
+NEXT_PUBLIC_VIEWER_URL=http://localhost:3000
+
+# 콘텐츠 디렉토리 (절대 경로)
+CONTENT_PATH=/absolute/path/to/your/content
+
+# 선택사항: 사용자 정의 포트 구성
+EDITOR_PORT=3001
+VIEWER_PORT=3000
+
+# 선택사항: 개발 설정
+NODE_ENV=production
+DEBUG=false
+
+# 선택사항: Git 구성
+GIT_USER_NAME="BaiDocs Bot"
+GIT_USER_EMAIL="baidocs@your-domain.com"
+
+# 선택사항: 검색 구성
+ENABLE_SEARCH=true
+SEARCH_INDEX_PATH=/absolute/path/to/search/index
+
+# 선택사항: PDF 생성
+ENABLE_PDF_GENERATION=true
+PDF_OUTPUT_PATH=/absolute/path/to/pdfs
+```
+
+### 4. 콘텐츠 디렉토리 설정
+
+콘텐츠 디렉토리를 생성하고 구성합니다:
+
+```bash
+# 콘텐츠 디렉토리 생성
+mkdir -p /path/to/your/content
+cd /path/to/your/content
+
+# 샘플 콘텐츠로 초기화
+git init
+git remote add origin https://github.com/your-org/docs-content.git
+
+# 또는 새 책 생성
+mkdir -p my-docs/en
+cd my-docs
+
+# 기본 구성 생성
+cat > book.config.yaml << EOF
+id: my-docs
+title: My Documentation
+description: Local documentation
+emoji: 📚
+type: document
+languages:
+  - en
+defaultLanguage: en
+navigation:
+  en:
+    - title: "Home"
+      path: "index.mdx"
+EOF
+
+# 홈페이지 생성
+cat > en/index.mdx << EOF
+# 내 문서에 오신 것을 환영합니다
+
+이것은 로컬 BaiDocs 설치입니다.
+EOF
+```
+
+## BaiDocs 실행
+
+### 개발 모드
+
+에디터와 뷰어를 모두 개발 모드로 실행합니다:
+
+```bash
+# 개발 서버 시작
+npm run dev
+
+# 또는 개별적으로 시작
+npm run dev:editor    # 포트 3001의 에디터
+npm run dev:viewer    # 포트 3000의 뷰어
+```
+
+### 프로덕션 모드
+
+최적화된 프로덕션 빌드를 실행합니다:
+
+```bash
+# 프로덕션용 빌드
+npm run build
+
+# 프로덕션 서버 시작
+npm run start
+
+# 또는 개별적으로 시작
+npm run start:editor
+npm run start:viewer
+```
+
+### 프로세스 매니저 (권장)
+
+프로덕션 프로세스 관리에 PM2를 사용합니다:
+
+```bash
+# PM2를 전역으로 설치
+npm install -g pm2
+
+# PM2 구성 생성
+cat > ecosystem.config.js << EOF
+module.exports = {
+  apps: [
+    {
+      name: 'baidocs-editor',
+      script: 'npm',
+      args: 'run start:editor',
+      cwd: '/path/to/baidocs',
+      env: {
+        NODE_ENV: 'production',
+        PORT: 3001
+      },
+      instances: 1,
+      autorestart: true,
+      watch: false,
+      max_memory_restart: '1G'
+    },
+    {
+      name: 'baidocs-viewer',
+      script: 'npm',
+      args: 'run start:viewer',
+      cwd: '/path/to/baidocs',
+      env: {
+        NODE_ENV: 'production',
+        PORT: 3000
+      },
+      instances: 'max',
+      autorestart: true,
+      watch: false,
+      max_memory_restart: '1G'
+    }
+  ]
+};
+EOF
+
+# PM2로 시작
+pm2 start ecosystem.config.js
+
+# PM2 구성 저장
+pm2 save
+pm2 startup
+```
+
+## 리버스 프록시 설정
+
+### Nginx 구성
+
+Nginx를 리버스 프록시로 설정합니다:
+
+```nginx
+# /etc/nginx/sites-available/baidocs
+server {
+    listen 80;
+    server_name your-docs-domain.com;
+
+    # HTTP를 HTTPS로 리디렉션
+    return 301 https://$server_name$request_uri;
+}
+
+server {
+    listen 443 ssl http2;
+    server_name your-docs-domain.com;
+
+    # SSL 인증서
+    ssl_certificate /path/to/ssl/certificate.crt;
+    ssl_certificate_key /path/to/ssl/private.key;
+
+    # SSL 구성
+    ssl_protocols TLSv1.2 TLSv1.3;
+    ssl_ciphers ECDHE+AESGCM:ECDHE+AES256:ECDHE+AES128:!aNULL:!MD5:!DSS;
+    ssl_prefer_server_ciphers on;
+
+    # 보안 헤더
+    add_header X-Frame-Options DENY;
+    add_header X-Content-Type-Options nosniff;
+    add_header X-XSS-Protection "1; mode=block";
+    add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
+
+    # 에디터 애플리케이션 (관리자만)
+    location /editor {
+        # 에디터 액세스 제한
+        allow 192.168.1.0/24;  # 로컬 네트워크
+        allow 10.0.0.0/8;      # VPN 사용자
+        deny all;
+
+        proxy_pass http://localhost:3001;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_cache_bypass $http_upgrade;
+        proxy_read_timeout 86400;
+    }
+
+    # 뷰어 애플리케이션 (공개 액세스)
+    location / {
+        proxy_pass http://localhost:3000;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_cache_bypass $http_upgrade;
+
+        # 정적 에셋 캐시
+        location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2)$ {
+            expires 1y;
+            add_header Cache-Control "public, immutable";
+        }
+
+        # 생성된 PDF 캐시
+        location /pdfs/ {
+            expires 1w;
+            add_header Cache-Control "public";
+        }
+    }
+
+    # 헬스 체크 엔드포인트
+    location /health {
+        access_log off;
+        return 200 "healthy\n";
+        add_header Content-Type text/plain;
+    }
+
+    # 보안 및 오류 처리
+    location = /favicon.ico { access_log off; log_not_found off; }
+    location = /robots.txt  { access_log off; log_not_found off; }
+
+    # 민감한 파일 액세스 차단
+    location ~ /\. { deny all; access_log off; log_not_found off; }
+    location ~ ~$ { deny all; access_log off; log_not_found off; }
+}
+```
+
+구성을 활성화합니다:
+
+```bash
+# 사이트 활성화
+sudo ln -s /etc/nginx/sites-available/baidocs /etc/nginx/sites-enabled/
+
+# 구성 테스트
+sudo nginx -t
+
+# Nginx 재로드
+sudo systemctl reload nginx
+```
+
+### Apache 구성
+
+대안적인 Apache 설정:
+
+```apache
+# /etc/apache2/sites-available/baidocs.conf
+<VirtualHost *:80>
+    ServerName your-docs-domain.com
+    Redirect permanent / https://your-docs-domain.com/
+</VirtualHost>
+
+<VirtualHost *:443>
+    ServerName your-docs-domain.com
+
+    # SSL 구성
+    SSLEngine on
+    SSLCertificateFile /path/to/ssl/certificate.crt
+    SSLCertificateKeyFile /path/to/ssl/private.key
+
+    # 보안 헤더
+    Header always set X-Frame-Options DENY
+    Header always set X-Content-Type-Options nosniff
+    Header always set X-XSS-Protection "1; mode=block"
+    Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
+
+    # 에디터 프록시 (제한된 액세스)
+    <Location /editor>
+        Require ip 192.168.1.0/24
+        Require ip 10.0.0.0/8
+
+        ProxyPreserveHost On
+        ProxyPass http://localhost:3001/
+        ProxyPassReverse http://localhost:3001/
+    </Location>
+
+    # 뷰어 프록시 (공개 액세스)
+    <Location />
+        ProxyPreserveHost On
+        ProxyPass http://localhost:3000/
+        ProxyPassReverse http://localhost:3000/
+    </Location>
+
+    # 정적 파일 캐싱
+    <LocationMatch "\.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2)$">
+        ExpiresActive On
+        ExpiresDefault "access plus 1 year"
+        Header set Cache-Control "public, immutable"
+    </LocationMatch>
+
+    # PDF 캐싱
+    <Location /pdfs/>
+        ExpiresActive On
+        ExpiresDefault "access plus 1 week"
+        Header set Cache-Control "public"
+    </Location>
+</VirtualHost>
+```
+
+## 서비스 구성
+
+### Systemd 서비스
+
+자동 시작을 위한 systemd 서비스를 생성합니다:
+
+```bash
+# 서비스 파일 생성
+sudo cat > /etc/systemd/system/baidocs.service << EOF
+[Unit]
+Description=BaiDocs Documentation Platform
+After=network.target
+Wants=network.target
+
+[Service]
+Type=forking
+User=baidocs
+Group=baidocs
+WorkingDirectory=/opt/baidocs
+ExecStart=/usr/bin/pm2 start /opt/baidocs/ecosystem.config.js --no-daemon
+ExecReload=/usr/bin/pm2 reload /opt/baidocs/ecosystem.config.js
+ExecStop=/usr/bin/pm2 kill
+Environment=NODE_ENV=production
+Environment=PATH=/usr/bin:/usr/local/bin
+Environment=PM2_HOME=/home/baidocs/.pm2
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+# systemd 재로드 및 서비스 활성화
+sudo systemctl daemon-reload
+sudo systemctl enable baidocs
+sudo systemctl start baidocs
+
+# 상태 확인
+sudo systemctl status baidocs
+```
+
+## Docker 배포
+
+### Dockerfile
+
+Docker 구성을 생성합니다:
+
+```dockerfile
+# Dockerfile
+FROM node:18-alpine AS base
+
+# 필요한 경우에만 의존성 설치
+FROM base AS deps
+RUN apk add --no-cache libc6-compat git
+WORKDIR /app
+
+# 패키지 파일 복사
+COPY package.json package-lock.json ./
+RUN npm ci --only=production
+
+# 필요한 경우에만 소스 코드 재빌드
+FROM base AS builder
+WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules
+COPY . .
+
+# 애플리케이션 빌드
+RUN npm run build
+
+# 프로덕션 이미지
+FROM base AS runner
+WORKDIR /app
+
+ENV NODE_ENV production
+RUN addgroup --system --gid 1001 baidocs
+RUN adduser --system --uid 1001 baidocs
+
+# 필요한 파일 복사
+COPY --from=builder /app/public ./public
+COPY --from=builder /app/.next/standalone ./
+COPY --from=builder /app/.next/static ./.next/static
+
+# 콘텐츠 디렉토리 생성
+RUN mkdir -p /app/content && chown -R baidocs:baidocs /app/content
+
+USER baidocs
+
+EXPOSE 3000 3001
+
+ENV PORT 3000
+ENV HOSTNAME "0.0.0.0"
+
+CMD ["node", "server.js"]
+```
+
+### Docker Compose
+
+```yaml
+# docker-compose.yml
+version: '3.8'
+
+services:
+  baidocs:
+    build: .
+    ports:
+      - "3000:3000"
+      - "3001:3001"
+    volumes:
+      - ./content:/app/content
+      - ./data:/app/data
+    environment:
+      - NODE_ENV=production
+      - CONTENT_PATH=/app/content
+      - NEXT_PUBLIC_EDITOR_URL=http://localhost:3001
+      - NEXT_PUBLIC_VIEWER_URL=http://localhost:3000
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+      - ./ssl:/etc/nginx/ssl
+    depends_on:
+      - baidocs
+    restart: unless-stopped
+
+volumes:
+  content:
+  data:
+```
+
+### Docker로 실행
+
+```bash
+# 서비스 빌드 및 시작
+docker-compose up -d
+
+# 로그 보기
+docker-compose logs -f
+
+# 뷰어 인스턴스 확장
+docker-compose up -d --scale baidocs=3
+
+# 서비스 업데이트
+docker-compose pull
+docker-compose up -d
+```
+
+## 백업 및 유지보수
+
+### 자동 백업
+
+백업 스크립트를 생성합니다:
+
+```bash
+#!/bin/bash
+# backup-baidocs.sh
+
+# 구성
+BACKUP_DIR="/backups/baidocs"
+CONTENT_DIR="/path/to/baidocs/content"
+DATA_DIR="/path/to/baidocs/data"
+RETENTION_DAYS=30
+
+# 백업 디렉토리 생성
+mkdir -p "$BACKUP_DIR"
+
+# 백업 파일명 생성
+BACKUP_FILE="baidocs-backup-$(date +%Y%m%d-%H%M%S).tar.gz"
+
+echo "BaiDocs 백업을 시작합니다..."
+
+# 압축된 백업 생성
+tar -czf "$BACKUP_DIR/$BACKUP_FILE" \
+    --exclude='node_modules' \
+    --exclude='.git' \
+    --exclude='*.log' \
+    -C "$(dirname $CONTENT_DIR)" \
+    "$(basename $CONTENT_DIR)" \
+    -C "$(dirname $DATA_DIR)" \
+    "$(basename $DATA_DIR)"
+
+# 백업 확인
+if [ $? -eq 0 ]; then
+    echo "백업이 성공적으로 완료되었습니다: $BACKUP_FILE"
+
+    # 오래된 백업 제거
+    find "$BACKUP_DIR" -name "baidocs-backup-*.tar.gz" -mtime +$RETENTION_DAYS -delete
+
+    echo "오래된 백업이 정리되었습니다 (보존 기간: $RETENTION_DAYS일)"
+else
+    echo "백업에 실패했습니다!" >&2
+    exit 1
+fi
+```
+
+cron으로 스케줄링합니다:
+
+```bash
+# crontab에 추가
+crontab -e
+
+# 백업 일정 추가 (매일 오전 2시)
+0 2 * * * /path/to/backup-baidocs.sh >> /var/log/baidocs-backup.log 2>&1
+```
+
+### 헬스 모니터링
+
+모니터링 스크립트를 생성합니다:
+
+```bash
+#!/bin/bash
+# monitor-baidocs.sh
+
+# 구성
+EDITOR_URL="http://localhost:3001/health"
+VIEWER_URL="http://localhost:3000/health"
+ALERT_EMAIL="admin@your-domain.com"
+
+# 에디터 헬스 체크
+if ! curl -sf "$EDITOR_URL" > /dev/null; then
+    echo "경고: BaiDocs 에디터가 다운되었습니다!" | mail -s "BaiDocs Editor Down" "$ALERT_EMAIL"
+fi
+
+# 뷰어 헬스 체크
+if ! curl -sf "$VIEWER_URL" > /dev/null; then
+    echo "경고: BaiDocs 뷰어가 다운되었습니다!" | mail -s "BaiDocs Viewer Down" "$ALERT_EMAIL"
+fi
+
+# 디스크 공간 확인
+DISK_USAGE=$(df /opt/baidocs | tail -1 | awk '{print $5}' | sed 's/%//')
+if [ "$DISK_USAGE" -gt 85 ]; then
+    echo "경고: 높은 디스크 사용률: $DISK_USAGE%" | mail -s "BaiDocs High Disk Usage" "$ALERT_EMAIL"
+fi
+
+# 메모리 사용률 확인
+MEMORY_USAGE=$(free | grep Mem | awk '{printf("%.0f\n", $3/$2 * 100.0)}')
+if [ "$MEMORY_USAGE" -gt 90 ]; then
+    echo "경고: 높은 메모리 사용률: $MEMORY_USAGE%" | mail -s "BaiDocs High Memory Usage" "$ALERT_EMAIL"
+fi
+```
+
+## 보안 고려사항
+
+### 액세스 제어
+
+**에디터 액세스 제한:**
+- 신뢰할 수 있는 네트워크로 에디터 액세스 제한
+- 원격 관리 액세스에 VPN 사용
+- 민감한 환경에서 인증 구현
+
+**파일 시스템 권한:**
+```bash
+# 적절한 권한 설정
+sudo chown -R baidocs:baidocs /opt/baidocs
+sudo chmod -R 750 /opt/baidocs
+sudo chmod -R 640 /opt/baidocs/content
+```
+
+### SSL 구성
+
+**SSL 인증서 설정:**
+```bash
+# Let's Encrypt 사용
+sudo certbot --nginx -d your-docs-domain.com
+
+# 또는 사용자 정의 인증서 사용
+sudo cp your-certificate.crt /etc/ssl/certs/
+sudo cp your-private.key /etc/ssl/private/
+sudo chmod 600 /etc/ssl/private/your-private.key
+```
+
+### 방화벽 구성
+
+```bash
+# UFW 구성 (Ubuntu/Debian)
+sudo ufw allow ssh
+sudo ufw allow 80/tcp
+sudo ufw allow 443/tcp
+sudo ufw deny 3000  # 앱에 직접 액세스 차단
+sudo ufw deny 3001
+sudo ufw enable
+```
+
+## 문제 해결
+
+### 일반적인 문제
+
+#### "Port Already in Use"
+
+```bash
+# 포트를 사용하는 프로세스 확인
+sudo netstat -tulpn | grep :3000
+sudo lsof -i :3000
+
+# 포트 사용 프로세스 종료
+sudo kill -9 <PID>
+
+# 또는 다른 포트 사용
+PORT=3002 npm run start:viewer
+PORT=3003 npm run start:editor
+```
+
+#### "Permission Denied" 오류
+
+```bash
+# 파일 권한 수정
+sudo chown -R $USER:$USER /path/to/baidocs
+chmod -R 755 /path/to/baidocs
+
+# 콘텐츠 디렉토리 권한 수정
+sudo chown -R baidocs:baidocs /path/to/content
+chmod -R 750 /path/to/content
+```
+
+#### "Out of Memory" 오류
+
+```bash
+# Node.js 메모리 한도 증가
+node --max-old-space-size=4096 apps/viewer/server.js
+
+# 또는 환경에서 설정
+export NODE_OPTIONS="--max-old-space-size=4096"
+```
+
+### 로그 분석
+
+```bash
+# 애플리케이션 로그 보기
+tail -f ~/.pm2/logs/*.log
+
+# 시스템 로그 보기
+sudo journalctl -u baidocs -f
+
+# Nginx 로그 보기
+sudo tail -f /var/log/nginx/access.log
+sudo tail -f /var/log/nginx/error.log
+```
+
+## 다음 단계
+
+로컬 배포를 완료하는 방법:
+
+1. **[Vercel 배포](vercel.mdx)** - 전 세계 액세스를 위한 클라우드 배포
+2. **[검색 설정](../advanced/search.mdx)** - 콘텐츠에 맞는 검색 최적화
+3. **[다국어 지원](../advanced/multilingual.mdx)** - 국제 언어 추가
+
+---
+
+*로컬 배포는 BaiDocs 기능의 모든 기능을 유지하면서 문서 환경을 완전히 제어할 수 있게 해줍니다.*

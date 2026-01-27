@@ -3,7 +3,7 @@ title: BaiDocs Guide
 description: Complete guide to using BaiDocs for creating and managing documentation
 emoji: 📚
 type: document
-branch: main
+branch: docs/latest
 languages:
   - en
   - ko
@@ -75,7 +75,7 @@ navigation:
           path: "books/importing-books.mdx"
     - title: "콘텐츠 작성"
       items:
-        - title: "마크다운 기초"
+        - title: "마크다운 기본"
           path: "writing/markdown-basics.mdx"
         - title: "MDX 기능"
           path: "writing/mdx-features.mdx"
@@ -89,7 +89,7 @@ navigation:
           path: "advanced/pdf-generation.mdx"
         - title: "검색"
           path: "advanced/search.mdx"
-        - title: "다중 언어"
+        - title: "다국어"
           path: "advanced/multilingual.mdx"
         - title: "버전 관리"
           path: "advanced/versioning.mdx"
