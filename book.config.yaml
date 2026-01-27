@@ -3,7 +3,7 @@ title: BaiDocs Guide
 description: Complete guide to using BaiDocs for creating and managing documentation
 emoji: 📚
 type: document
-branch: main
+branch: docs/latest
 languages:
   - en
   - ko
