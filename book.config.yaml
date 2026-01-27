@@ -10,92 +10,92 @@ languages:
 defaultLanguage: en
 navigation:
   en:
-    - title: "Home"
-      path: "index.mdx"
-    - title: "Getting Started"
+    - title: Home
+      path: index.mdx
+    - title: Getting Started
       items:
-        - title: "Overview"
-          path: "getting-started/overview.mdx"
-        - title: "Installation"
-          path: "getting-started/installation.mdx"
-        - title: "First Book"
-          path: "getting-started/first-book.mdx"
-    - title: "Managing Books"
+        - title: Overview
+          path: getting-started/overview.mdx
+        - title: Installation
+          path: getting-started/installation.mdx
+        - title: First Book
+          path: getting-started/first-book.mdx
+    - title: Managing Books
       items:
-        - title: "Creating Books"
-          path: "books/creating-books.mdx"
-        - title: "Cloning Books"
-          path: "books/cloning-books.mdx"
-        - title: "Importing & Converting"
-          path: "books/importing-books.mdx"
-    - title: "Writing Content"
+        - title: Creating Books
+          path: books/creating-books.mdx
+        - title: Cloning Books
+          path: books/cloning-books.mdx
+        - title: Importing & Converting
+          path: books/importing-books.mdx
+    - title: Writing Content
       items:
-        - title: "Markdown Basics"
-          path: "writing/markdown-basics.mdx"
-        - title: "MDX Features"
-          path: "writing/mdx-features.mdx"
-        - title: "Admonitions"
-          path: "writing/admonitions.mdx"
-    - title: "Advanced Features"
+        - title: Markdown Basics
+          path: writing/markdown-basics.mdx
+        - title: MDX Features
+          path: writing/mdx-features.mdx
+        - title: Admonitions
+          path: writing/admonitions.mdx
+    - title: Advanced Features
       items:
-        - title: "Themes"
-          path: "advanced/themes.mdx"
-        - title: "PDF Generation"
-          path: "advanced/pdf-generation.mdx"
-        - title: "Search"
-          path: "advanced/search.mdx"
-        - title: "Multi-language"
-          path: "advanced/multilingual.mdx"
-        - title: "Versioning"
-          path: "advanced/versioning.mdx"
-    - title: "Deployment"
+        - title: Themes
+          path: advanced/themes.mdx
+        - title: PDF Generation
+          path: advanced/pdf-generation.mdx
+        - title: Search
+          path: advanced/search.mdx
+        - title: Multi-language
+          path: advanced/multilingual.mdx
+        - title: Versioning
+          path: advanced/versioning.mdx
+    - title: Deployment
       items:
-        - title: "Local Deployment"
-          path: "deployment/local.mdx"
-        - title: "Vercel Deployment"
-          path: "deployment/vercel.mdx"
+        - title: Local Deployment
+          path: deployment/local.mdx
+        - title: Vercel Deployment
+          path: deployment/vercel.mdx
   ko:
-    - title: "홈"
-      path: "index.mdx"
-    - title: "시작하기"
+    - title: 홈
+      path: index.mdx
+    - title: 시작하기
       items:
-        - title: "개요"
-          path: "getting-started/overview.mdx"
-        - title: "설치"
-          path: "getting-started/installation.mdx"
-        - title: "첫 번째 책"
-          path: "getting-started/first-book.mdx"
-    - title: "책 관리"
+        - title: 개요
+          path: getting-started/overview.mdx
+        - title: 설치
+          path: getting-started/installation.mdx
+        - title: 첫 번째 책
+          path: getting-started/first-book.mdx
+    - title: 책 관리
       items:
-        - title: "책 생성하기"
-          path: "books/creating-books.mdx"
-        - title: "책 복제하기"
-          path: "books/cloning-books.mdx"
-        - title: "가져오기 & 변환"
-          path: "books/importing-books.mdx"
-    - title: "콘텐츠 작성"
+        - title: 책 생성하기
+          path: books/creating-books.mdx
+        - title: 책 복제하기
+          path: books/cloning-books.mdx
+        - title: 가져오기 & 변환
+          path: books/importing-books.mdx
+    - title: 콘텐츠 작성
       items:
-        - title: "마크다운 기본"
-          path: "writing/markdown-basics.mdx"
-        - title: "MDX 기능"
-          path: "writing/mdx-features.mdx"
-        - title: "어드모니션"
-          path: "writing/admonitions.mdx"
-    - title: "고급 기능"
+        - title: 마크다운 기본
+          path: writing/markdown-basics.mdx
+        - title: MDX 기능
+          path: writing/mdx-features.mdx
+        - title: 어드모니션
+          path: writing/admonitions.mdx
+    - title: 고급 기능
       items:
-        - title: "테마"
-          path: "advanced/themes.mdx"
-        - title: "PDF 생성"
-          path: "advanced/pdf-generation.mdx"
-        - title: "검색"
-          path: "advanced/search.mdx"
-        - title: "다국어"
-          path: "advanced/multilingual.mdx"
-        - title: "버전 관리"
-          path: "advanced/versioning.mdx"
-    - title: "배포"
+        - title: 테마
+          path: advanced/themes.mdx
+        - title: PDF 생성
+          path: advanced/pdf-generation.mdx
+        - title: 검색
+          path: advanced/search.mdx
+        - title: 다국어
+          path: advanced/multilingual.mdx
+        - title: 버전 관리
+          path: advanced/versioning.mdx
+    - title: 배포
       items:
-        - title: "로컬 배포"
-          path: "deployment/local.mdx"
-        - title: "Vercel 배포"
-          path: "deployment/vercel.mdx"
+        - title: 로컬 배포
+          path: deployment/local.mdx
+        - title: Vercel 배포
+          path: deployment/vercel.mdx
