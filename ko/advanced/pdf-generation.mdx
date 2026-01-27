@@ -1,16 +1,16 @@
 # PDF 생성
 
-BaiDocs는 MDX 문서를 적절한 형식, 네비게이션, 스타일링이 적용된 고품질의 인쇄용 PDF 문서로 자동 변환하는 강력한 PDF 생성 기능을 포함합니다.
+BaiDocs는 MDX 문서를 적절한 형식, 네비게이션 및 스타일링을 갖춘 고품질의 인쇄 가능한 PDF 문서로 자동 변환하는 강력한 PDF 생성 기능을 포함합니다.
 
 ## 개요
 
-PDF 생성 시스템이 생성하는 것:
+PDF 생성 시스템은 다음을 생성합니다:
 
-- **개별 페이지 PDF**: 각 문서 페이지를 독립적인 PDF로
+- **개별 페이지 PDF**: 각 문서 페이지를 독립적인 PDF로 생성
 - **완전한 책 PDF**: 전체 문서를 단일 PDF로 컴파일
-- **다국어 지원**: 각 언어별로 별도 PDF
+- **다국어 지원**: 각 언어별로 개별 PDF 생성
 - **사용자 정의 스타일링**: 일관된 브랜딩과 전문적인 형식
-- **상호작용 요소**: 클릭 가능한 목차와 내부 링크
+- **인터랙티브 요소**: 클릭 가능한 목차 및 내부 링크
 
 ## PDF 생성 과정
 
@@ -30,7 +30,7 @@ npm run build
 public/pdfs/
 ├── baidocs-guide/
 │   ├── en/
-│   │   ├── complete-guide.pdf          # 완전한 책 PDF
+│   │   ├── complete-guide.pdf          # 전체 책 PDF
 │   │   ├── getting-started/
 │   │   │   ├── overview.pdf           # 개별 페이지 PDF
 │   │   │   ├── installation.pdf
@@ -50,34 +50,34 @@ public/pdfs/
         └── complete-guide.pdf
 ```
 
-## 설정
+## 구성
 
 ### book.config.yaml의 PDF 설정
 
-책에 대한 PDF 생성을 구성하세요:
+책에 대한 PDF 생성을 구성할 수 있습니다:
 
 ```yaml
 # book.config.yaml
 id: my-documentation
-title: 내 문서
-description: 완전한 사용자 가이드
+title: My Documentation
+description: Complete user guide
 
 # PDF 생성 설정
 pdf:
   enabled: true
 
-  # 책 수준 PDF 설정
+  # 책 수준 PDF 구성
   book:
-    title: "내 문서 - 완전한 가이드"
-    author: "귀하의 조직"
-    subject: "사용자 문서"
+    title: "My Documentation - Complete Guide"
+    author: "Your Organization"
+    subject: "User Documentation"
     creator: "BaiDocs"
 
     # 표지 페이지 설정
     cover:
       enabled: true
-      title: "내 문서"
-      subtitle: "완전한 사용자 가이드"
+      title: "My Documentation"
+      subtitle: "Complete User Guide"
       version: "v2.0"
       date: "2024-01-26"
       logo: "../_assets/logo.png"
@@ -99,7 +99,7 @@ pdf:
         left: "2cm"
         right: "2cm"
 
-  # 페이지 수준 PDF 설정
+  # 페이지 수준 PDF 구성
   pages:
     header:
       enabled: true
@@ -109,14 +109,14 @@ pdf:
 
     footer:
       enabled: true
-      content: "페이지 {page.number} / {total.pages}"
+      content: "Page {page.number} of {total.pages}"
       alignment: "center"
       fontSize: "10pt"
 
     # 워터마크
     watermark:
       enabled: false
-      text: "기밀"
+      text: "CONFIDENTIAL"
       opacity: 0.1
       angle: 45
 ```
@@ -125,7 +125,7 @@ pdf:
 
 #### PDF용 사용자 정의 CSS
 
-PDF 전용 스타일링을 만드세요:
+PDF 전용 스타일링을 생성할 수 있습니다:
 
 ```css
 /* styles/pdf.css */
@@ -175,7 +175,7 @@ PDF 전용 스타일링을 만드세요:
     text-align: left !important;
   }
 
-  /* 인쇄용 어드모니션 스타일링 */
+  /* 인쇄용 어드모니션 스타일 */
   .admonition {
     border: 1px solid #dee2e6 !important;
     background: #f8f9fa !important;
@@ -183,7 +183,7 @@ PDF 전용 스타일링을 만드세요:
     margin: 1em 0 !important;
   }
 
-  /* 링크 스타일링 */
+  /* 링크 스타일 */
   a[href^="http"]:after {
     content: " (" attr(href) ")";
     font-size: 0.8em;
@@ -198,7 +198,7 @@ PDF 전용 스타일링을 만드세요:
   }
 }
 
-/* PDF 표지 페이지 스타일링 */
+/* PDF 표지 페이지 스타일 */
 .pdf-cover {
   text-align: center;
   padding: 4cm 2cm;
@@ -226,7 +226,7 @@ PDF 전용 스타일링을 만드세요:
 
 #### PDF 스타일 포함
 
-문서에서 PDF 스타일시트를 참조하세요:
+문서에서 PDF 스타일시트를 참조할 수 있습니다:
 
 ```yaml
 # book.config.yaml
@@ -239,47 +239,47 @@ pdf:
 
 ### 특정 책에 대한 PDF 생성
 
-단일 책에 대한 PDF 생성:
+단일 책에 대한 PDF를 생성할 수 있습니다:
 
 ```bash
 # 특정 책에 대한 모든 PDF 생성
 npm run build:pdfs -- --book=my-documentation
 
 # 특정 언어에 대한 PDF 생성
-npm run build:pdfs -- --book=my-documentation --language=ko
+npm run build:pdfs -- --book=my-documentation --language=en
 ```
 
 ### 개별 페이지 PDF 생성
 
-특정 페이지에 대한 PDF 생성:
+특정 페이지에 대한 PDF를 생성할 수 있습니다:
 
 ```bash
 # 특정 페이지에 대한 PDF 생성
-npm run build:pdf -- --book=my-documentation --language=ko --page=getting-started/overview
+npm run build:pdf -- --book=my-documentation --language=en --page=getting-started/overview
 ```
 
 ## PDF 기능
 
 ### 표지 페이지 생성
 
-자동 생성된 표지 페이지에는 다음이 포함됩니다:
+자동 생성되는 표지 페이지에는 다음이 포함됩니다:
 
-- **책 제목과 부제목**: 설정에서
-- **버전 정보**: 책 버전과 빌드 날짜
+- **책 제목 및 부제목**: 구성에서 가져옴
+- **버전 정보**: 책 버전 및 빌드 날짜
 - **로고**: 조직 또는 프로젝트 로고
-- **메타데이터**: 저자, 설명, 빌드 정보
+- **메타데이터**: 작성자, 설명 및 빌드 정보
 
-표지 페이지 설정 예제:
+표지 페이지 구성 예제:
 
 ```yaml
 pdf:
   book:
     cover:
       enabled: true
-      title: "BaiDocs 사용자 가이드"
-      subtitle: "완전한 문서화 플랫폼"
+      title: "BaiDocs User Guide"
+      subtitle: "Complete Documentation Platform"
       version: "v3.0"
-      date: "2024년 1월"
+      date: "January 2024"
       logo: "../_assets/baidocs-logo.png"
       background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)"
       textColor: "white"
@@ -287,30 +287,30 @@ pdf:
 
 ### 목차
 
-다음 기능이 있는 상호작용 목차:
+다음 기능을 갖춘 인터랙티브 목차:
 
-- **계층 구조**: 네비게이션 구조 반영
+- **계층적 구조**: 네비게이션 구조를 반영
 - **페이지 번호**: 정확한 페이지 참조
 - **클릭 가능한 링크**: 섹션으로 직접 이동
-- **사용자 정의 가능한 깊이**: 포함할 헤딩 수준 제어
+- **사용자 정의 가능한 깊이**: 포함할 제목 수준 제어
 
-### 헤더와 푸터
+### 헤더 및 푸터
 
-사용자 정의 가능한 헤더와 푸터 지원:
+사용자 정의 가능한 헤더와 푸터는 다음을 지원합니다:
 
 - **동적 콘텐츠**: 책 제목, 페이지 제목, 페이지 번호
-- **사용자 정의 텍스트**: 조직명, 문서 분류
-- **다중 정렬**: 왼쪽, 가운데, 오른쪽 위치 지정
-- **변수 치환**: 동적 콘텐츠를 위한 템플릿 변수
+- **사용자 정의 텍스트**: 조직 이름, 문서 분류
+- **다양한 정렬**: 왼쪽, 가운데, 오른쪽 배치
+- **변수 치환**: 동적 콘텐츠용 템플릿 변수
 
 #### 헤더/푸터 변수
 
 사용 가능한 템플릿 변수:
 
 ```yaml
-# 헤더/푸터를 위한 템플릿 변수
+# 헤더/푸터용 템플릿 변수
 variables:
-  "{book.title}": "설정의 책 제목"
+  "{book.title}": "구성에서 가져온 책 제목"
   "{book.description}": "책 설명"
   "{page.title}": "현재 페이지 제목"
   "{page.number}": "현재 페이지 번호"
@@ -322,7 +322,7 @@ variables:
 
 ### 페이지 레이아웃 제어
 
-MDX 컴포넌트로 페이지 레이아웃을 제어하세요:
+MDX 컴포넌트로 페이지 레이아웃을 제어할 수 있습니다:
 
 ```mdx
 # 소개
@@ -333,32 +333,32 @@ MDX 컴포넌트로 페이지 레이아웃을 제어하세요:
 ## 새 섹션 (새 페이지에서 시작)
 </div>
 
-이 섹션은 새 페이지에서 시작합니다.
+이 섹션은 새 페이지에서 시작됩니다.
 
 <div className="page-break-avoid">
-### 중요한 노트
+### 중요 노트
 
-이 전체 섹션은 함께 유지되며 페이지에 걸쳐 분할되지 않습니다.
+이 전체 섹션은 함께 유지되며 페이지 간에 분할되지 않습니다.
 </div>
 
 <div className="page-break-after">
 ## 섹션 끝
 </div>
 
-다음 콘텐츠는 새 페이지에서 시작합니다.
+다음 콘텐츠는 새 페이지에서 시작됩니다.
 ```
 
 ### 코드 블록 최적화
 
-코드 블록은 PDF에 대해 자동으로 최적화됩니다:
+코드 블록은 PDF용으로 자동 최적화됩니다:
 
-- **구문 하이라이팅**: 인쇄에서 보존
-- **줄 래핑**: 긴 줄이 적절히 래핑됨
+- **구문 강조**: 인쇄에서 보존
+- **줄 바꿈**: 긴 줄이 적절히 래핑
 - **폰트 크기**: 읽기 쉽지만 공간 효율적
-- **배경**: 인쇄 친화적 색상
+- **배경**: 인쇄에 친화적인 색상
 
 ```javascript
-// 이 코드 블록은 PDF 출력에 최적화됩니다
+// 이 코드 블록은 PDF 출력용으로 최적화됩니다
 function generatePDF(book, options) {
   const pdfOptions = {
     format: 'A4',
@@ -378,9 +378,9 @@ function generatePDF(book, options) {
 
 ### 이미지 처리
 
-이미지는 PDF에 대해 자동으로 처리됩니다:
+이미지는 PDF용으로 자동 처리됩니다:
 
-- **해상도 최적화**: 고품질이지만 합리적인 크기
+- **해상도 최적화**: 고품질이지만 적절한 크기
 - **형식 변환**: 인쇄에 최적화된 형식
 - **크기 조정**: 페이지 너비에 맞게 자동 스케일링
 - **품질**: 인쇄에서 선명도 유지
@@ -389,11 +389,11 @@ function generatePDF(book, options) {
 
 ### CI/CD에서 PDF 생성
 
-배포 파이프라인에 PDF 생성 통합:
+배포 파이프라인에 PDF 생성을 통합할 수 있습니다:
 
 ```yaml
 # .github/workflows/deploy.yml
-name: 문서 배포
+name: Deploy Documentation
 
 on:
   push:
@@ -405,22 +405,22 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Node.js 설정
+      - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '18'
           cache: 'npm'
 
-      - name: 의존성 설치
+      - name: Install dependencies
         run: npm ci
 
-      - name: 문서 빌드
+      - name: Build documentation
         run: npm run build
 
-      - name: PDF 생성
+      - name: Generate PDFs
         run: npm run build:pdfs
 
-      - name: Vercel에 배포
+      - name: Deploy to Vercel
         run: npm run deploy
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
@@ -428,49 +428,49 @@ jobs:
 
 ### PDF 아티팩트
 
-생성된 PDF에 액세스:
+생성된 PDF에 액세스할 수 있습니다:
 
 - **직접 URL**: `https://your-site.com/pdfs/book-id/language/page.pdf`
-- **다운로드 링크**: 뷰어의 자동 다운로드 버튼
+- **다운로드 링크**: 뷰어에서 자동 다운로드 버튼
 - **아카이브 생성**: 모든 PDF의 압축 아카이브
 
 ## 문제 해결
 
 ### 일반적인 문제
 
-#### "PDF 생성 실패"
+#### "PDF Generation Failed"
 
 ```bash
 # 누락된 의존성 확인
 npm install puppeteer-core
 
-# 책 설정 검증
+# 책 구성 검증
 npm run validate-config
 
 # PDF 생성 디버그
 DEBUG=pdf npm run build:pdfs
 ```
 
-#### "폰트가 로드되지 않음"
+#### "Fonts Not Loading"
 
 ```yaml
 # book.config.yaml
 pdf:
   styling:
     fontFamily: "Inter"
-    # 폰트가 사용 가능하거나 웹 안전 폰트 사용 확인
+    # 폰트가 사용 가능한지 확인하거나 웹 안전 폰트 사용
     fontFallbacks:
       - "Arial"
       - "sans-serif"
 ```
 
-#### "PDF에서 이미지 누락"
+#### "Images Missing in PDF"
 
-- 이미지 경로가 콘텐츠 디렉토리에 상대적인지 확인
+- 이미지 경로가 콘텐츠 디렉토리 기준 상대 경로인지 확인
 - 이미지가 존재하고 액세스 가능한지 확인
 - 이미지 형식 지원 확인 (PNG, JPG, SVG 권장)
 
-#### "큰 파일 크기"
+#### "Large File Sizes"
 
 ```yaml
 # PDF 크기 최적화
@@ -497,7 +497,7 @@ npm run build:pdfs -- --incremental
 npm run build:pdfs -- --format=pdf
 ```
 
-#### 메모리 사용량 감소
+#### 메모리 사용량 줄이기
 
 ```yaml
 # book.config.yaml
@@ -513,14 +513,14 @@ pdf:
 
 ### 사용자 정의 PDF 템플릿
 
-다양한 문서 유형에 대한 사용자 정의 PDF 템플릿 생성:
+다양한 문서 유형에 대한 사용자 정의 PDF 템플릿을 생성할 수 있습니다:
 
 ```typescript
 // pdf-templates/api-reference.ts
 export const apiReferenceTemplate = {
   cover: {
     title: "{book.title}",
-    subtitle: "API 참조 v{book.version}",
+    subtitle: "API Reference v{book.version}",
     layout: "technical"
   },
   header: {
@@ -528,7 +528,7 @@ export const apiReferenceTemplate = {
     style: "technical"
   },
   footer: {
-    content: "페이지 {page.number} | 최종 업데이트: {build.date}",
+    content: "Page {page.number} | Last updated: {build.date}",
     includeConfidentiality: true
   },
   styling: {
@@ -541,31 +541,31 @@ export const apiReferenceTemplate = {
 
 ### 조건부 PDF 콘텐츠
 
-PDF 생성 기반으로 콘텐츠를 포함하거나 제외:
+PDF 생성 기준으로 콘텐츠를 포함하거나 제외할 수 있습니다:
 
 ```mdx
 import { isPDFExport } from '@baidocs/utils'
 
 # 문서 페이지
 
-모든 곳에 나타나는 일반 콘텐츠.
+모든 곳에 나타나는 일반 콘텐츠입니다.
 
 {!isPDFExport && (
   <div className="interactive-demo">
-    이 상호작용 데모는 웹 버전에서만 나타납니다.
+    이 인터랙티브 데모는 웹 버전에서만 나타납니다.
   </div>
 )}
 
 {isPDFExport && (
   <div className="pdf-note">
-    📋 **참고**: 이 문서에는 PDF 형식에서 사용할 수 없는 상호작용 요소가 포함되어 있습니다. 전체 기능을 위해 온라인 버전을 방문하세요.
+    📋 **참고**: 이 문서에는 PDF 형식에서 사용할 수 없는 인터랙티브 요소가 포함되어 있습니다. 전체 기능을 위해 온라인 버전을 방문하세요.
   </div>
 )}
 ```
 
 ### 배치 PDF 작업
 
-여러 책에 대한 PDF 생성:
+여러 책에 대한 PDF를 생성할 수 있습니다:
 
 ```bash
 # 모든 책에 대한 PDF 생성
@@ -580,12 +580,12 @@ npm run build:pdfs -- --output=/path/to/pdfs/
 
 ## 다음 단계
 
-PDF 문서를 향상시키세요:
+PDF 문서를 향상시키는 방법:
 
-1. **[검색 설정](search.mdx)** - PDF가 발견 가능한지 확인
+1. **[검색 설정](search.mdx)** - PDF가 검색 가능한지 확인
 2. **[다국어 지원](multilingual.mdx)** - 모든 언어에 대한 PDF 생성
-3. **[버전 관리](versioning.mdx)** - 릴리스에 걸친 PDF 버전 관리
+3. **[버전 관리](versioning.mdx)** - 릴리스별 PDF 버전 관리
 
 ---
 
-*PDF 생성은 디지털 문서를 오프라인 읽기와 공식 배포에 완벽한 전문적이고 공유 가능한 문서로 변환합니다.*
+*PDF 생성 기능은 디지털 문서를 오프라인 읽기와 공식 배포에 적합한 전문적이고 공유 가능한 문서로 변환합니다.*

@@ -1,18 +1,18 @@
 # 검색 설정
 
-BaiDocs는 고급 필터링, 하이라이팅, 다국어 지원과 함께 모든 문서 콘텐츠에서 즉시 지능적 검색을 제공하는 강력한 내장 검색 시스템을 포함합니다.
+BaiDocs는 고급 필터링, 강조 표시 및 다국어 지원을 통해 모든 문서 콘텐츠에서 즉석 지능형 검색을 제공하는 강력한 내장 검색 시스템을 포함합니다.
 
 ## 검색 시스템 개요
 
 ### 기능
 
-- **즉시 검색**: 입력하는 동안 실시간 결과
-- **전체 텍스트 검색**: 모든 콘텐츠, 헤딩, 메타데이터에서 검색
-- **다국어 지원**: 특정 언어 또는 모든 언어에서 검색
-- **고급 필터링**: 책, 섹션, 콘텐츠 유형, 태그별 필터링
-- **지능적 순위 매기기**: 관련성과 맥락별로 결과 순위 매김
+- **즉석 검색**: 타이핑할 때 실시간 결과 제공
+- **전문 검색**: 모든 콘텐츠, 제목 및 메타데이터 검색
+- **다국어 지원**: 특정 언어 내에서 또는 모든 언어에서 검색
+- **고급 필터링**: 책, 섹션, 콘텐츠 유형 및 태그별 필터링
+- **지능적 순위**: 관련성과 컨텍스트에 따른 결과 순위 지정
 - **키보드 네비게이션**: 접근성을 위한 완전한 키보드 지원
-- **하이라이팅**: 결과와 콘텐츠에서 검색어 하이라이트
+- **강조 표시**: 결과 및 콘텐츠에서 검색 용어 강조 표시
 
 ### 검색 아키텍처
 
@@ -20,49 +20,49 @@ BaiDocs는 고급 필터링, 하이라이팅, 다국어 지원과 함께 모든 
 검색 인덱스 생성:
 콘텐츠 파일 → 인덱싱 → 검색 데이터베이스 → 검색 API → 사용자 인터페이스
 
-구성요소:
-├── Content Indexer      # MDX 파일 처리
-├── Search Database      # 인덱싱된 콘텐츠 저장
-├── Search API          # 쿼리 처리
-├── Search UI           # 사용자 인터페이스
-└── Result Highlighting # 용어 하이라이팅
+컴포넌트:
+├── 콘텐츠 인덱서      # MDX 파일 처리
+├── 검색 데이터베이스   # 인덱싱된 콘텐츠 저장
+├── 검색 API          # 쿼리 처리
+├── 검색 UI           # 사용자 인터페이스
+└── 결과 강조 표시     # 용어 강조 표시
 ```
 
 ## 자동 검색 설정
 
-### 기본 설정
+### 기본 구성
 
-검색은 기본적으로 활성화되며 다음을 자동으로 인덱싱합니다:
+검색은 기본적으로 활성화되어 있으며 다음을 자동으로 인덱싱합니다:
 
 - 모든 MDX 콘텐츠 파일
-- 페이지 제목과 헤딩
-- 프론트매터 메타데이터
+- 페이지 제목 및 제목
+- Frontmatter 메타데이터
 - 네비게이션 구조
-- 코드 블록 (선택적)
-- 이미지 대체 텍스트
+- 코드 블록 (선택 사항)
+- 이미지 alt 텍스트
 
-### 빌드 시간 인덱싱
+### 빌드 타임 인덱싱
 
 검색 인덱스는 빌드 중에 생성됩니다:
 
 ```bash
 npm run build
-# 검색 인덱스 자동 생성
+# 자동으로 검색 인덱스 생성
 # 출력: _data/search/index.json
 ```
 
-## 검색 설정
+## 검색 구성
 
-### 기본 설정
+### 기본 구성
 
-책 설정에서 검색을 구성하세요:
+책 설정에서 검색을 구성할 수 있습니다:
 
 ```yaml
 # book.config.yaml
 id: my-documentation
-title: 내 문서
+title: My Documentation
 
-# 검색 설정
+# 검색 구성
 search:
   enabled: true
 
@@ -78,10 +78,10 @@ search:
     maxResultsPerPage: 10
     excerptLength: 150
 
-  # UI 설정
+  # UI 구성
   ui:
-    placeholder: "문서 검색..."
-    noResultsMessage: "결과를 찾을 수 없습니다"
+    placeholder: "Search documentation..."
+    noResultsMessage: "No results found"
     shortcut: "/"
     showRecentSearches: true
     showSearchStats: true
@@ -125,13 +125,13 @@ search:
 
   # 검색 동작
   behavior:
-    # 퍼지 매칭 허용 오차
+    # 퍼지 매칭 허용치
     fuzzyThreshold: 0.6
 
     # 최소 쿼리 길이
     minQueryLength: 2
 
-    # 결과 하이라이팅
+    # 결과 강조 표시
     highlighting:
       enabled: true
       className: "search-highlight"
@@ -148,7 +148,7 @@ search:
 
 ### 사용자 정의 검색 컴포넌트
 
-사용자 정의 검색 인터페이스 생성:
+사용자 정의 검색 인터페이스를 생성할 수 있습니다:
 
 ```typescript
 // components/CustomSearch.tsx
@@ -185,7 +185,7 @@ export function CustomSearch() {
       includeHighlights: true,
       filters: {
         type: ['page', 'section'],
-        language: 'ko'
+        language: 'en'
       }
     })
     .then(setResults)
@@ -199,17 +199,17 @@ export function CustomSearch() {
           type="text"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="문서 검색..."
+          placeholder="Search documentation..."
           className="search-input"
-          aria-label="문서 검색"
+          aria-label="Search documentation"
         />
-        {isLoading && <div className="search-loading">검색 중...</div>}
+        {isLoading && <div className="search-loading">Searching...</div>}
       </div>
 
       {results.length > 0 && (
         <div className="search-results">
           <div className="search-stats">
-            {results.length}개의 결과를 찾았습니다
+            Found {results.length} results
           </div>
 
           {results.map((result) => (
@@ -223,7 +223,7 @@ export function CustomSearch() {
                 </p>
                 <div className="search-result-meta">
                   <span className="search-result-type">{result.type}</span>
-                  <span className="search-result-score">점수: {result.score.toFixed(2)}</span>
+                  <span className="search-result-score">Score: {result.score.toFixed(2)}</span>
                 </div>
               </a>
             </div>
@@ -233,13 +233,13 @@ export function CustomSearch() {
 
       {query.length >= 2 && results.length === 0 && !isLoading && (
         <div className="search-no-results">
-          <p>"{query}"에 대한 결과를 찾을 수 없습니다</p>
+          <p>No results found for "{query}"</p>
           <div className="search-suggestions">
-            <p>다시 시도해보세요:</p>
+            <p>Try:</p>
             <ul>
-              <li>맞춤법 확인</li>
-              <li>다른 키워드 사용</li>
-              <li>더 일반적인 용어 사용</li>
+              <li>Checking your spelling</li>
+              <li>Using different keywords</li>
+              <li>Using more general terms</li>
             </ul>
           </div>
         </div>
@@ -360,7 +360,7 @@ export function CustomSearch() {
   font-weight: 500;
 }
 
-/* 검색 하이라이팅 */
+/* 검색 강조 표시 */
 .search-highlight {
   background-color: #fef3c7;
   color: #92400e;
@@ -432,34 +432,34 @@ export function CustomSearch() {
 
 ### 검색 쿼리 API
 
-프로그래밍적으로 검색에 액세스:
+프로그래밍 방식으로 검색에 액세스할 수 있습니다:
 
 ```typescript
 // 검색 API 사용
 import { searchAPI } from '@baidocs/search';
 
 // 기본 검색
-const results = await searchAPI.search('설치 가이드', {
+const results = await searchAPI.search('installation guide', {
   limit: 10,
   offset: 0,
-  language: 'ko'
+  language: 'en'
 });
 
 // 필터가 있는 고급 검색
-const advancedResults = await searchAPI.search('설정', {
+const advancedResults = await searchAPI.search('configuration', {
   limit: 20,
   filters: {
-    book: ['사용자-가이드', 'api-참조'],
+    book: ['user-guide', 'api-reference'],
     type: ['page', 'heading'],
-    tags: ['초보자'],
-    section: ['시작하기']
+    tags: ['beginner'],
+    section: ['getting-started']
   },
   highlighting: {
     enabled: true,
     preTag: '<mark>',
     postTag: '</mark>'
   },
-  sort: 'relevance', // 또는 'date', 'title'
+  sort: 'relevance', // or 'date', 'title'
   fuzzy: {
     enabled: true,
     threshold: 0.7
@@ -467,7 +467,7 @@ const advancedResults = await searchAPI.search('설정', {
 });
 
 // 검색 제안
-const suggestions = await searchAPI.suggest('설정', {
+const suggestions = await searchAPI.suggest('config', {
   limit: 5,
   includePopular: true
 });
@@ -516,9 +516,9 @@ interface SearchHighlight {
 
 ## 다국어 검색
 
-### 언어별 설정
+### 언어별 구성
 
-여러 언어에 대한 검색 구성:
+여러 언어에 대한 검색을 구성할 수 있습니다:
 
 ```yaml
 # book.config.yaml
@@ -538,7 +538,7 @@ search:
         guide: ["tutorial", "walkthrough"]
 
     ko:
-      stemming: false  # 한국어는 전통적인 어간 추출 사용 안 함
+      stemming: false  # 한국어는 전통적인 어간 추출을 사용하지 않음
       stopWords: ["이", "그", "저", "것", "등"]
       wordSegmentation: true  # 한국어/중국어/일본어에 활성화
 
@@ -576,7 +576,7 @@ const searchWithAutoDetect = async (query: string) => {
 
 ### 사용량 추적
 
-검색 사용량과 성능 추적:
+검색 사용량 및 성능을 추적할 수 있습니다:
 
 ```yaml
 # book.config.yaml
@@ -591,7 +591,7 @@ search:
       clicks: true
       zeroResults: true
 
-    # 개인정보보호 설정
+    # 개인정보 보호 설정
     privacy:
       anonymizeQueries: true
       retentionDays: 90
@@ -606,7 +606,7 @@ search:
 
 ### 검색 메트릭 대시보드
 
-검색 분석에 액세스:
+검색 분석에 액세스할 수 있습니다:
 
 ```typescript
 // 검색 분석
@@ -627,7 +627,7 @@ const analytics = await searchAPI.getAnalytics({
 const popularQueries = await searchAPI.getPopularQueries({
   timeframe: '7d',
   limit: 10,
-  language: 'ko'
+  language: 'en'
 });
 
 // 검색 성능
@@ -641,7 +641,7 @@ const performance = await searchAPI.getPerformanceMetrics({
 
 ### 인덱스 최적화
 
-더 나은 성능을 위해 검색 인덱스를 최적화:
+더 나은 성능을 위해 검색 인덱스를 최적화할 수 있습니다:
 
 ```yaml
 # book.config.yaml
@@ -674,7 +674,7 @@ search:
 
 ### 쿼리 최적화
 
-검색 쿼리 최적화:
+검색 쿼리를 최적화할 수 있습니다:
 
 ```typescript
 // 쿼리 최적화 기법
@@ -717,20 +717,20 @@ const optimizedSearch = {
 
 ### 일반적인 문제
 
-#### "검색이 작동하지 않음"
+#### "Search Not Working"
 
 ```bash
-# 검색 인덱스가 존재하는지 확인
+# 검색 인덱스 존재 확인
 ls -la _data/search/
 
 # 검색 인덱스 재빌드
 npm run build:search
 
-# 검색 설정 확인
+# 검색 구성 확인
 npm run validate-search-config
 ```
 
-#### "느린 검색 성능"
+#### "Slow Search Performance"
 
 ```yaml
 # 검색 성능 최적화
@@ -746,7 +746,7 @@ search:
     enableCompression: true
 ```
 
-#### "관련 없는 검색 결과"
+#### "Search Results Not Relevant"
 
 ```yaml
 # 결과 관련성 개선
@@ -771,10 +771,10 @@ const debugSearch = {
   // 검색 인덱스 테스트
   async testIndex() {
     const stats = await searchAPI.getIndexStats();
-    console.log('인덱스 통계:', stats);
+    console.log('Index stats:', stats);
 
     const health = await searchAPI.checkIndexHealth();
-    console.log('인덱스 상태:', health);
+    console.log('Index health:', health);
   },
 
   // 특정 쿼리 디버그
@@ -784,7 +784,7 @@ const debugSearch = {
       includeAnalysis: true
     });
 
-    console.log('쿼리 설명:', explanation);
+    console.log('Query explanation:', explanation);
   },
 
   // 검색 성능 테스트
@@ -799,19 +799,19 @@ const debugSearch = {
       results.push({ query, duration });
     }
 
-    console.log('검색 벤치마크:', results);
+    console.log('Search benchmark:', results);
   }
 };
 ```
 
 ## 다음 단계
 
-검색 경험을 향상시키세요:
+검색 경험을 향상시키는 방법:
 
 1. **[다국어 지원](multilingual.mdx)** - 여러 언어에 대한 검색 구성
-2. **[버전 관리](versioning.mdx)** - 다양한 문서 버전에서 검색
-3. **[테마](themes.mdx)** - 테마에 맞게 검색 인터페이스 스타일링
+2. **[버전 관리](versioning.mdx)** - 다른 문서 버전 간 검색
+3. **[테마](themes.mdx)** - 테마와 일치하도록 검색 인터페이스 스타일링
 
 ---
 
-*강력한 검색 기능은 사용자가 필요한 것을 정확히 찾을 수 있게 도와 문서를 더 접근하기 쉽고 가치 있게 만듭니다.*
+*강력한 검색 기능은 사용자가 필요한 것을 정확히 찾을 수 있도록 도와주어 문서를 더 접근 가능하고 가치 있게 만듭니다.*

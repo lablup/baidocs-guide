@@ -1,6 +1,6 @@
 # Vercel 배포
 
-전 세계적으로 확장 가능하고 유지보수가 필요 없는 문서 호스팅을 위해 BaiDocs를 Vercel에 배포하세요. 이 배포는 공개 액세스를 위한 뷰어 애플리케이션에 중점을 두고 에디터는 로컬 사용을 위해 유지합니다.
+전 세계적이고 확장 가능하며 유지보수가 필요 없는 문서 호스팅을 위해 BaiDocs를 Vercel에 배포합니다. 이 배포는 공개 액세스를 위한 뷰어 애플리케이션에 중점을 두고 에디터는 로컬 사용을 위해 유지합니다.
 
 ## 개요
 
@@ -9,39 +9,39 @@
 BaiDocs는 개발과 프로덕션 모두에 최적화된 하이브리드 배포 모델을 따릅니다:
 
 - **Vercel의 뷰어**: 전 세계적으로 액세스 가능한 공개 문서
-- **로컬 에디터**: 콘텐츠 편집은 로컬 머신 또는 프라이빗 서버에서 유지
+- **로컬 에디터**: 콘텐츠 편집은 로컬 머신이나 비공개 서버에서
 - **Git 통합**: 콘텐츠 변경 시 자동 배포
-- **글로벌 CDN**: 전 세계 빠른 콘텐츠 전달
+- **글로벌 CDN**: 전 세계적으로 빠른 콘텐츠 전달
 
 ### 아키텍처
 
 ```
 BaiDocs Vercel 배포:
 ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
-│ Local Editor    │    │ Git Repository  │    │ Vercel Viewer   │
-│ (localhost:3001)│────│ (GitHub/GitLab) │────│ (Global CDN)    │
+│ 로컬 에디터      │    │ Git 저장소      │    │ Vercel 뷰어     │
+│ (localhost:3001)│────│ (GitHub/GitLab) │────│ (글로벌 CDN)    │
 │                 │    │                 │    │                 │
-│ - 콘텐츠 편집     │    │ - 소스 오브       │    │ - 공개 문서       │
-│ - 실시간 미리보기  │    │   트루스         │    │ - 검색           │
-│ - Git 푸시       │    │ - 자동 배포      │    │ - 빠른 로딩       │
+│ - 콘텐츠 편집   │    │ - 신뢰할 수     │    │ - 공개 문서     │
+│ - 라이브 미리보기│   │   있는 소스     │    │ - 검색          │
+│ - Git 푸시      │    │ - 자동 배포     │    │ - 빠른 로딩     │
 └─────────────────┘    └─────────────────┘    └─────────────────┘
 ```
 
 ## 전제 조건
 
-### 필수 계정
+### 필요한 계정
 
-- **Vercel 계정**: [vercel.com](https://vercel.com)에서 회원가입
+- **Vercel 계정**: [vercel.com](https://vercel.com)에서 가입
 - **Git 저장소**: GitHub, GitLab 또는 Bitbucket 저장소
 - **도메인 (선택사항)**: 브랜딩을 위한 사용자 정의 도메인
 
 ### 저장소 준비
 
-저장소가 제대로 구조화되었는지 확인하세요:
+저장소가 적절히 구조화되어 있는지 확인합니다:
 
 ```
 your-docs-repository/
-├── book.config.yaml          # BaiDocs 설정
+├── book.config.yaml          # BaiDocs 구성
 ├── en/                      # 영어 콘텐츠
 │   ├── index.mdx
 │   ├── getting-started/
@@ -57,9 +57,9 @@ your-docs-repository/
 
 ### 1단계: 저장소 연결
 
-1. **Vercel 로그인**:
+1. **Vercel에 로그인**:
    - [vercel.com](https://vercel.com)으로 이동
-   - Git 제공업체로 로그인
+   - Git 프로바이더로 로그인
 
 2. **프로젝트 가져오기**:
    - "New Project" 클릭
@@ -72,7 +72,7 @@ your-docs-repository/
 
 빌드 및 배포 설정을 구성합니다:
 
-**Framework Preset**: Custom
+**프레임워크 프리셋**: Custom
 
 **빌드 설정**:
 ```bash
@@ -95,15 +95,15 @@ npm run dev:viewer
 CONTENT_PATH=./content
 NEXT_PUBLIC_VIEWER_URL=https://your-domain.vercel.app
 
-# 선택적 커스터마이징
+# 선택적 사용자 정의
 NODE_ENV=production
 ENABLE_SEARCH=true
 ENABLE_PDF_GENERATION=true
 ```
 
-### 3단계: 프로젝트 설정
+### 3단계: 프로젝트 구성
 
-저장소 루트에 `vercel.json` 생성:
+저장소 루트에 `vercel.json`을 생성합니다:
 
 ```json
 {
@@ -178,12 +178,12 @@ ENABLE_PDF_GENERATION=true
 
 1. **프로젝트 배포**:
    - "Deploy" 클릭
-   - 초기 배포가 완료될 때까지 대기
+   - 초기 배포가 완료될 때까지 기다림
    - 제공된 URL에서 문서 확인
 
-2. **배포 검증**:
+2. **배포 확인**:
    - 모든 페이지가 올바르게 로드되는지 확인
-   - 내비게이션이 작동하는지 검증
+   - 네비게이션이 작동하는지 확인
    - 검색 기능 테스트
    - 이미지와 에셋이 로드되는지 확인
 
@@ -191,11 +191,11 @@ ENABLE_PDF_GENERATION=true
 
 ### Git 통합
 
-변경사항을 푸시할 때 Vercel이 자동으로 배포합니다:
+Vercel은 변경사항을 푸시할 때 자동으로 배포합니다:
 
 ```bash
 # 로컬에서 콘텐츠 변경
-echo "# Updated Content" > en/new-page.mdx
+echo "# 업데이트된 콘텐츠" > en/new-page.mdx
 
 # 변경사항 커밋 및 푸시
 git add .
@@ -207,7 +207,7 @@ git push origin main
 
 ### 브랜치 배포
 
-다양한 배포 전략 구성:
+다른 배포 전략을 구성할 수 있습니다:
 
 **프로덕션 배포** (main 브랜치):
 ```json
@@ -220,10 +220,10 @@ git push origin main
 }
 ```
 
-**프리뷰 배포** (기능 브랜치):
-- 풀 리퀘스트에 대한 자동 프리뷰 URL
-- main으로 병합하기 전 변경사항 테스트
-- 리뷰용 공유 가능한 프리뷰 링크
+**미리보기 배포** (기능 브랜치):
+- 풀 리퀘스트에 대한 자동 미리보기 URL
+- 메인에 병합하기 전에 변경사항 테스트
+- 검토를 위한 공유 가능한 미리보기 링크
 
 ### 배포 훅
 
@@ -241,7 +241,7 @@ curl -X POST "https://api.vercel.com/v1/integrations/deploy/[HOOK_ID]" \
      }'
 ```
 
-## 사용자 정의 도메인 설정
+## 사용자 정의 도메인 구성
 
 ### 1단계: 도메인 추가
 
@@ -251,22 +251,22 @@ curl -X POST "https://api.vercel.com/v1/integrations/deploy/[HOOK_ID]" \
    - 사용자 정의 도메인 추가
 
 2. **도메인 유형**:
-   - `docs.yourcompany.com` (서브도메인)
+   - `docs.yourcompany.com` (하위 도메인)
    - `yourcompany.com/docs` (경로 기반)
    - `yourdocs.com` (별도 도메인)
 
-### 2단계: DNS 설정
+### 2단계: DNS 구성
 
-DNS 레코드 구성:
+DNS 레코드를 구성합니다:
 
-**서브도메인용 (`docs.yourcompany.com`)**:
+**하위 도메인의 경우 (`docs.yourcompany.com`)**:
 ```
 Type: CNAME
 Name: docs
 Value: cname.vercel-dns.com
 ```
 
-**Apex 도메인용 (`yourdocs.com`)**:
+**루트 도메인의 경우 (`yourdocs.com`)**:
 ```
 Type: A
 Name: @
@@ -279,16 +279,16 @@ Value: 76.76.21.21
 
 ### 3단계: SSL 인증서
 
-Vercel이 자동으로 SSL 인증서를 제공합니다:
+Vercel은 자동으로 SSL 인증서를 제공합니다:
 - 자동 SSL 프로비저닝
 - 인증서 자동 갱신
-- 기본적으로 HTTPS 리다이렉트 활성화
+- 기본적으로 HTTPS 리디렉션 활성화
 
 ## 성능 최적화
 
 ### Edge Functions
 
-Edge Functions로 성능 최적화:
+Edge 함수로 성능을 최적화할 수 있습니다:
 
 ```typescript
 // middleware.ts
@@ -296,7 +296,7 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
 export function middleware(request: NextRequest) {
-  // 레거시 URL 리다이렉트
+  // 레거시 URL 리디렉션
   if (request.nextUrl.pathname.startsWith('/old-docs')) {
     return NextResponse.redirect(
       new URL('/docs' + request.nextUrl.pathname.slice(9), request.url)
@@ -316,7 +316,7 @@ export function middleware(request: NextRequest) {
 export const config = {
   matcher: [
     /*
-     * 다음으로 시작하는 것을 제외한 모든 요청 경로와 매치:
+     * 다음으로 시작하는 요청 경로를 제외한 모든 요청 경로와 일치:
      * - api (API 라우트)
      * - _next/static (정적 파일)
      * - _next/image (이미지 최적화 파일)
@@ -376,7 +376,7 @@ export const config = {
 
 ### 이미지 최적화
 
-Vercel의 이미지 최적화 구성:
+Vercel의 이미지 최적화를 구성합니다:
 
 ```typescript
 // next.config.js
@@ -391,16 +391,16 @@ module.exports = {
 };
 ```
 
-## 환경 설정
+## 환경 구성
 
 ### 프로덕션 환경 변수
 
-프로덕션별 설정 구성:
+프로덕션별 설정을 구성합니다:
 
 ```bash
-# Vercel Dashboard > Settings > Environment Variables에서
+# Vercel 대시보드 > 설정 > 환경 변수에서
 
-# 핵심 설정
+# 핵심 구성
 CONTENT_PATH=./content
 NODE_ENV=production
 
@@ -408,7 +408,7 @@ NODE_ENV=production
 NEXT_PUBLIC_VIEWER_URL=https://docs.yourcompany.com
 NEXT_PUBLIC_EDITOR_URL=http://localhost:3001
 
-# 검색 설정
+# 검색 구성
 ENABLE_SEARCH=true
 SEARCH_PROVIDER=vercel
 
@@ -426,7 +426,7 @@ CONTENT_SECURITY_POLICY=strict
 
 ### 다중 환경 설정
 
-다양한 환경 구성:
+다른 환경을 구성할 수 있습니다:
 
 **프로덕션** (main 브랜치):
 ```bash
@@ -442,7 +442,7 @@ NEXT_PUBLIC_API_URL=https://staging-api.yourcompany.com
 ENABLE_DEBUG=true
 ```
 
-**프리뷰** (기능 브랜치):
+**미리보기** (기능 브랜치):
 ```bash
 ENVIRONMENT=preview
 NEXT_PUBLIC_API_URL=https://dev-api.yourcompany.com
@@ -451,9 +451,9 @@ ENABLE_DEBUG=true
 
 ## 모니터링 및 분석
 
-### Vercel Analytics
+### Vercel 분석
 
-Vercel의 내장 분석 활성화:
+Vercel의 내장 분석을 활성화합니다:
 
 ```typescript
 // app/layout.tsx
@@ -477,7 +477,7 @@ export default function RootLayout({
 
 ### 사용자 정의 분석
 
-Google Analytics 또는 다른 서비스 통합:
+Google Analytics 또는 다른 서비스를 통합합니다:
 
 ```typescript
 // lib/analytics.ts
@@ -505,7 +505,7 @@ export const event = ({ action, category, label, value }: {
 
 ### 성능 모니터링
 
-Core Web Vitals 모니터링:
+Core Web Vitals를 모니터링합니다:
 
 ```typescript
 // lib/vitals.ts
@@ -523,11 +523,11 @@ getLCP(sendToAnalytics);
 getTTFB(sendToAnalytics);
 ```
 
-## 보안 설정
+## 보안 구성
 
-### Content Security Policy
+### 콘텐츠 보안 정책
 
-CSP 헤더 구현:
+CSP 헤더를 구현합니다:
 
 ```json
 {
@@ -547,10 +547,10 @@ CSP 헤더 구현:
 
 ### 액세스 제어
 
-액세스 제한 구성:
+액세스 제한을 구성합니다:
 
 ```typescript
-// middleware.ts - 민감한 문서에 인증 추가
+// middleware.ts - 민감한 문서에 대한 인증 추가
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
@@ -580,7 +580,7 @@ function isValidToken(token: string): boolean {
 
 ### GitHub Actions
 
-GitHub Actions를 통한 자동화된 배포:
+GitHub Actions로 자동화된 배포:
 
 ```yaml
 # .github/workflows/deploy.yml
@@ -671,13 +671,13 @@ jobs:
 
 ```bash
 # Vercel 대시보드에서 빌드 로그 확인
-# 일반적인 문제와 해결책:
+# 일반적인 문제 및 해결책:
 
-# 1. 종속성 누락
-# 해결책: package.json에 필요한 모든 패키지가 포함되어 있는지 확인
+# 1. 누락된 의존성
+# 해결책: package.json에 필요한 모든 패키지 포함 확인
 
 # 2. 환경 변수 문제
-# 해결책: Vercel 대시보드에서 필요한 모든 환경 변수가 설정되어 있는지 확인
+# 해결책: Vercel 대시보드에서 필요한 모든 환경 변수 설정 확인
 
 # 3. 메모리 문제
 # 해결책: vercel.json에서 함수 메모리 증가
@@ -709,7 +709,7 @@ jobs:
 #### 사용자 정의 도메인 문제
 
 ```bash
-# DNS 설정 확인
+# DNS 구성 확인
 dig docs.yourcompany.com
 
 # CNAME 레코드 확인
@@ -742,7 +742,7 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
 });
 
 module.exports = withBundleAnalyzer({
-  // Next.js 설정
+  // Next.js 구성
 });
 ```
 
@@ -765,28 +765,28 @@ vercel dev
 
 ### 콘텐츠 관리
 
-1. **별도 콘텐츠 저장소**: 콘텐츠를 전용 저장소에 보관
-2. **브랜치 전략**: 프로덕션용 main, 스테이징용 develop 사용
+1. **별도의 콘텐츠 저장소**: 콘텐츠를 전용 저장소에 보관
+2. **브랜치 전략**: 프로덕션에는 main, 스테이징에는 develop 사용
 3. **커밋 메시지**: 명확하고 설명적인 커밋 메시지 사용
-4. **리뷰 프로세스**: 콘텐츠 변경에 대해 풀 리퀘스트 사용
+4. **검토 과정**: 콘텐츠 변경에 풀 리퀘스트 사용
 
 ### 성능
 
 1. **이미지 최적화**: Vercel의 이미지 최적화 사용
-2. **정적 생성**: 가능할 때 페이지를 미리 생성
-3. **캐싱**: 적절한 캐시 헤더 설정
+2. **정적 생성**: 가능한 경우 페이지 사전 생성
+3. **캐싱**: 적절한 캐시 헤더 구성
 4. **번들 최적화**: JavaScript 번들 크기 최소화
 
 ### 보안
 
-1. **환경 변수**: Git에 비밀을 커밋하지 않음
+1. **환경 변수**: 비밀 정보를 Git에 커밋하지 않기
 2. **콘텐츠 보안**: CSP 헤더 구현
 3. **액세스 제어**: 민감한 콘텐츠에 대한 액세스 제한
-4. **정기 업데이트**: 종속성을 최신 상태로 유지
+4. **정기 업데이트**: 의존성을 최신 상태로 유지
 
 ## 다음 단계
 
-Vercel 배포를 완료하세요:
+Vercel 배포를 완료하는 방법:
 
 1. **[로컬 배포](local.mdx)** - 로컬 에디터 환경 설정
 2. **[검색 설정](../advanced/search.mdx)** - 프로덕션용 검색 최적화
@@ -794,4 +794,4 @@ Vercel 배포를 완료하세요:
 
 ---
 
-*Vercel 배포는 최소한의 유지보수와 최대 성능으로 문서를 위한 확장 가능한 글로벌 플랫폼을 제공합니다.*
+*Vercel 배포는 최소한의 유지보수와 최대한의 성능으로 문서를 위한 확장 가능한 글로벌 플랫폼을 제공합니다.*

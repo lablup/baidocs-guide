@@ -1,6 +1,6 @@
-# 버전 관리 & 브랜치 관리
+# 버전 관리 및 브랜치 관리
 
-BaiDocs는 Git 브랜치 통합을 통한 강력한 버전 관리 기능을 제공하여 매끄러운 전환, 버전별 콘텐츠, 자동화된 버전 관리와 함께 문서의 여러 버전을 유지할 수 있습니다.
+BaiDocs는 Git 브랜치 통합을 통해 강력한 버전 관리 기능을 제공하여 원활한 전환, 버전별 콘텐츠 및 자동화된 버전 관리를 통해 문서의 여러 버전을 유지할 수 있습니다.
 
 ## 개요
 
@@ -8,38 +8,38 @@ BaiDocs는 Git 브랜치 통합을 통한 강력한 버전 관리 기능을 제�
 
 - **Git 브랜치 통합**: 각 문서 버전이 Git 브랜치에 대응
 - **자동 버전 감지**: 사용 가능한 버전 자동 감지 및 나열
-- **버전 전환**: 다른 문서 버전 간 매끄러운 전환
-- **버전별 콘텐츠**: 버전 간 다양한 콘텐츠
-- **레거시 지원**: 새로운 버전 개발 중 이전 버전 유지
+- **버전 전환**: 다른 문서 버전 간 원활한 전환
+- **버전별 콘텐츠**: 버전 간에 다른 콘텐츠
+- **레거시 지원**: 새 버전 개발 중 이전 버전 유지
 - **릴리스 관리**: 자동화된 버전 태깅 및 릴리스 프로세스
 - **버전 비교**: 다른 버전 간 콘텐츠 비교
 
 ### 일반적인 버전 관리 시나리오
 
-- **제품 릴리스**: v1.0, v2.0, v3.0에 대한 문서 유지
-- **API 버전**: 다른 API 버전 문서화 (v1, v2, latest)
+- **제품 릴리스**: v1.0, v2.0, v3.0 문서 유지
+- **API 버전**: 다양한 API 버전 문서화 (v1, v2, latest)
 - **기능 브랜치**: 향후 기능에 대한 문서 미리보기
-- **환경별**: 스테이징, 프로덕션 환경에 대한 다른 문서
+- **환경별**: 스테이징, 프로덕션 환경별 다른 문서
 - **현지화된 버전**: 지역 또는 고객 세그먼트별 다른 버전
 
 ## 브랜치 기반 버전 관리
 
-### 버전 설정
+### 버전 구성
 
-책 설정에서 버전 관리를 구성하세요:
+책 설정에서 버전 관리를 구성할 수 있습니다:
 
 ```yaml
 # book.config.yaml
 id: my-documentation
-title: 내 문서
-description: 다중 버전 문서
+title: My Documentation
+description: Multi-version documentation
 
-# Git 설정
+# Git 구성
 git:
   repository: "https://github.com/myorg/docs.git"
   branch: main  # 기본 브랜치
 
-# 버전 설정
+# 버전 구성
 versioning:
   enabled: true
   strategy: "branch"  # 또는 "tag", "directory"
@@ -87,7 +87,7 @@ versioning:
 
 ### Git 브랜치 구조
 
-버전 관리를 위한 Git 브랜치 구성:
+버전 관리를 위해 Git 브랜치를 구성할 수 있습니다:
 
 ```
 Git 저장소 구조:
@@ -100,17 +100,17 @@ main                    ← 최신 안정 버전 (v3.0)
 
 v2.x                    ← 버전 2.x 유지보수
 ├── content/
-│   ├── book.config.yaml  (버전별 설정)
+│   ├── book.config.yaml  (버전별 구성)
 │   ├── en/
 │   └── ko/
 
 v1.x                    ← 레거시 버전 1.x
 ├── content/
-│   ├── book.config.yaml  (이전 설정)
+│   ├── book.config.yaml  (이전 구성)
 │   ├── en/
 │   └── ko/
 
-develop                 ← 개발 브랜치 (v3.1 beta)
+develop                 ← 개발 브랜치 (v3.1 베타)
 ├── content/
 │   ├── book.config.yaml
 │   ├── en/
@@ -129,14 +129,14 @@ feature/new-api         ← 기능 미리보기
 
 #### 메인에서 릴리스 버전 생성
 
-새로운 안정 버전 생성:
+새로운 안정 버전을 생성할 수 있습니다:
 
 ```bash
 # 메인에서 버전 브랜치 생성
 git checkout main
 git checkout -b v3.x
 
-# 버전 설정 업데이트
+# 버전 구성 업데이트
 # book.config.yaml을 편집하여 새 버전 반영
 
 # 새 버전 브랜치 푸시
@@ -149,7 +149,7 @@ git checkout main
 
 #### 기능 브랜치 미리보기
 
-새 기능에 대한 미리보기 버전 생성:
+새 기능에 대한 미리보기 버전을 생성할 수 있습니다:
 
 ```bash
 # 기능 브랜치 생성
@@ -157,18 +157,18 @@ git checkout -b feature/new-authentication
 
 # 미리보기용 book.config.yaml 업데이트
 git add content/book.config.yaml
-git commit -m "새 인증을 위한 미리보기 버전 구성"
+git commit -m "Configure preview version for new authentication"
 git push origin feature/new-authentication
 ```
 
-### 버전별 설정
+### 버전별 구성
 
-각 버전은 자체 설정을 가질 수 있습니다:
+각 버전은 자체 구성을 가질 수 있습니다:
 
 ```yaml
 # main 브랜치 - book.config.yaml
 id: my-documentation
-title: "내 문서 v3.0"
+title: "My Documentation v3.0"
 version: "3.0"
 
 # 버전별 메타데이터
@@ -182,11 +182,11 @@ versionInfo:
 # 버전별 네비게이션
 navigation:
   en:
-    - title: "홈"
+    - title: "Home"
       path: "index.mdx"
-    - title: "새 기능"  # v3.0에서만
+    - title: "New Features"  # v3.0에만 존재
       path: "new-features.mdx"
-    - title: "API 참조"
+    - title: "API Reference"
       items:
         - title: "v3 API"      # 버전별 API 문서
           path: "api/v3/index.mdx"
@@ -195,7 +195,7 @@ navigation:
 ```yaml
 # v2.x 브랜치 - book.config.yaml
 id: my-documentation
-title: "내 문서 v2.x"
+title: "My Documentation v2.x"
 version: "2.x"
 
 versionInfo:
@@ -205,14 +205,14 @@ versionInfo:
   prerelease: null
   status: "maintenance"
 
-# v2.x용 다른 네비게이션
+# v2.x에 대한 다른 네비게이션
 navigation:
   en:
-    - title: "홈"
+    - title: "Home"
       path: "index.mdx"
-    - title: "마이그레이션 가이드"  # 사용자의 v3 마이그레이션 도움
+    - title: "Migration Guide"  # 사용자가 v3로 마이그레이션하도록 도움
       path: "migration-to-v3.mdx"
-    - title: "API 참조"
+    - title: "API Reference"
       items:
         - title: "v2 API"      # 레거시 API 문서
           path: "api/v2/index.mdx"
@@ -222,7 +222,7 @@ navigation:
 
 ### 조건부 콘텐츠
 
-버전에 따라 콘텐츠 표시:
+버전에 따라 콘텐츠를 표시할 수 있습니다:
 
 ```mdx
 import { useVersion } from '@baidocs/versioning'
@@ -260,8 +260,8 @@ const client = new APIClient({
 });
 ```
 
-:::warning 사용 중단됨
-API 키 인증은 v3.0에서 사용 중단되었습니다. OAuth 2.0으로 마이그레이션하세요.
+:::warning 더 이상 사용되지 않음
+API 키 인증은 v3.0에서 더 이상 사용되지 않습니다. OAuth 2.0으로 마이그레이션하세요.
 :::
 
 </VersionContent>
@@ -288,7 +288,7 @@ const client = new APIClient({
 
 ### 버전 비교
 
-버전 간 기능 비교:
+버전 간 기능을 비교할 수 있습니다:
 
 ```mdx
 import { VersionTable, VersionCompare } from '@baidocs/components'
@@ -297,9 +297,9 @@ import { VersionTable, VersionCompare } from '@baidocs/components'
 
 <VersionTable>
 | 기능 | v1.x | v2.x | v3.x |
-|------|------|------|------|
+|---------|------|------|------|
 | 기본 인증 | ✅ | ❌ | ❌ |
-| API 키 | ❌ | ✅ | ⚠️ 사용 중단됨 |
+| API 키 | ❌ | ✅ | ⚠️ 더 이상 사용되지 않음 |
 | OAuth 2.0 | ❌ | ❌ | ✅ |
 | 속도 제한 | 기본 | 고급 | 스마트 |
 | WebSocket API | ❌ | ✅ | ✅ 향상됨 |
@@ -312,8 +312,8 @@ import { VersionTable, VersionCompare } from '@baidocs/components'
 
 업그레이드 시 주요 변경사항:
 
-#### 호환성 중단 변경사항
-- API 키 인증 사용 중단
+#### 주요 변경사항
+- API 키 인증 더 이상 사용되지 않음
 - WebSocket 프로토콜 업데이트
 - 일부 엔드포인트 URL 변경
 
@@ -327,13 +327,13 @@ import { VersionTable, VersionCompare } from '@baidocs/components'
 
 ### 버전별 어드모니션
 
-버전 인식 콜아웃 생성:
+버전 인식 콜아웃을 생성할 수 있습니다:
 
 ```mdx
 import { VersionAdmonition } from '@baidocs/components'
 
 <VersionAdmonition type="added" version="3.0">
-**v3.0의 새 기능:** OAuth 2.0 인증이 향상된 보안과 사용자 경험을 제공합니다.
+**v3.0의 새 기능:** OAuth 2.0 인증으로 향상된 보안과 사용자 경험을 제공합니다.
 </VersionAdmonition>
 
 <VersionAdmonition type="changed" version="2.5">
@@ -341,7 +341,7 @@ import { VersionAdmonition } from '@baidocs/components'
 </VersionAdmonition>
 
 <VersionAdmonition type="deprecated" version="3.0" removeVersion="4.0">
-**v3.0에서 사용 중단됨:** API 키 인증은 v4.0에서 제거될 예정입니다. OAuth 2.0으로 마이그레이션하세요.
+**v3.0에서 더 이상 사용되지 않음:** API 키 인증은 v4.0에서 제거될 예정입니다. OAuth 2.0으로 마이그레이션하세요.
 </VersionAdmonition>
 
 <VersionAdmonition type="removed" version="2.0" previousVersion="1.x">
@@ -353,7 +353,7 @@ import { VersionAdmonition } from '@baidocs/components'
 
 ### 버전 선택기 컴포넌트
 
-버전 전환 인터페이스 생성:
+버전 전환 인터페이스를 생성할 수 있습니다:
 
 ```typescript
 // components/VersionSwitcher.tsx
@@ -378,7 +378,7 @@ export function VersionSwitcher() {
     try {
       await switchVersion(version.version);
 
-      // 버전 변경을 반영하도록 URL 업데이트
+      // 버전 변경을 반영하기 위해 URL 업데이트
       const currentPath = router.asPath;
       const newPath = currentPath.replace(
         `/docs/${currentVersion}/`,
@@ -388,7 +388,7 @@ export function VersionSwitcher() {
       router.push(newPath);
       setIsOpen(false);
     } catch (error) {
-      console.error('버전 전환 실패:', error);
+      console.error('Failed to switch version:', error);
     }
   };
 
@@ -419,7 +419,7 @@ export function VersionSwitcher() {
       <button
         className="version-trigger"
         onClick={() => setIsOpen(!isOpen)}
-        aria-label="버전 선택"
+        aria-label="Select version"
         aria-haspopup="listbox"
         aria-expanded={isOpen}
       >
@@ -485,7 +485,7 @@ export function VersionSwitcher() {
 
 ### 버전 배너
 
-버전 정보 표시:
+버전 정보를 표시할 수 있습니다:
 
 ```typescript
 // components/VersionBanner.tsx
@@ -527,7 +527,7 @@ export function VersionBanner() {
         <div className="version-banner-text">
           <strong>{bannerInfo.message}</strong>
           {config.endOfLife && (
-            <span> 지원 종료: {new Date(config.endOfLife).toLocaleDateString()}.</span>
+            <span> 지원 종료일: {new Date(config.endOfLife).toLocaleDateString()}.</span>
           )}
           <a href="/latest" className="version-banner-link">
             최신 버전으로 전환
@@ -543,11 +543,11 @@ export function VersionBanner() {
 
 ### 릴리스 자동화
 
-버전 생성 및 관리 자동화:
+버전 생성 및 관리를 자동화할 수 있습니다:
 
 ```yaml
 # .github/workflows/release.yml
-name: 문서 릴리스 생성
+name: Create Documentation Release
 
 on:
   push:
@@ -562,7 +562,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: 태그에서 버전 추출
+      - name: Extract version from tag
         id: version
         run: |
           VERSION=${GITHUB_REF#refs/tags/}
@@ -570,7 +570,7 @@ jobs:
           echo "version=$VERSION" >> $GITHUB_OUTPUT
           echo "major_minor=${MAJOR_MINOR}.x" >> $GITHUB_OUTPUT
 
-      - name: 버전 브랜치 생성
+      - name: Create version branch
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
@@ -578,17 +578,17 @@ jobs:
           # 버전 브랜치 생성
           git checkout -b ${{ steps.version.outputs.major_minor }}
 
-          # 새 버전을 위한 책 설정 업데이트
+          # 새 버전에 대한 책 구성 업데이트
           sed -i 's/version: ".*"/version: "${{ steps.version.outputs.version }}"/' content/book.config.yaml
 
           # 버전 업데이트 커밋
           git add content/book.config.yaml
-          git commit -m "${{ steps.version.outputs.version }} 문서 생성"
+          git commit -m "Create documentation for ${{ steps.version.outputs.version }}"
 
           # 버전 브랜치 푸시
           git push origin ${{ steps.version.outputs.major_minor }}
 
-      - name: 다음 버전을 위한 메인 브랜치 업데이트
+      - name: Update main branch for next version
         run: |
           git checkout main
 
@@ -599,10 +599,10 @@ jobs:
           sed -i "s/version: \".*\"/version: \"$NEXT_VERSION\"/" content/book.config.yaml
 
           git add content/book.config.yaml
-          git commit -m "다음 버전 준비: $NEXT_VERSION"
+          git commit -m "Prepare for next version: $NEXT_VERSION"
           git push origin main
 
-      - name: 버전별 문서 배포
+      - name: Deploy versioned documentation
         run: |
           # 새 버전 배포 트리거
           curl -X POST \
@@ -614,15 +614,15 @@ jobs:
 
 ### 버전 정리
 
-이전 버전 자동 정리:
+이전 버전을 자동으로 정리할 수 있습니다:
 
 ```yaml
 # .github/workflows/cleanup-versions.yml
-name: 이전 문서 버전 정리
+name: Cleanup Old Documentation Versions
 
 on:
   schedule:
-    - cron: '0 0 1 * *'  # 월별 정리
+    - cron: '0 0 1 * *'  # 월간 정리
 
 jobs:
   cleanup-old-versions:
@@ -630,7 +630,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: 이전 버전 식별
+      - name: Identify old versions
         id: old-versions
         run: |
           # 모든 버전 브랜치 가져오기
@@ -641,7 +641,7 @@ jobs:
           OLD_BRANCHES=""
           for branch in $BRANCHES; do
             LAST_COMMIT_DATE=$(git log -1 --format=%ct origin/$branch)
-            TWO_YEARS_AGO=$(($(date +%s) - 63072000))  # 2년 (초)
+            TWO_YEARS_AGO=$(($(date +%s) - 63072000))  # 2년 (초 단위)
 
             if [ $LAST_COMMIT_DATE -lt $TWO_YEARS_AGO ]; then
               OLD_BRANCHES="$OLD_BRANCHES $branch"
@@ -650,31 +650,31 @@ jobs:
 
           echo "old_branches=$OLD_BRANCHES" >> $GITHUB_OUTPUT
 
-      - name: 이전 버전 아카이브
+      - name: Archive old versions
         if: steps.old-versions.outputs.old_branches != ''
         run: |
-          # 삭제 전 이전 버전 아카이브 생성
+          # 삭제 전 이전 버전의 아카이브 생성
           for branch in ${{ steps.old-versions.outputs.old_branches }}; do
             git checkout origin/$branch
             tar -czf "archive-$branch.tar.gz" content/
-            # 아카이브 스토리지에 업로드
+            # 아카이브 저장소에 업로드
           done
 
-      - name: 이전 버전 브랜치 삭제
+      - name: Delete old version branches
         if: steps.old-versions.outputs.old_branches != ''
         run: |
           for branch in ${{ steps.old-versions.outputs.old_branches }}; do
             git push origin --delete $branch
           done
 
-      - name: 버전 설정 업데이트
+      - name: Update version configuration
         run: |
-          # 메인 브랜치 설정에서 이전 버전 제거
-          # 아카이브된 버전을 제거하도록 book.config.yaml 업데이트
+          # 메인 브랜치 구성에서 이전 버전 제거
+          # book.config.yaml을 업데이트하여 아카이브된 버전 제거
           git checkout main
           # ... 업데이트 로직 ...
           git add content/book.config.yaml
-          git commit -m "설정에서 아카이브된 버전 제거"
+          git commit -m "Remove archived versions from configuration"
           git push origin main
 ```
 
@@ -682,7 +682,7 @@ jobs:
 
 ### 버전 사용량 추적
 
-사용자가 액세스하는 버전 모니터링:
+사용자가 액세스하는 버전을 모니터링할 수 있습니다:
 
 ```typescript
 // 버전 분석
@@ -719,7 +719,7 @@ async function notifyVersionDeprecation() {
     const versionConfig = await getVersionConfig(version.version);
 
     if (versionConfig.status === 'legacy' && version.pageviews > 1000) {
-      // 아직 많이 사용되는 레거시 버전 - 알림 보내기
+      // 여전히 많이 사용되는 레거시 버전 - 알림 전송
       await sendDeprecationNotification({
         version: version.version,
         usage: version.pageviews,
@@ -735,9 +735,9 @@ async function notifyVersionDeprecation() {
 
 ### 버전 전략
 
-#### 의미적 버전 관리
+#### 시맨틱 버전 관리
 
-의미적 버전 관리 원칙을 따르세요:
+시맨틱 버전 관리 원칙을 따르세요:
 
 ```yaml
 # 버전 브랜치 명명 전략
@@ -755,25 +755,25 @@ versions:
     version: "1.15.3"
 ```
 
-#### 버전 라이프사이클
+#### 버전 수명 주기
 
-버전 라이프사이클 관리:
+버전 수명 주기를 관리하세요:
 
 1. **개발** (`main`): 활발한 개발, 빈번한 변경
-2. **릴리스 후보** (`rc/v3.0`): 기능 완성, 테스트 중
+2. **릴리스 후보** (`rc/v3.0`): 기능 완성, 테스트
 3. **안정** (`v3.x`): 릴리스된 버전, 버그 수정만
 4. **유지보수** (`v2.x`): 보안 수정, 중요한 버그
-5. **레거시** (`v1.x`): 종료 예정 타임라인 발표
-6. **아카이브됨**: 더 이상 유지보수하지 않음, 문서 보존
+5. **레거시** (`v1.x`): 지원 종료 일정 발표
+6. **아카이브**: 더 이상 유지되지 않지만 문서 보존
 
 ### 콘텐츠 관리
 
 #### 버전별 콘텐츠
 
 ```mdx
-<!-- 좋음: 명확한 버전 지시자 -->
+<!-- 좋음: 명확한 버전 표시 -->
 :::info 버전 3.0+
-이 기능은 버전 3.0 이상에서 사용 가능합니다.
+이 기능은 버전 3.0 이상에서 사용할 수 있습니다.
 :::
 
 <!-- 좋음: 마이그레이션 가이드 -->
@@ -781,13 +781,13 @@ versions:
 버전 2.x에서는 `oldMethod()`를 사용했습니다. 3.x에서는 `newMethod()`를 대신 사용하세요.
 </VersionMigration>
 
-<!-- 피할 것: 불명확한 버전 관리 -->
-이 새 기능을 이제 사용할 수 있습니다!
+<!-- 피해야 함: 불명확한 버전 관리 -->
+이 새로운 기능을 이제 사용할 수 있습니다!
 ```
 
 #### 일관된 네비게이션
 
-가능할 때 버전 간 일관된 네비게이션 구조 유지:
+가능할 때 버전 간에 일관된 네비게이션 구조를 유지하세요:
 
 ```yaml
 # 모든 버전에서 사용되는 템플릿 네비게이션
@@ -812,45 +812,45 @@ navigationTemplate:
 
 ### 일반적인 문제
 
-#### "버전을 찾을 수 없음"
+#### "Version Not Found"
 
 ```bash
-# 버전 설정 확인
+# 버전 구성 확인
 cat content/book.config.yaml | grep -A 20 "versioning:"
 
 # 사용 가능한 브랜치 확인
 git branch -r | grep "v[0-9]"
 
-# 버전 브랜치가 존재하는지 확인
+# 버전 브랜치 존재 확인
 git ls-remote origin v3.x
 ```
 
-#### "버전 전환 실패"
+#### "Version Switch Failed"
 
 ```typescript
 // 버전 전환 디버그
 const debugVersionSwitch = async (targetVersion: string) => {
   try {
-    // 버전이 존재하는지 확인
+    // 버전 존재 확인
     const available = await getAvailableVersions();
     if (!available.includes(targetVersion)) {
-      throw new Error(`버전 ${targetVersion}을 사용할 수 없습니다`);
+      throw new Error(`Version ${targetVersion} not available`);
     }
 
-    // 버전에 대한 콘텐츠가 존재하는지 확인
+    // 버전에 대한 콘텐츠 존재 확인
     const content = await fetchVersionContent(targetVersion);
     if (!content) {
-      throw new Error(`버전 ${targetVersion}에 대한 콘텐츠를 찾을 수 없습니다`);
+      throw new Error(`No content found for version ${targetVersion}`);
     }
 
-    console.log(`버전 ${targetVersion}이 유효하고 콘텐츠가 있습니다`);
+    console.log(`Version ${targetVersion} is valid and has content`);
   } catch (error) {
-    console.error('버전 전환 디버그:', error);
+    console.error('Version switch debug:', error);
   }
 };
 ```
 
-#### "버전 간 링크 깨짐"
+#### "Cross-Version Links Broken"
 
 ```typescript
 // 버전 간 링크 수정
@@ -873,4 +873,4 @@ const fixCrossVersionLinks = (content: string, currentVersion: string) => {
 
 ---
 
-*효과적인 버전 관리는 사용자가 제품과 함께 문서를 발전시킬 수 있도록 하면서 소프트웨어 버전에 적절한 문서에 액세스할 수 있도록 합니다.*
+*효과적인 버전 관리는 사용자가 소프트웨어 버전에 적합한 문서에 액세스할 수 있도록 하면서 제품과 함께 문서를 발전시킬 수 있게 합니다.*

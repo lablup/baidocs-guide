@@ -1,23 +1,23 @@
 # MDX 기능
 
-MDX (Markdown + JSX)는 BaiDocs 콘텐츠 생성의 핵심입니다. 마크다운의 단순함과 React 컴포넌트의 강력함을 결합하여 풍부하고 상호작용적인 문서를 만들 수 있습니다.
+MDX (Markdown + JSX)는 BaiDocs 콘텐츠 생성의 핵심입니다. 마크다운의 간단함과 React 구성 요소의 힘을 결합하여 풍부하고 인터랙티브한 문서를 만들 수 있습니다.
 
-## MDX란 무엇인가?
+## MDX란?
 
-MDX를 사용하면 마크다운 파일에서 직접 JSX를 작성할 수 있습니다. 이는 다음을 의미합니다:
+MDX를 사용하면 마크다운 파일에서 직접 JSX를 작성할 수 있습니다. 이는 다음을 수행할 수 있음을 의미합니다:
 
-- 문서에서 React 컴포넌트 사용
+- 문서에서 React 구성 요소 사용
 - 사용자 정의 레이아웃과 스타일링 생성
-- 상호작용 요소 임베드
+- 인터랙티브 요소 포함
 - 재사용 가능한 콘텐츠 블록 구축
 
 ```mdx
 # 일반 마크다운 헤더
 
-**굵은** 텍스트가 있는 일반 마크다운 콘텐츠입니다.
+이것은 **굵은** 텍스트가 있는 일반 마크다운 콘텐츠입니다.
 
 <div style={{backgroundColor: '#f0f8ff', padding: '1rem', borderRadius: '8px'}}>
-  사용자 정의 스타일링이 있는 JSX 컴포넌트입니다!
+  이것은 사용자 정의 스타일링이 있는 JSX 구성 요소입니다!
 </div>
 
 import CustomComponent from '../components/CustomComponent'
@@ -29,7 +29,7 @@ import CustomComponent from '../components/CustomComponent'
 
 ### 인라인 JSX 요소
 
-콘텐츠에서 HTML/JSX 요소를 직접 사용할 수 있습니다:
+콘텐츠에서 모든 HTML/JSX 요소를 직접 사용할 수 있습니다:
 
 ```mdx
 <div className="highlight-box">
@@ -58,12 +58,12 @@ import CustomComponent from '../components/CustomComponent'
 
 ### JavaScript 표현식
 
-콘텐츠 내에서 JavaScript 표현식을 사용하세요:
+콘텐츠 내에서 JavaScript 표현식을 사용할 수 있습니다:
 
 ```mdx
 현재 날짜: {new Date().toLocaleDateString()}
 
-수학 계산: {2 + 3 = {2 + 3}}
+수학 계산: {2 + 3} = {2 + 3}
 
 조건부 콘텐츠: {true ? '이것이 표시됩니다' : '이것은 표시되지 않습니다'}
 
@@ -75,11 +75,11 @@ import CustomComponent from '../components/CustomComponent'
 
 수학 계산: 2 + 3 = {2 + 3}
 
-## 사용자 정의 컴포넌트
+## 사용자 정의 구성 요소
 
-### 컴포넌트 가져오기
+### 구성 요소 가져오기
 
-MDX 파일에서 React 컴포넌트를 가져와서 사용할 수 있습니다:
+MDX 파일에서 React 구성 요소를 가져오고 사용할 수 있습니다:
 
 ```mdx
 import { Button } from '../components/Button'
@@ -87,7 +87,7 @@ import CodeDemo from '../components/CodeDemo'
 import { Alert } from '../components/Alert'
 
 <Alert type="info">
-  사용자 정의 알림 컴포넌트입니다.
+  이것은 사용자 정의 알림 구성 요소입니다.
 </Alert>
 
 <Button onClick={() => alert('클릭됨!')}>
@@ -95,13 +95,13 @@ import { Alert } from '../components/Alert'
 </Button>
 
 <CodeDemo language="javascript">
-  console.log('상호작용 코드 데모');
+  console.log('인터랙티브 코드 데모');
 </CodeDemo>
 ```
 
-### 재사용 가능한 컴포넌트 만들기
+### 재사용 가능한 구성 요소 생성
 
-반복되는 콘텐츠를 위한 컴포넌트를 만드세요:
+반복되는 콘텐츠를 위한 구성 요소를 생성할 수 있습니다:
 
 ```mdx
 export const FeatureBox = ({ title, children, icon }) => (
@@ -124,15 +124,15 @@ export const FeatureBox = ({ title, children, icon }) => (
 </FeatureBox>
 
 <FeatureBox title="강력한 기능" icon="⚡">
-  복잡한 문서 요구사항을 위한 고급 기능.
+  복잡한 문서화 요구사항을 위한 고급 기능입니다.
 </FeatureBox>
 ```
 
 ## 고급 레이아웃 기법
 
-### 다중 컬럼 레이아웃
+### 다중 열 레이아웃
 
-반응형 컬럼 레이아웃을 만드세요:
+반응형 열 레이아웃을 생성할 수 있습니다:
 
 ```mdx
 <div style={{
@@ -142,25 +142,25 @@ export const FeatureBox = ({ title, children, icon }) => (
   marginTop: '1rem'
 }}>
   <div style={{padding: '1rem', backgroundColor: '#f9f9f9'}}>
-    <h4>컬럼 1</h4>
-    <p>첫 번째 컬럼의 콘텐츠.</p>
+    <h4>열 1</h4>
+    <p>첫 번째 열의 콘텐츠입니다.</p>
   </div>
 
   <div style={{padding: '1rem', backgroundColor: '#f9f9f9'}}>
-    <h4>컬럼 2</h4>
-    <p>두 번째 컬럼의 콘텐츠.</p>
+    <h4>열 2</h4>
+    <p>두 번째 열의 콘텐츠입니다.</p>
   </div>
 
   <div style={{padding: '1rem', backgroundColor: '#f9f9f9'}}>
-    <h4>컬럼 3</h4>
-    <p>세 번째 컬럼의 콘텐츠.</p>
+    <h4>열 3</h4>
+    <p>세 번째 열의 콘텐츠입니다.</p>
   </div>
 </div>
 ```
 
 ### 유연한 컨테이너
 
-유연한 콘텐츠 컨테이너를 만드세요:
+유연한 콘텐츠 컨테이너를 생성할 수 있습니다:
 
 ```mdx
 <div style={{
@@ -171,19 +171,19 @@ export const FeatureBox = ({ title, children, icon }) => (
 }}>
   <div style={{flex: '1', backgroundColor: '#e3f2fd', padding: '1rem'}}>
     <h4>주요 콘텐츠</h4>
-    <p>이 섹션은 대부분의 공간을 차지합니다.</p>
+    <p>이 섹션은 공간의 대부분을 차지합니다.</p>
   </div>
 
   <div style={{flex: '0 0 200px', backgroundColor: '#fff3e0', padding: '1rem'}}>
     <h4>사이드바</h4>
-    <p>고정 너비 사이드바 콘텐츠.</p>
+    <p>고정 폭 사이드바 콘텐츠입니다.</p>
   </div>
 </div>
 ```
 
 ### 반응형 디자인
 
-모바일 친화적인 레이아웃을 만드세요:
+모바일 친화적 레이아웃을 생성할 수 있습니다:
 
 ```mdx
 <div style={{
@@ -200,7 +200,7 @@ export const FeatureBox = ({ title, children, icon }) => (
   }}>
     <div style={{flex: 1}}>
       <h4>반응형 섹션 1</h4>
-      <p>모바일에서는 세로로 쌓이고, 데스크톱에서는 나란히 배치됩니다.</p>
+      <p>모바일에서는 세로로, 데스크톱에서는 나란히 배치됩니다.</p>
     </div>
 
     <div style={{flex: 1}}>
@@ -211,11 +211,11 @@ export const FeatureBox = ({ title, children, icon }) => (
 </div>
 ```
 
-## 상호작용 요소
+## 인터랙티브 요소
 
-### 탭 컴포넌트
+### 탭 구성 요소
 
-탭형 콘텐츠 섹션을 만드세요:
+탭된 콘텐츠 섹션을 생성할 수 있습니다:
 
 ```mdx
 export const Tabs = ({ children, defaultTab = 0 }) => {
@@ -252,14 +252,14 @@ export const TabPanel = ({ title, children }) => <div>{children}</div>;
 <Tabs>
   <TabPanel title="JavaScript">
     ```javascript
-    const greeting = '안녕하세요, 세상!';
+    const greeting = 'Hello, World!';
     console.log(greeting);
     ```
   </TabPanel>
 
   <TabPanel title="Python">
     ```python
-    greeting = '안녕하세요, 세상!'
+    greeting = 'Hello, World!'
     print(greeting)
     ```
   </TabPanel>
@@ -270,7 +270,7 @@ export const TabPanel = ({ title, children }) => <div>{children}</div>;
     import "fmt"
 
     func main() {
-        fmt.Println("안녕하세요, 세상!")
+        fmt.Println("Hello, World!")
     }
     ```
   </TabPanel>
@@ -279,7 +279,7 @@ export const TabPanel = ({ title, children }) => <div>{children}</div>;
 
 ### 접을 수 있는 콘텐츠
 
-확장 가능한 섹션을 만드세요:
+확장 가능한 섹션을 생성할 수 있습니다:
 
 ```mdx
 export const Collapsible = ({ title, children, defaultOpen = false }) => {
@@ -316,7 +316,7 @@ export const Collapsible = ({ title, children, defaultOpen = false }) => {
 };
 
 <Collapsible title="고급 설정">
-  이 콘텐츠는 기본적으로 숨겨져 있고 제목을 클릭하여 펼칠 수 있습니다.
+  이 콘텐츠는 기본적으로 숨겨져 있으며 제목을 클릭하여 펼칠 수 있습니다.
 
   ```yaml
   advanced:
@@ -339,7 +339,7 @@ export const Collapsible = ({ title, children, defaultOpen = false }) => {
 
 ### 복사 버튼이 있는 코드
 
-복사 기능이 있는 코드 블록을 만드세요:
+복사 기능이 있는 코드 블록을 생성할 수 있습니다:
 
 ```mdx
 export const CodeBlock = ({ children, language, copyable = true }) => {
@@ -392,9 +392,9 @@ baidocs dev
 </CodeBlock>
 ```
 
-### 강조된 코드 라인
+### 강조된 코드 줄
 
-코드 블록에서 특정 라인을 강조하세요:
+코드 블록에서 특정 줄을 강조할 수 있습니다:
 
 ```mdx
 export const HighlightedCode = ({ children, highlightLines = [] }) => {
@@ -420,9 +420,9 @@ export const HighlightedCode = ({ children, highlightLines = [] }) => {
 
 <HighlightedCode highlightLines={[2, 4]}>
 {`function example() {
-  const important = '이 라인이 강조됩니다';
-  const normal = '이 라인은 일반적입니다';
-  const alsoImportant = '이 라인도 강조됩니다';
+  const important = 'This line is highlighted';
+  const normal = 'This line is normal';
+  const alsoImportant = 'This line is also highlighted';
   return { important, normal, alsoImportant };
 }`}
 </HighlightedCode>
@@ -432,7 +432,7 @@ export const HighlightedCode = ({ children, highlightLines = [] }) => {
 
 ### 간단한 차트
 
-기본 차트와 시각화를 만드세요:
+기본 차트와 시각화를 생성할 수 있습니다:
 
 ```mdx
 export const ProgressBar = ({ value, max = 100, label }) => (
@@ -458,14 +458,14 @@ export const ProgressBar = ({ value, max = 100, label }) => (
   </div>
 );
 
-<ProgressBar value={75} max={100} label="프로젝트 완성도" />
+<ProgressBar value={75} max={100} label="프로젝트 완료도" />
 <ProgressBar value={45} max={60} label="문서 커버리지" />
 <ProgressBar value={12} max={15} label="팀 멤버" />
 ```
 
 ### 비교 표
 
-향상된 비교 표를 만드세요:
+향상된 비교 표를 생성할 수 있습니다:
 
 ```mdx
 export const ComparisonTable = ({ data, highlight = [] }) => (
@@ -509,10 +509,10 @@ export const ComparisonTable = ({ data, highlight = [] }) => (
   data={{
     headers: ['기능', '기본', '프로', '엔터프라이즈'],
     rows: [
-      ['사용자', '1명', '10명', '무제한'],
+      ['사용자', '1', '10', '무제한'],
       ['저장공간', '1GB', '100GB', '무제한'],
       ['지원', '이메일', '24/7 채팅', '전화 + 전담'],
-      ['API 호출', '월 1,000회', '월 100,000회', '무제한']
+      ['API 호출', '1,000/월', '100,000/월', '무제한']
     ]
   }}
 />
@@ -520,30 +520,30 @@ export const ComparisonTable = ({ data, highlight = [] }) => (
 
 ## MDX 모범 사례
 
-### 컴포넌트 구성
+### 구성 요소 구성
 
-컴포넌트를 논리적으로 구조화하세요:
+구성 요소를 논리적으로 구조화합니다:
 
 ```mdx
 // 파일 상단에
 import { Button, Alert, CodeBlock } from '../components'
 
-// 간단한 컴포넌트는 인라인으로 정의
+// 간단한 구성 요소를 인라인으로 정의
 export const Highlight = ({ children, color = 'yellow' }) => (
   <mark style={{backgroundColor: color, padding: '0.1rem 0.2rem'}}>
     {children}
   </mark>
 )
 
-// 콘텐츠 전체에서 컴포넌트 사용
+// 콘텐츠 전반에 걸쳐 구성 요소 사용
 <Alert type="warning">
-  진행하기 전에 <Highlight color="orange">데이터를 백업</Highlight>했는지 확인하세요.
+  계속하기 전에 <Highlight color="orange">데이터를 백업</Highlight>했는지 확인하세요.
 </Alert>
 ```
 
 ### 성능 고려사항
 
-**무거운 컴포넌트 지연 로드**:
+**무거운 구성 요소 지연 로드**:
 ```mdx
 import { lazy, Suspense } from 'react'
 
@@ -567,13 +567,13 @@ export const cardStyle = {
 <div style={cardStyle}>콘텐츠</div>
 <div style={cardStyle}>더 많은 콘텐츠</div>
 
-// 피할 것: 인라인 스타일 남발
+// 피할 것: 모든 곳에 인라인 스타일
 <div style={{border: '1px solid #ddd', borderRadius: '8px'}}>콘텐츠</div>
 ```
 
 ### 접근성
 
-컴포넌트를 접근 가능하게 만드세요:
+구성 요소를 접근 가능하게 만듭니다:
 
 ```mdx
 export const AccessibleButton = ({ children, onClick, ...props }) => (
@@ -642,21 +642,21 @@ export const DocCard = ({ title, description, link, icon }) => (
 <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1rem'}}>
   <DocCard
     title="시작하기"
-    description="BaiDocs의 기본 사항 배우기"
+    description="BaiDocs의 기본 사항을 학습합니다"
     link="../getting-started/overview.mdx"
     icon="🚀"
   />
 
   <DocCard
     title="고급 기능"
-    description="강력한 기능들 탐색하기"
+    description="강력한 기능을 탐색합니다"
     link="../advanced/themes.mdx"
     icon="⚡"
   />
 
   <DocCard
     title="배포"
-    description="문서 배포하기"
+    description="문서를 배포합니다"
     link="../deployment/vercel.mdx"
     icon="☁️"
   />
@@ -665,12 +665,12 @@ export const DocCard = ({ title, description, link, icon }) => (
 
 ## 다음 단계
 
-MDX를 마스터하면 다음을 만들 수 있습니다:
+MDX를 마스터하면 다음을 생성할 수 있습니다:
 
 1. **[풍부한 어드모니션](admonitions.mdx)** - 눈에 띄는 콜아웃과 알림
 2. **[고급 레이아웃](../advanced/themes.mdx)** - 사용자 정의 테마와 스타일링
-3. **[상호작용 컴포넌트](../advanced/search.mdx)** - 동적 기능
+3. **[인터랙티브 구성 요소](../advanced/search.mdx)** - 동적 기능
 
 ---
 
-*MDX는 마크다운의 단순함과 React 컴포넌트의 강력함을 결합하여 진정한 동적 문서를 만듭니다.*
+*MDX는 진정으로 동적인 문서화를 위해 마크다운의 단순함과 React 구성 요소의 힘을 결합합니다.*

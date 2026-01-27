@@ -1,28 +1,28 @@
 # 로컬 배포
 
-BaiDocs는 개발, 테스트 또는 비공개 문서 호스팅을 위해 로컬로 배포할 수 있습니다. 이 가이드에서는 문서 환경을 완전히 제어할 수 있도록 로컬 머신이나 프라이빗 서버에 BaiDocs를 설정하는 방법을 다룹니다.
+BaiDocs는 개발, 테스트 또는 비공개 문서 호스팅을 위해 로컬로 배포할 수 있습니다. 이 가이드는 문서 환경을 완전히 제어할 수 있도록 로컬 머신이나 비공개 서버에 BaiDocs를 설정하는 방법을 다룹니다.
 
 ## 개요
 
 ### 로컬 배포의 이점
 
-- **완전한 제어**: 호스팅 환경에 대한 완전한 통제권
-- **프라이버시**: 민감한 문서를 내부에서만 관리
-- **커스터마이징**: 무제한 커스터마이징 가능
-- **성능**: 특정 요구 사항에 최적화
-- **통합**: 내부 시스템과의 쉬운 통합
+- **완전한 제어**: 호스팅 환경에 대한 완전한 제어
+- **개인정보 보호**: 민감한 문서를 내부에 보관
+- **사용자 정의**: 무제한 사용자 정의 가능성
+- **성능**: 특정 요구사항에 최적화
+- **통합**: 내부 시스템과 쉬운 통합
 
 ### 배포 아키텍처
 
 ```
 로컬 BaiDocs 배포:
 ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
-│   Editor App    │    │   Viewer App    │    │ Content Storage │
-│  (localhost:3001)│    │ (localhost:3000)│    │ (File System)   │
+│   에디터 앱      │    │   뷰어 앱       │    │ 콘텐츠 저장소    │
+│  (localhost:3001)│    │ (localhost:3000)│    │ (파일 시스템)    │
 │                 │    │                 │    │                 │
-│ - 파일 편집       │    │ - 문서 보기       │    │ - Git 저장소      │
-│ - 실시간 미리보기  │    │ - 검색           │    │ - 에셋          │
-│ - Git 통합       │    │ - 내비게이션      │    │ - 빌드          │
+│ - 파일 편집     │    │ - 문서          │    │ - Git 저장소    │
+│ - 라이브 미리보기│    │ - 검색          │    │ - 에셋          │
+│ - Git 통합      │    │ - 네비게이션     │    │ - 빌드          │
 └─────────────────┘    └─────────────────┘    └─────────────────┘
 ```
 
@@ -32,17 +32,17 @@ BaiDocs는 개발, 테스트 또는 비공개 문서 호스팅을 위해 로컬�
 
 **최소 요구사항:**
 - **Node.js**: 18.0 이상
-- **RAM**: 최소 4GB, 8GB 권장
-- **저장공간**: 설치용 10GB + 콘텐츠 용량
-- **Git**: 2.0 버전 이상
+- **RAM**: 최소 4GB, 권장 8GB
+- **저장공간**: 설치 + 콘텐츠용 10GB
+- **Git**: 버전 2.0 이상
 
 **권장 요구사항:**
 - **Node.js**: 최신 LTS 버전
-- **RAM**: 대용량 문서 세트의 경우 16GB
+- **RAM**: 대용량 문서 세트용 16GB
 - **저장공간**: 더 나은 성능을 위한 SSD
-- **CPU**: 빠른 빌드를 위한 멀티코어 프로세서
+- **CPU**: 더 빠른 빌드를 위한 멀티코어 프로세서
 
-### 소프트웨어 종속성
+### 소프트웨어 의존성
 
 ```bash
 # Node.js 버전 확인
@@ -63,7 +63,7 @@ vm_stat         # macOS
 
 ### 1. BaiDocs 다운로드
 
-BaiDocs 저장소를 복제하세요:
+BaiDocs 저장소를 복제합니다:
 
 ```bash
 # GitHub에서 복제
@@ -75,21 +75,21 @@ git clone --branch v3.0.0 https://github.com/lablup/baidocs.git
 cd baidocs
 ```
 
-### 2. 종속성 설치
+### 2. 의존성 설치
 
-필요한 패키지를 모두 설치하세요:
+필요한 모든 패키지를 설치합니다:
 
 ```bash
-# 종속성 설치
+# 의존성 설치
 npm install
 
 # 설치 확인
 npm run --version
 ```
 
-### 3. 환경 설정
+### 3. 환경 구성
 
-환경 설정을 생성하세요:
+환경 구성을 생성합니다:
 
 ```bash
 # 예제 환경 파일 복사
@@ -99,7 +99,7 @@ cp .env.example .env.local
 nano .env.local
 ```
 
-기본 환경 설정:
+기본 환경 구성:
 
 ```bash
 # .env.local
@@ -111,7 +111,7 @@ NEXT_PUBLIC_VIEWER_URL=http://localhost:3000
 # 콘텐츠 디렉토리 (절대 경로)
 CONTENT_PATH=/absolute/path/to/your/content
 
-# 선택사항: 커스텀 포트 설정
+# 선택사항: 사용자 정의 포트 구성
 EDITOR_PORT=3001
 VIEWER_PORT=3000
 
@@ -119,11 +119,11 @@ VIEWER_PORT=3000
 NODE_ENV=production
 DEBUG=false
 
-# 선택사항: Git 설정
+# 선택사항: Git 구성
 GIT_USER_NAME="BaiDocs Bot"
 GIT_USER_EMAIL="baidocs@your-domain.com"
 
-# 선택사항: 검색 설정
+# 선택사항: 검색 구성
 ENABLE_SEARCH=true
 SEARCH_INDEX_PATH=/absolute/path/to/search/index
 
@@ -134,7 +134,7 @@ PDF_OUTPUT_PATH=/absolute/path/to/pdfs
 
 ### 4. 콘텐츠 디렉토리 설정
 
-콘텐츠 디렉토리를 생성하고 설정하세요:
+콘텐츠 디렉토리를 생성하고 구성합니다:
 
 ```bash
 # 콘텐츠 디렉토리 생성
@@ -149,7 +149,7 @@ git remote add origin https://github.com/your-org/docs-content.git
 mkdir -p my-docs/en
 cd my-docs
 
-# 기본 설정 생성
+# 기본 구성 생성
 cat > book.config.yaml << EOF
 id: my-docs
 title: My Documentation
@@ -177,20 +177,20 @@ EOF
 
 ### 개발 모드
 
-에디터와 뷰어를 모두 개발 모드로 실행:
+에디터와 뷰어를 모두 개발 모드로 실행합니다:
 
 ```bash
 # 개발 서버 시작
 npm run dev
 
 # 또는 개별적으로 시작
-npm run dev:editor    # 3001 포트의 에디터
-npm run dev:viewer    # 3000 포트의 뷰어
+npm run dev:editor    # 포트 3001의 에디터
+npm run dev:viewer    # 포트 3000의 뷰어
 ```
 
 ### 프로덕션 모드
 
-최적화된 프로덕션 빌드 실행:
+최적화된 프로덕션 빌드를 실행합니다:
 
 ```bash
 # 프로덕션용 빌드
@@ -206,13 +206,13 @@ npm run start:viewer
 
 ### 프로세스 매니저 (권장)
 
-프로덕션 프로세스 관리에 PM2 사용:
+프로덕션 프로세스 관리에 PM2를 사용합니다:
 
 ```bash
-# PM2 전역 설치
+# PM2를 전역으로 설치
 npm install -g pm2
 
-# PM2 설정 생성
+# PM2 구성 생성
 cat > ecosystem.config.js << EOF
 module.exports = {
   apps: [
@@ -251,16 +251,16 @@ EOF
 # PM2로 시작
 pm2 start ecosystem.config.js
 
-# PM2 설정 저장
+# PM2 구성 저장
 pm2 save
 pm2 startup
 ```
 
 ## 리버스 프록시 설정
 
-### Nginx 설정
+### Nginx 구성
 
-Nginx를 리버스 프록시로 설정:
+Nginx를 리버스 프록시로 설정합니다:
 
 ```nginx
 # /etc/nginx/sites-available/baidocs
@@ -268,7 +268,7 @@ server {
     listen 80;
     server_name your-docs-domain.com;
 
-    # HTTP를 HTTPS로 리다이렉트
+    # HTTP를 HTTPS로 리디렉션
     return 301 https://$server_name$request_uri;
 }
 
@@ -280,7 +280,7 @@ server {
     ssl_certificate /path/to/ssl/certificate.crt;
     ssl_certificate_key /path/to/ssl/private.key;
 
-    # SSL 설정
+    # SSL 구성
     ssl_protocols TLSv1.2 TLSv1.3;
     ssl_ciphers ECDHE+AESGCM:ECDHE+AES256:ECDHE+AES128:!aNULL:!MD5:!DSS;
     ssl_prefer_server_ciphers on;
@@ -322,7 +322,7 @@ server {
         proxy_set_header X-Forwarded-Proto $scheme;
         proxy_cache_bypass $http_upgrade;
 
-        # 정적 자산 캐시
+        # 정적 에셋 캐시
         location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2)$ {
             expires 1y;
             add_header Cache-Control "public, immutable";
@@ -335,7 +335,7 @@ server {
         }
     }
 
-    # 헬스체크 엔드포인트
+    # 헬스 체크 엔드포인트
     location /health {
         access_log off;
         return 200 "healthy\n";
@@ -352,22 +352,22 @@ server {
 }
 ```
 
-설정을 활성화:
+구성을 활성화합니다:
 
 ```bash
 # 사이트 활성화
 sudo ln -s /etc/nginx/sites-available/baidocs /etc/nginx/sites-enabled/
 
-# 설정 테스트
+# 구성 테스트
 sudo nginx -t
 
-# Nginx 다시 로드
+# Nginx 재로드
 sudo systemctl reload nginx
 ```
 
-### Apache 설정
+### Apache 구성
 
-Apache 대안 설정:
+대안적인 Apache 설정:
 
 ```apache
 # /etc/apache2/sites-available/baidocs.conf
@@ -379,7 +379,7 @@ Apache 대안 설정:
 <VirtualHost *:443>
     ServerName your-docs-domain.com
 
-    # SSL 설정
+    # SSL 구성
     SSLEngine on
     SSLCertificateFile /path/to/ssl/certificate.crt
     SSLCertificateKeyFile /path/to/ssl/private.key
@@ -423,11 +423,11 @@ Apache 대안 설정:
 </VirtualHost>
 ```
 
-## 서비스 설정
+## 서비스 구성
 
 ### Systemd 서비스
 
-자동 시작을 위한 systemd 서비스 생성:
+자동 시작을 위한 systemd 서비스를 생성합니다:
 
 ```bash
 # 서비스 파일 생성
@@ -455,7 +455,7 @@ RestartSec=10
 WantedBy=multi-user.target
 EOF
 
-# systemd 다시 로드 및 서비스 활성화
+# systemd 재로드 및 서비스 활성화
 sudo systemctl daemon-reload
 sudo systemctl enable baidocs
 sudo systemctl start baidocs
@@ -468,13 +468,13 @@ sudo systemctl status baidocs
 
 ### Dockerfile
 
-Docker 설정 생성:
+Docker 구성을 생성합니다:
 
 ```dockerfile
 # Dockerfile
 FROM node:18-alpine AS base
 
-# 필요한 경우에만 종속성 설치
+# 필요한 경우에만 의존성 설치
 FROM base AS deps
 RUN apk add --no-cache libc6-compat git
 WORKDIR /app
@@ -581,15 +581,15 @@ docker-compose up -d
 
 ## 백업 및 유지보수
 
-### 자동화된 백업
+### 자동 백업
 
-백업 스크립트 생성:
+백업 스크립트를 생성합니다:
 
 ```bash
 #!/bin/bash
 # backup-baidocs.sh
 
-# 설정
+# 구성
 BACKUP_DIR="/backups/baidocs"
 CONTENT_DIR="/path/to/baidocs/content"
 DATA_DIR="/path/to/baidocs/data"
@@ -601,7 +601,7 @@ mkdir -p "$BACKUP_DIR"
 # 백업 파일명 생성
 BACKUP_FILE="baidocs-backup-$(date +%Y%m%d-%H%M%S).tar.gz"
 
-echo "BaiDocs 백업 시작..."
+echo "BaiDocs 백업을 시작합니다..."
 
 # 압축된 백업 생성
 tar -czf "$BACKUP_DIR/$BACKUP_FILE" \
@@ -613,39 +613,39 @@ tar -czf "$BACKUP_DIR/$BACKUP_FILE" \
     -C "$(dirname $DATA_DIR)" \
     "$(basename $DATA_DIR)"
 
-# 백업 검증
+# 백업 확인
 if [ $? -eq 0 ]; then
     echo "백업이 성공적으로 완료되었습니다: $BACKUP_FILE"
 
     # 오래된 백업 제거
     find "$BACKUP_DIR" -name "baidocs-backup-*.tar.gz" -mtime +$RETENTION_DAYS -delete
 
-    echo "오래된 백업이 정리되었습니다 (보관 기간: $RETENTION_DAYS일)"
+    echo "오래된 백업이 정리되었습니다 (보존 기간: $RETENTION_DAYS일)"
 else
-    echo "백업이 실패했습니다!" >&2
+    echo "백업에 실패했습니다!" >&2
     exit 1
 fi
 ```
 
-cron으로 스케줄 설정:
+cron으로 스케줄링합니다:
 
 ```bash
 # crontab에 추가
 crontab -e
 
-# 백업 스케줄 추가 (매일 오전 2시)
+# 백업 일정 추가 (매일 오전 2시)
 0 2 * * * /path/to/backup-baidocs.sh >> /var/log/baidocs-backup.log 2>&1
 ```
 
 ### 헬스 모니터링
 
-모니터링 스크립트 생성:
+모니터링 스크립트를 생성합니다:
 
 ```bash
 #!/bin/bash
 # monitor-baidocs.sh
 
-# 설정
+# 구성
 EDITOR_URL="http://localhost:3001/health"
 VIEWER_URL="http://localhost:3000/health"
 ALERT_EMAIL="admin@your-domain.com"
@@ -660,16 +660,16 @@ if ! curl -sf "$VIEWER_URL" > /dev/null; then
     echo "경고: BaiDocs 뷰어가 다운되었습니다!" | mail -s "BaiDocs Viewer Down" "$ALERT_EMAIL"
 fi
 
-# 디스크 공간 체크
+# 디스크 공간 확인
 DISK_USAGE=$(df /opt/baidocs | tail -1 | awk '{print $5}' | sed 's/%//')
 if [ "$DISK_USAGE" -gt 85 ]; then
-    echo "경고: 높은 디스크 사용량: $DISK_USAGE%" | mail -s "BaiDocs High Disk Usage" "$ALERT_EMAIL"
+    echo "경고: 높은 디스크 사용률: $DISK_USAGE%" | mail -s "BaiDocs High Disk Usage" "$ALERT_EMAIL"
 fi
 
-# 메모리 사용량 체크
+# 메모리 사용률 확인
 MEMORY_USAGE=$(free | grep Mem | awk '{printf("%.0f\n", $3/$2 * 100.0)}')
 if [ "$MEMORY_USAGE" -gt 90 ]; then
-    echo "경고: 높은 메모리 사용량: $MEMORY_USAGE%" | mail -s "BaiDocs High Memory Usage" "$ALERT_EMAIL"
+    echo "경고: 높은 메모리 사용률: $MEMORY_USAGE%" | mail -s "BaiDocs High Memory Usage" "$ALERT_EMAIL"
 fi
 ```
 
@@ -678,9 +678,9 @@ fi
 ### 액세스 제어
 
 **에디터 액세스 제한:**
-- 신뢰할 수 있는 네트워크로만 에디터 액세스 제한
-- 원격 관리 액세스를 위해 VPN 사용
-- 민감한 환경에서는 인증 구현
+- 신뢰할 수 있는 네트워크로 에디터 액세스 제한
+- 원격 관리 액세스에 VPN 사용
+- 민감한 환경에서 인증 구현
 
 **파일 시스템 권한:**
 ```bash
@@ -690,7 +690,7 @@ sudo chmod -R 750 /opt/baidocs
 sudo chmod -R 640 /opt/baidocs/content
 ```
 
-### SSL 설정
+### SSL 구성
 
 **SSL 인증서 설정:**
 ```bash
@@ -703,10 +703,10 @@ sudo cp your-private.key /etc/ssl/private/
 sudo chmod 600 /etc/ssl/private/your-private.key
 ```
 
-### 방화벽 설정
+### 방화벽 구성
 
 ```bash
-# UFW 설정 (Ubuntu/Debian)
+# UFW 구성 (Ubuntu/Debian)
 sudo ufw allow ssh
 sudo ufw allow 80/tcp
 sudo ufw allow 443/tcp
@@ -726,7 +726,7 @@ sudo ufw enable
 sudo netstat -tulpn | grep :3000
 sudo lsof -i :3000
 
-# 포트를 사용하는 프로세스 종료
+# 포트 사용 프로세스 종료
 sudo kill -9 <PID>
 
 # 또는 다른 포트 사용
@@ -749,7 +749,7 @@ chmod -R 750 /path/to/content
 #### "Out of Memory" 오류
 
 ```bash
-# Node.js 메모리 제한 증가
+# Node.js 메모리 한도 증가
 node --max-old-space-size=4096 apps/viewer/server.js
 
 # 또는 환경에서 설정
@@ -772,12 +772,12 @@ sudo tail -f /var/log/nginx/error.log
 
 ## 다음 단계
 
-로컬 배포를 완료하세요:
+로컬 배포를 완료하는 방법:
 
-1. **[Vercel 배포](vercel.mdx)** - 글로벌 액세스를 위해 클라우드에 배포
-2. **[검색 설정](../advanced/search.mdx)** - 콘텐츠에 맞게 검색 최적화
-3. **[다국어 지원](../advanced/multilingual.mdx)** - 국제적 언어 추가
+1. **[Vercel 배포](vercel.mdx)** - 전 세계 액세스를 위한 클라우드 배포
+2. **[검색 설정](../advanced/search.mdx)** - 콘텐츠에 맞는 검색 최적화
+3. **[다국어 지원](../advanced/multilingual.mdx)** - 국제 언어 추가
 
 ---
 
-*로컬 배포를 통해 BaiDocs의 모든 기능을 유지하면서 문서 환경을 완전히 제어할 수 있습니다.*
+*로컬 배포는 BaiDocs 기능의 모든 기능을 유지하면서 문서 환경을 완전히 제어할 수 있게 해줍니다.*
